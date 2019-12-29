@@ -4,14 +4,27 @@ sudo apt update
 sudo apt upgrade
 sudo apt install libsodium-dev wget unzip
 ```
-## 安装V2ray
+## 安装V2ray到opt文件夹
 ```
+mkdir v2ray
+cd v2ray
 wget -c https://github.com/v2ray/v2ray-core/releases/download/v4.21.3/v2ray-linux-64.zip
 unzip v2ray-linux-64.zip
+rm v2ray-linux-64.zip
+cd ..
+sudo mv v2ray /opt
 ```
-sudo cp systemd/v2ray.service /etc/systemd/system/
-
+## 加载v2ray到systemd
+```
+sudo cp /opt/v2ray/systemd/v2ray.service /etc/systemd/system/
+sudo systemctl enable v2ray
+```
+## 配置v2ray.service
+```
 sudo nano /etc/systemd/system/v2ray.service
+```
+### 修改后的内容
+```
 [Unit]
 Description=V2Ray Service
 After=network.target
@@ -20,28 +33,34 @@ Wants=network.target
 [Service]
 User=nobody
 Type=simple
-PIDFile=/home/eamlinux/v2ray/v2ray.pid
-ExecStart=/home/eamlinux/v2ray/v2ray -config /home/eamlinux/v2ray/config.json
+PIDFile=/opt/v2ray/v2ray.pid
+ExecStart=/opt/v2ray/v2ray -config /opt/v2ray/config.json
 Restart=on-failure
-# Don't restart in the case of configuration error
 RestartPreventExitStatus=23
 
 [Install]
 WantedBy=multi-user.target
-
-
+```
+## 生成UUID
+```
 cat /proc/sys/kernel/random/uuid
+```
+## 建立v2ray配置文件
+```
+sudo nano /opt/v2ray/config.json
+```
+### 内容如下，请根据自己的信息更改
 ```
 {
   "inbounds": [
 {
-  "port": 8443,
+  "port": 1443,
   "listen": "0.0.0.0",
   "protocol": "vmess",
   "settings": {
     "clients": [
       {
-        "id": "8d138d8d-aaaa-4634-b82b-33785cefc099",
+        "id": "此处填入获得的UUID",
         "alterId": 64
       }
     ]
@@ -50,12 +69,12 @@ cat /proc/sys/kernel/random/uuid
     "network": "tcp",
     "security": "tls",
     "tlsSettings": {
-      "serverName": "pr02.leam.ml",
+      "serverName": "你的域名",
       "allowInsecure": true,
       "certificates": [
         {
-          "certificateFile": "/home/eamlinux/.acme.sh/pr02.leam.ml_ecc/pr02.leam.ml.cer",
-          "keyFile": "/home/eamlinux/.acme.sh/pr02.leam.ml_ecc/pr02.leam.ml.key"
+          "certificateFile": "/你域名的SSL证书.cer",
+          "keyFile": "/你域名的SSL密钥.key"
         }
       ]
     },
@@ -81,3 +100,9 @@ cat /proc/sys/kernel/random/uuid
   ]
 }
 ```
+## 启动v2ray
+```
+sudo systemctl daemon-reload
+sudo systemctl start v2ray
+```
+到此基本完毕，如果使用ufw防火墙，记得allow 1443端口，也可以是你更改的端口。
