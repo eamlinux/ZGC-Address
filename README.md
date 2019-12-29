@@ -1,2 +1,2 @@
 # ZGC-Address
-ZGC
+来自萌咖的脚本，做个备份！
