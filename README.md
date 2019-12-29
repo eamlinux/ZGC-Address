@@ -1,4 +1,4 @@
-# ZGC-Address
+# VPS系统全自动安装脚本
 来自萌咖的脚本，做个备份！
 
 ## 全自动安装默认root密码:MoeClub.org
@@ -15,4 +15,4 @@ bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://mirrors.cloud.aliyuncs.com/de
 ```bash
 bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://ftp.debian.org/debian/'
 ```
-
+仅以```Debian10```作为示例，其它参考萌咖大神博客。
