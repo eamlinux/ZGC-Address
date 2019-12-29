@@ -41,7 +41,7 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target
 ```
-## 生成UUID
+## 生成UUID，记得复制下来，要放到配置文件里的UUID里面去。
 ```
 cat /proc/sys/kernel/random/uuid
 ```
@@ -106,3 +106,7 @@ sudo systemctl daemon-reload
 sudo systemctl start v2ray
 ```
 到此基本完毕，如果使用ufw防火墙，记得allow 1443端口，也可以是你更改的端口。
+
+## 填坑说明：
+在```v2ray.service```配置文件里的```User=nobody```参数，目的是非root模式下使用v2ray，但是这可能影响到你证书的权限是其它用户时，v2ray无法启动。
+最好的解决办法就是把```nobody```改成你生成证书或者有证书权限的用户，当然你也可以改成root。
