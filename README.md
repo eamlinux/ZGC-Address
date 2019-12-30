@@ -11,7 +11,7 @@ wget --no-check-certificate -qO InstallNET.sh 'https://moeclub.org/attachment/Li
 ```
 bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://mirrors.cloud.aliyuncs.com/debian/'
 ```
-### 非阿里里云主机
+### 非阿里云主机
 ```bash
 bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://ftp.us.debian.org/debian/'
 ```
