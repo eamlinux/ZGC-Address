@@ -8,7 +8,7 @@ sudo apt install libsodium-dev wget unzip
 ```
 mkdir v2ray
 cd v2ray
-wget -c https://github.com/v2ray/v2ray-core/releases/download/v4.21.3/v2ray-linux-64.zip
+wget -c https://github.com/v2ray/v2ray-core/releases/download/v4.22.0/v2ray-linux-64.zip
 unzip v2ray-linux-64.zip
 rm v2ray-linux-64.zip
 cd ..
