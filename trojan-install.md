@@ -2,7 +2,7 @@
 
 ## 安装trojan
 ```
-wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.13.0/trojan-1.13.0-linux-amd64.tar.xz
+wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.14.0/trojan-1.14.0-linux-amd64.tar.xz
 tar xf trojan-1.13.0-linux-amd64.tar.xz
 cd trojan
 sudo mv trojan /usr/local/bin/
