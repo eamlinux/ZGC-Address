@@ -1,0 +1,148 @@
+# Debian10系统
+
+## 安装trojan
+```
+wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.13.0/trojan-1.13.0-linux-amd64.tar.xz
+tar xf trojan-1.13.0-linux-amd64.tar.xz
+cd trojan
+sudo mv trojan /usr/local/bin/
+```
+## 生成trojan服务
+```
+cat > trojan.service << EOF
+[Unit]
+Description=trojan
+Documentation=man:trojan(1) https://trojan-gfw.github.io/trojan/config https://trojan-gfw.github.io/trojan/
+After=network.target network-online.target nss-lookup.target mysql.service mariadb.service mysqld.service
+
+[Service]
+Type=simple
+StandardError=journal
+User=acme
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+ExecStart=/usr/local/bin/trojan /opt/trojan/server.json
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+## 激活trojan开机自启
+```
+sudo mv trojan.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable trojan
+```
+## 生成证书：
+```
+sudo apt install socat ufw curl
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/socat
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+sudo ufw default deny
+sudo ufw reload
+sudo useradd -r -m -s /bin/bash acme
+sudo su -l acme
+curl  https://get.acme.sh | sh
+exit
+sudo su -l acme
+acme.sh --issue -d 你的域名 --keylength ec-256 --standalone
+mkdir cert
+acme.sh --install-cert -d 你的域名 --key-file /home/acme/cert/private.key --fullchain-file /home/acme/cert/certificate.crt --ecc
+acme.sh --upgrade --auto-upgrade
+exit
+```
+## 建立trojan配置
+```
+sudo mkdir -p /opt/trojan
+sudo nano /opt/trojan/server.json
+```
+#### 配置内容，根据你的实际情况更改
+```json
+{
+    "run_type": "server",
+    "local_addr": "0.0.0.0",
+    "local_port": 443,
+    "remote_addr": "127.0.0.1",
+    "remote_port": 80,
+    "password": [
+        "密码1",
+        "密码2"
+    ],
+    "log_level": 1,
+    "ssl": {
+        "cert": "/home/acme/cert/certificate.crt",
+        "key": "/home/acme/cert/private.key",
+        "key_password": "",
+        "cipher": "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256",
+        "prefer_server_cipher": true,
+        "alpn": [
+            "http/2",
+            "http/1.1"
+        ],
+        "reuse_session": true,
+        "session_ticket": false,
+        "session_timeout": 600,
+        "plain_http_response": "",
+        "curves": "",
+        "dhparam": ""
+    },
+    "tcp": {
+        "prefer_ipv4": false,
+        "no_delay": true,
+        "keep_alive": true,
+        "fast_open": false,
+        "fast_open_qlen": 20
+    },
+    "mysql": {
+        "enabled": false,
+        "server_addr": "127.0.0.1",
+        "server_port": 3306,
+        "database": "trojan",
+        "username": "trojan",
+        "password": ""
+    }
+}
+```
+## 安装nginx伪装
+```
+sudo apt install nginx-full
+```
+#### 配置nginx高防
+```
+sudo rm /etc/nginx/sites-enabled/default
+sudo nano /etc/nginx/sites-available/xxx
+
+///内容如下：
+
+server {
+    listen 127.0.0.1:80 default_server;
+    server_name 你的域名;
+    location / {
+        proxy_pass https://www.ietf.org;
+    }
+}
+
+server {
+    listen 127.0.0.1:80;
+    server_name 主机外网IP;
+    return 301 https://你的域名$request_uri;
+}
+
+server {
+    listen 0.0.0.0:80;
+    listen [::]:80;
+    server_name _;
+    return 301 https://你的域名$request_uri;
+}
+
+///内容分隔
+
+sudo ln -s /etc/nginx/sites-available/xxx /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+sudo systemctl start trojan
+```
+##### 其中有什么坑我也不知道，肯定是小坑，自己填一下，不难。
+  
