@@ -141,6 +141,7 @@ server {
 ///内容分隔
 
 sudo ln -s /etc/nginx/sites-available/xxx /etc/nginx/sites-enabled/
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
 sudo systemctl restart nginx
 sudo systemctl start trojan
 ```
