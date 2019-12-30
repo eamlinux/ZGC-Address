@@ -13,6 +13,6 @@ bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://mirrors.cloud.aliyuncs.com/de
 ```
 ### 非阿里里云主机
 ```bash
-bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://ftp.debian.org/debian/'
+bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://ftp.us.debian.org/debian/'
 ```
 仅以```Debian10```作为示例，其它参考萌咖大神博客。
