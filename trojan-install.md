@@ -59,7 +59,7 @@ exit
 sudo mkdir -p /opt/trojan
 sudo nano /opt/trojan/server.json
 ```
-#### 配置内容，根据你的实际情况更改
+#### 1.13版配置内容，根据你的实际情况更改
 ```json
 {
     "run_type": "server",
@@ -106,8 +106,8 @@ sudo nano /opt/trojan/server.json
     }
 }
 ```
-## 最新版配置，有天坑，特别是windows客户端的配置要改
-```
+## 1.14版版配置内容，windows客户端配置见最后。
+```json
 {
     "run_type": "server",
     "local_addr": "0.0.0.0",
@@ -194,5 +194,42 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
 sudo systemctl restart nginx
 sudo systemctl start trojan
 ```
+## windows客户端配置
+```json
+{
+    "run_type": "client",
+    "local_addr": "127.0.0.1",
+    "local_port": 1080,
+    "remote_addr": "你的域名",
+    "remote_port": 443,
+    "password": [
+        "服务器中设置的其中一个密码"
+    ],
+    "log_level": 1,
+    "ssl": {
+        "verify": true,
+        "verify_hostname": true,
+        "cert": "",
+        "cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:RSA-AES128-GCM-SHA256:RSA-AES256-GCM-SHA384:RSA-AES128-SHA:RSA-AES256-SHA:RSA-3DES-EDE-SHA",
+        "cipher_tls13":"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
+        "sni": "",
+        "alpn": [
+            "h2",
+            "http/1.1"
+        ],
+        "reuse_session": true,
+        "session_ticket": false,
+        "curves": ""
+    },
+    "tcp": {
+        "no_delay": true,
+        "keep_alive": true,
+        "reuse_port": false,
+        "fast_open": false,
+        "fast_open_qlen": 20
+    }
+}
+```
+
 ##### 其中有什么坑我也不知道，肯定是小坑，自己填一下，不难。
   
