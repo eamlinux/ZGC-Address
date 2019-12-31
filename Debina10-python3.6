@@ -1,0 +1,8 @@
+sudo apt install -y build-essential libssl-dev libsodium-dev zlib1g-dev
+wget https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz
+tar xvf Python-3.6.9.tgz
+cd Python-3.6.9
+./configure --with-ensurepip=install
+make
+sudo make altinstall
+python3.6 -V
