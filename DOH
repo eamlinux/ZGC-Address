@@ -1,7 +1,12 @@
 
 wget -c https://dl.google.com/go/go1.13.5.linux-amd64.tar.gz
+tar xf go1.13.5.linux-amd64.tar.gz
+cp go /usr/local/
+ln -snf /usr/local/go/bin/* /usr/local/bin/
 
 git clone https://github.com/m13253/dns-over-https.git
+make
+cp doh-client/doh-client /usr/local/bin/
 
 ## /etc/systemd/system/doh-client.service
 [Unit]
