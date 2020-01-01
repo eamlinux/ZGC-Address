@@ -15,4 +15,4 @@ bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://mirrors.cloud.aliyuncs.com/de
 ```bash
 bash InstallNET.sh -d 10 -v 64 -a --mirror 'http://ftp.us.debian.org/debian/'
 ```
-仅以```Debian10```作为示例，其它参考萌咖大神博客。
+原机系统必须是debian或者ubuntu，脚本安装系统仅以```Debian10```作为示例，其它参考萌咖大神博客。
