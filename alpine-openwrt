@@ -1,3 +1,15 @@
 apk add --no-cache asciidoc bash bc binutils bzip2 cdrkit coreutils diffutils findutils flex g++ gawk gcc gettext git grep intltool libxslt linux-headers make ncurses-dev patch perl python2-dev python3-dev tar unzip  util-linux wget zlib-dev
+## openwrt
 git clone https://git.openwrt.org/openwrt/openwrt.git
+## lean
+git clone https://github.com/coolsnowwolf/lede.git
+## lede
+git clone https://github.com/lede-project/source.git
+
+
+./scripts/feeds update -a
+./scripts/feeds install -a
+make defconfig
 make prereq
+make menuconfig
+make tools/install && make toolchain/install
