@@ -1,5 +1,6 @@
 ## 安装shadowsocksr
 ```
+sudo apt install libsodium-dev git
 git clone https://github.com/shadowsocksrr/shadowsocksr.git
 sudo mv shadowsocksr/shadowsocks /usr/local/
 sudo nano /usr/local/shadowsocks/config.json
