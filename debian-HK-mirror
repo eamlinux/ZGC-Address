@@ -1,0 +1,11 @@
+deb https://mirror.xtom.com.hk/debian/ buster main
+deb-src https://mirror.xtom.com.hk/debian/ buster main
+
+deb https://mirror.xtom.com.hk/debian buster-backports main
+deb-src https://mirror.xtom.com.hk/debian buster-backports main
+
+deb https://mirror.xtom.com.hk/debian buster-updates main
+deb-src https://mirror.xtom.com.hk/debian buster-updates main
+
+deb https://mirror.xtom.com.hk/debian-security buster/updates main
+deb-src https://mirror.xtom.com.hk/debian-security buster/updates main
