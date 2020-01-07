@@ -1,0 +1,19 @@
+在 Linux 下安装非常简单
+
+sudo apt install privoxy
+
+默认的配置文件地址在 /etc/privoxy/config 目录下。假设本地 1080 端口已经启动（不管是本地 sslocal 还是 v2ray 本地都需要启动）然后要将本地 1080 socks5 代理转成 http 代理，重要的配置只有两行
+
+# 把本地 HTTP 流量转发到本地 1080 SOCKS5 代理
+forward-socks5t / 127.0.0.1:1080 .
+# 可选，默认监听本地连接
+listen-address 127.0.0.1:8118
+
+如果想要将 http 代理非常到局域网中，可以使用 listen-address 0.0.0.0:8118。 Privoxy 默认的端口为 8118，可以自行修改。修改完成保存之后使用如下命令启动
+
+可以在终端进行测试 export http_proxy=http://127.0.0.1:8118
+
+curl ip.gs 应该显示代理的 IP 地址。
+如果监听 0.0.0.0:8118 ，那么局域网中，使用 ip:8118 也能够使用该 HTTP 代理，并且所有的流量都经由 HTTP 转发到 SOCKS5 代理，并走 shadowsocks 或者 v2ray 到墙外。
+
+使用浏览器配置 HTTP 代理，然后访问 http://p.p 如果看到 Privoxy 启动成功表示一切 OK。
