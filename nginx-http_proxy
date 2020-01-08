@@ -1,0 +1,188 @@
+sudo apt install build-essential libpcre3 libpcre3-dev zlib1g-dev libgd-dev libperl-dev libxslt1-dev libxml2-dev libgeoip-dev
+
+libc6-dev需要添加sid源
+
+wget -c http://nginx.org/download/nginx-1.17.6.tar.gz
+tar xf nginx-1.17.6.tar.gz
+cd nginx-1.17.6
+
+wget https://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz
+wget https://www.zlib.net/zlib-1.2.11.tar.gz
+wget https://www.openssl.org/source/openssl-1.1.1d.tar.gz
+
+git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+
+#!/bin/sh
+./configure --prefix=/etc/nginx \
+            --sbin-path=/usr/local/bin/nginx \
+            --modules-path=/etc/nginx/modules \
+            --conf-path=/etc/nginx/nginx.conf \
+            --error-log-path=/var/log/nginx/error.log \
+            --pid-path=/var/run/nginx.pid \
+            --lock-path=/var/run/nginx.lock \
+            --user=www-data \
+            --group=www-data \
+            --with-select_module \
+            --with-poll_module \
+            --with-threads \
+            --with-file-aio \
+            --with-http_ssl_module \
+            --with-http_v2_module \
+            --with-http_realip_module \
+            --with-http_addition_module \
+            --with-http_xslt_module=dynamic \
+            --with-http_image_filter_module=dynamic \
+            --with-http_geoip_module=dynamic \
+            --with-http_sub_module \
+            --with-http_dav_module \
+            --with-http_flv_module \
+            --with-http_mp4_module \
+            --with-http_gunzip_module \
+            --with-http_gzip_static_module \
+            --with-http_auth_request_module \
+            --with-http_random_index_module \
+            --with-http_secure_link_module \
+            --with-http_degradation_module \
+            --with-http_slice_module \
+            --with-http_stub_status_module \
+            --http-log-path=/var/log/nginx/access.log \
+            --http-client-body-temp-path=/var/cache/nginx/client_temp \
+            --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+            --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+            --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+            --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+            --with-mail=dynamic \
+            --with-mail_ssl_module \
+            --with-stream=dynamic \
+            --with-stream_ssl_module \
+            --with-stream_realip_module \
+            --with-stream_geoip_module=dynamic \
+            --with-stream_ssl_preread_module \
+            --with-compat \
+            --with-pcre=./pcre-8.43 \
+            --with-pcre-jit \
+            --with-zlib=./zlib-1.2.11 \
+            --with-openssl=./openssl-1.1.1d \
+            --with-openssl-opt='enable-tls1_3 enable-ec_nistp_64_gcc_128 enable-weak-ssl-ciphers' \
+            --add-dynamic-module=./ngx_http_proxy_connect_module \
+            --with-debug
+			
+			
+			--with-openssl-opt="enable-tls1_3 no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong" \
+			
+			
+			
+			sudo nano /etc/systemd/system/nginx.service
+			
+[Unit]
+Description=nginx - high performance web server
+Documentation=https://nginx.org/en/docs/
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/nginx.pid
+ExecStartPre=/usr/local/bin/nginx -t -c /etc/nginx/nginx.conf
+ExecStart=/usr/local/bin/nginx -c /etc/nginx/nginx.conf
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl start nginx
+			
+sudo sh -c 'printf "user:$(openssl passwd -crypt password)\n" >  passwordng'
+
+### nginx.conf
+-------------------------------------------------------------------------------
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+load_module modules/ngx_http_proxy_connect_module.so;
+load_module modules/ngx_http_geoip_module.so;
+load_module modules/ngx_stream_module.so;
+load_module modules/ngx_http_image_filter_module.so;
+load_module modules/ngx_http_xslt_filter_module.so;
+load_module modules/ngx_stream_geoip_module.so;
+load_module modules/ngx_mail_module.so;
+#include /etc/nginx/modules-enabled/*.conf;
+
+events {
+        worker_connections 768;
+        # multi_accept on;
+}
+
+http {
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        # server_tokens off;
+
+        # server_names_hash_bucket_size 64;
+        # server_name_in_redirect off;
+
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+
+        ##
+        gzip on;
+
+        # gzip_vary on;
+        # gzip_proxied any;
+        # gzip_comp_level 6;
+        # gzip_buffers 16 8k;
+        # gzip_http_version 1.1;
+        # gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+        ##
+        # Virtual Host Configs
+        ##
+
+        include /etc/nginx/conf.d/*.conf;
+        # include /etc/nginx/sites-enabled/*;
+}
+------------------------------------------------------------------------------------------
+
+#### http_proxy
+
+server {
+    resolver 8.8.8.8;
+    listen 80;
+    proxy_connect;
+    proxy_connect_allow all;
+    proxy_connect_connect_timeout 10s;
+    proxy_connect_read_timeout 10s;
+    proxy_connect_send_timeout 10s;
+    location / {
+                auth_basic "password auth";
+                auth_basic_user_file passwordng;
+                proxy_pass http://$http_host$request_uri;
+                proxy_set_header HOST $http_host;
+                proxy_buffers 256 4k;
+                proxy_max_temp_file_size 0k;
+                proxy_next_upstream error timeout invalid_header http_502;
+    }
+}
+
+server {
+    resolver 8.8.8.8;
+    listen 443;
+    proxy_connect;
+    proxy_connect_allow all;
+    proxy_connect_connect_timeout 10s;
+    proxy_connect_read_timeout 10s;
+    proxy_connect_send_timeout 10s;
+    location / {
+       auth_basic "password auth";
+       auth_basic_user_file passwordng;
+       proxy_pass https://$host$request_uri;
+       proxy_buffers 256 4k;
+       proxy_max_temp_file_size 0k;
+       proxy_next_upstream error timeout invalid_header http_502;
+    }
+}
