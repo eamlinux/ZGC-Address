@@ -5,7 +5,7 @@ sudo apt install privoxy
 默认的配置文件地址在 /etc/privoxy/config 目录下。假设本地 1080 端口已经启动（不管是本地 sslocal 还是 v2ray 本地都需要启动）然后要将本地 1080 socks5 代理转成 http 代理，重要的配置只有两行
 
 # 把本地 HTTP 流量转发到本地 1080 SOCKS5 代理
-forward-socks5t / 127.0.0.1:1080 .
+forward-socks5 / 127.0.0.1:1080 .
 # 可选，默认监听本地连接
 listen-address 127.0.0.1:8118
 
