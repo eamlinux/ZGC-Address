@@ -1,0 +1,124 @@
+sudo apt-get install libmnl-dev libelf-dev linux-headers-$(uname -r) build-essential pkg-config dkms xz-utils gnutls-bin
+git clone https://github.com/WireGuard/wireguard-linux-compat.git
+git clone https://github.com/WireGuard/wireguard-tools.git
+
+cd wireguard-linux-compat/src
+sudo make dkms-install
+使用 DKMS 管理内核模块，需要将源码放在/usr/src/<module_name>-<module_version>目录下，并在源码根目录下存在合法的dkms.conf配置文件。
+
+命令dkms-install是将编译后的源码目录拷贝到/usr/src/wireguard中，查看里面的dkms.conf应该是这样：
+
+PACKAGE_NAME="wireguard"
+PACKAGE_VERSION="0.0.20191012-2-g21df5a5-dirty"
+AUTOINSTALL=yes
+
+BUILT_MODULE_NAME="wireguard"
+DEST_MODULE_LOCATION="/kernel/net"
+
+# requires kernel 3.10 or greater:
+BUILD_EXCLUSIVE_KERNEL="^(([^1230]\.)|(3\.1[0-9]))"
+
+其中PACKAGE_VERSION值后面会用到，另外，从WireGuard/src/Makefile可知，更新dkms.conf文件的内容时，会使用git update-index --assume-unchanged dkms.conf更新dkms.conf文件的 Git 索引，因此git status看不到dkms.conf有修改，version.h也一样。
+使用DKMS
+
+上面make dkms-install生成的目录/usr/src/wireguard不带版本号，使用dkms add时也不带版本号：
+
+$ cd /usr/src
+$ sudo dkms add wireguard
+
+Creating symlink /var/lib/dkms/wireguard/0.0.20191012-2-g21df5a5-dirty/source ->
+                 /usr/src/wireguard-0.0.20191012-2-g21df5a5-dirty
+
+DKMS: add completed.
+$ sudo dkms status
+wireguard, 0.0.20191012-2-g21df5a5-dirty: added
+
+DKMS读取wireguard/dkms.conf中的版本信息，并将源码再次拷贝到/usr/src/wireguard-0.0.20191012-2-g21df5a5-dirty目录。
+
+使用dkms build编译特定版本的源码：
+
+$ sudo dkms build wireguard/0.0.20191012-2-g21df5a5-dirty
+
+Kernel preparation unnecessary for this kernel.  Skipping...
+
+Building module:
+cleaning build area...
+make -j1 KERNELRELEASE=5.3.0-1-generic -C /lib/modules/5.3.0-1-generic/build M=/var/lib/dkms/wireguard/0.0.20191012-2-g21df5a5-dirty/build......
+cleaning build area...
+
+DKMS: build completed.
+$ sudo dkms status
+wireguard, 0.0.20191012-2-g21df5a5-dirty, 5.3.0-1-generic, x86_64: built
+
+使用dkms install进行安装：
+
+$ sudo dkms install wireguard/0.0.20191012-2-g21df5a5-dirty
+
+wireguard:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/5.3.0-1-generic/updates/dkms/
+
+depmod...
+
+DKMS: install completed.
+$ sudo dkms status
+wireguard, 0.0.20191012-2-g21df5a5-dirty, 5.3.0-1-generic, x86_64: installed
+
+查看模块是否安装到内核模块目录中:
+
+$ ls /lib/modules/$(uname -r)/updates/dkms/wireguard.ko
+$ ls /var/lib/dkms/wireguard/0.0.20191012-2-g21df5a5-dirty/$(uname -r)/x86_64/module/wireguard.ko
+$ sudo modprobe wireguard
+$ lsmod | grep wireguard
+
+之所以有两个拷贝，是因为所有dkms build的版本都会拷贝到对应的/var/lib/dkms/<module_name>/<module_version>/<kernel_version>/<arch>/module/目录下，而只有dkms install的版本会拷贝到当前运行内核对应的/lib/modules/<kernel_version>/updates/dkms/目录。
+
+如果WireGuard``源码更新了，使用git pull获取到最新代码后，重复上面的步骤，再执行sudo dkms status中看到之前版本的状态回退到built，而最新安装的版本状态变为installed`。
+
+卸载已安装的模块使用dkms uninstall，不需要的旧模块可使用dkms remove移除。如：
+
+$ sudo dkms uninstall wireguard/0.0.20191012-2-g21df5a5-dirty
+$ sudo dkms remove wireguard/0.0.20191012-2-g21df5a5-dirty --all
+$ sudo dkms status
+
+DKMS仅用于内核模块代码的管理，WireGuard需使用的wg和wg-quick两个运行工具：
+
+$ cd wireguard-tools/src
+$ make
+$ sudo cp ./wg /usr/local/bin/
+$ sudo cp ./wg-quick/linux.bash /usr/local/bin/wg-quick
+$ sudo nano /usr/local/bin/wg-quick
+
+把$CONFIG_FILE改成其它路径，如/usr/local/wireguard，把配置文件放在里面即可。
+
+建立启动文件：
+
+$ sudo nano /etc/systemd/system/wg-quick@.service
+
+输入以下内容：
+
+[Unit]
+Description=WireGuard via wg-quick(8) for %I
+After=network-online.target nss-lookup.target
+Wants=network-online.target nss-lookup.target
+Documentation=man:wg-quick(8)
+Documentation=man:wg(8)
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/wg-quick up %i
+ExecStop=/usr/local/bin/wg-quick down %i
+Environment=WG_ENDPOINT_RESOLUTION_RETRIES=infinity
+
+[Install]
+WantedBy=multi-user.target
+
+系统启动加载：
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl start wg-quick@wg0
+$ sudo systemctl enable wg-quick@wg0
