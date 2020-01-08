@@ -2,15 +2,16 @@ sudo apt install build-essential libpcre3 libpcre3-dev zlib1g-dev libgd-dev libp
 
 libc6-dev需要添加sid源
 
-wget -c http://nginx.org/download/nginx-1.17.6.tar.gz
-tar xf nginx-1.17.6.tar.gz
-cd nginx-1.17.6
+wget -c http://nginx.org/download/nginx-1.17.7.tar.gz
+tar xf nginx-1.17.7.tar.gz
+cd nginx-1.17.7
 
 wget https://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz
 wget https://www.zlib.net/zlib-1.2.11.tar.gz
 wget https://www.openssl.org/source/openssl-1.1.1d.tar.gz
 
 git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+patch -p1 < /path/to/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_101504.patch
 
 #!/bin/sh
 ./configure --prefix=/etc/nginx \
@@ -68,11 +69,11 @@ git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
             --with-debug
 			
 			
-			--with-openssl-opt="enable-tls1_3 no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong" \
+--with-openssl-opt="enable-tls1_3 no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong" \
 			
 			
 			
-			sudo nano /etc/systemd/system/nginx.service
+sudo nano /etc/systemd/system/nginx.service
 			
 [Unit]
 Description=nginx - high performance web server
