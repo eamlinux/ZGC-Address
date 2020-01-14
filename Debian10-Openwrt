@@ -1,0 +1,14 @@
+sudo apt install build-essential libncurses5-dev gawk git libssl-dev gettext zlib1g-dev swig unzip time -y
+git clone https://github.com/coolsnowwolf/lede.git
+./scripts/feeds update -a
+./scripts/feeds install -a
+rm -rf ./tmp
+rm -rf .config
+make defconfig
+make menuconfig
+make download V=s
+make kernel_menuconfig
+make package/kernel/linux/compile V=s
+make tools/install -j4
+make toolchain/install -j4
+make -j4 V=s
