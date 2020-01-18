@@ -13,3 +13,8 @@ make defconfig
 make prereq
 make menuconfig
 make tools/install && make toolchain/install
+
+
+undefined reference to `major'
+
+#include <sys/sysmacros.h>
