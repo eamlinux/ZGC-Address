@@ -19,3 +19,21 @@ sudo cp ./wg-quick/linux.bash /usr/local/bin/wg-quick
 sudo nano /usr/local/bin/wg-quick
 
 
+sudo nano /etc/systemd/system/wg-quick@.service
+
+[Unit]
+Description=WireGuard via wg-quick(8) for %I
+After=network-online.target nss-lookup.target
+Wants=network-online.target nss-lookup.target
+Documentation=man:wg-quick(8)
+Documentation=man:wg(8)
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/wg-quick up %i
+ExecStop=/usr/local/bin/wg-quick down %i
+Environment=WG_QUICK_USERSPACE_IMPLEMENTATION=wireguard-go WG_SUDO=1
+
+[Install]
+WantedBy=multi-user.target
