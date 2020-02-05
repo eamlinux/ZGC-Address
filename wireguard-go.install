@@ -1,5 +1,15 @@
 git clone https://github.com/WireGuard/wireguard-tools.git
 wget -c https://dl.google.com/go/go1.13.7.linux-amd64.tar.gz
+git clone https://github.com/WireGuard/wireguard-go.git
+
+tar xf go1.13.7.linux-amd64.tar.gz
+sudo mv go /usr/local/
+sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
+
+cd wireguard-go
+make
+strip -s wireguard-go
+sudo mv wireguard-go /usr/local/bin/
 
 cd wireguard-tools/src
 make
@@ -7,4 +17,5 @@ strip -s wg
 sudo cp ./wg /usr/local/bin/
 sudo cp ./wg-quick/linux.bash /usr/local/bin/wg-quick
 sudo nano /usr/local/bin/wg-quick
+
 
