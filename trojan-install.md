@@ -6,6 +6,7 @@ wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.14.1/trojan-1.
 tar xf trojan-1.14.1-linux-amd64.tar.xz
 cd trojan
 sudo mv trojan /usr/local/bin/
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
 ```
 ## 生成trojan服务
 ```
