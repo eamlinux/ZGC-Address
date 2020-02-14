@@ -10,6 +10,8 @@ wget -O geosite.dat https://github.com/v2ray/domain-list-community/releases/late
 wget -O geoip.dat https://github.com/v2ray/geoip/releases/latest/download/geoip.dat
 cd ..
 sudo mv v2ray /opt
+sudo rm /etc/localtime
+sudo ln -snf /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/socat
 sudo systemctl stop nginx
 sudo ufw allow ssh
