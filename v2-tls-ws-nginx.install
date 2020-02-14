@@ -1,0 +1,185 @@
+sudo apt update
+sudo apt upgrade
+sudo apt install libsodium-dev wget unzip socat ufw curl nginx-full
+mkdir v2ray
+cd v2ray
+wget -c https://github.com/v2ray/v2ray-core/releases/download/v4.22.1/v2ray-linux-64.zip
+unzip v2ray-linux-64.zip
+rm v2ray-linux-64.zip
+wget -O geosite.dat https://github.com/v2ray/domain-list-community/releases/latest/download/dlc.dat
+wget -O geoip.dat https://github.com/v2ray/geoip/releases/latest/download/geoip.dat
+cd ..
+sudo mv v2ray /opt
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/socat
+sudo systemctl stop nginx
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+sudo ufw default deny
+sudo ufw reload
+sudo useradd -r -m -s /bin/bash acme
+sudo su -l acme
+curl  https://get.acme.sh | sh
+exit
+sudo su -l acme
+acme.sh --issue -d xxx.com --keylength ec-256 --standalone
+mkdir cert
+acme.sh --install-cert -d xxx.com --key-file /home/acme/cert/private.key --fullchain-file /home/acme/cert/certificate.crt --ecc
+acme.sh --upgrade --auto-upgrade
+exit
+sudo cp /opt/v2ray/systemd/v2ray.service /etc/systemd/system/
+sudo systemctl enable v2ray
+sudo nano /etc/systemd/system/v2ray.service
+-------------------------------------------
+[Unit]
+Description=V2Ray Service
+After=network.target
+Wants=network.target
+
+[Service]
+User=nobody
+Type=simple
+PIDFile=/opt/v2ray/v2ray.pid
+ExecStart=/opt/v2ray/v2ray -config /opt/v2ray/config.json
+Restart=on-failure
+RestartPreventExitStatus=23
+
+[Install]
+WantedBy=multi-user.target
+---------------------------------------------
+cat /proc/sys/kernel/random/uuid
+sudo nano /opt/v2ray/config.json
+---------------------------------
+{
+  "inbounds": [
+    {
+      "port": 10086,
+      "listen": "127.0.0.1",
+      "tag": "vmess-in",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "711fc231-23eb-481d-943b-21352264ae8f",
+            "alterId": 64
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/login"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": { },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": { },
+      "tag": "blocked"
+    }
+  ],
+  "dns": {
+    "servers": [
+      "https+local://1.1.1.1/dns-query",
+        "1.1.1.1",
+        "1.0.0.1",
+        "8.8.8.8",
+        "8.8.4.4",
+        "localhost"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "vmess-in"
+        ],
+        "outboundTag": "direct"
+      }
+    ]
+  }
+ }
+ -----------------------------------------
+sudo systemctl daemon-reload
+sudo systemctl start v2ray
+
+sudo nano /etc/nginx/conf.d/www.conf
+------------------------------------
+server {
+    listen 80;
+    listen [::]:80;
+    server_name xxx.com;
+    return 301 https://xxx.com$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name xxx.com;
+    root /var/www/html/mikutap;
+
+    # SSL
+    ssl_certificate         /home/acme/.acme.sh/xxx.com_ecc/xxx.com.cer;
+    ssl_certificate_key     /home/acme/.acme.sh/xxx.com_ecc/xxx.com.key;
+    ssl_trusted_certificate /home/acme/.acme.sh/xxx.com_ecc/fullchain.cer;
+
+#   ssl_ecdh_curve X25519:P-256:P-384;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK;
+    ssl_prefer_server_ciphers on;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets on;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 8.8.8.8 valid=300s;
+    resolver_timeout 10s;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+#   add_header Strict-Transport-Security "max-age=63072000" always;
+
+    location / {
+      index  index.html index.php;
+#     http2_push /style.css;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf|ico)$ {
+      expires 30d;
+    }
+
+    location ~ .*\.(js|css)?$ {
+      expires 15d;
+    }
+
+ location /login {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:10086;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $http_host;
+	    proxy_set_header X-Real-IP $remote_addr;
+	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+   }
+
+}
+--------------------------------------------------------------------------
+sudo systemctl restart nginx
