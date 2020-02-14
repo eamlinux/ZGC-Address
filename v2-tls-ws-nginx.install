@@ -184,4 +184,7 @@ server {
 
 }
 --------------------------------------------------------------------------
+cd /var/www/html/
+sudo git clone https://github.com/HFIProgramming/mikutap.git
+sudo chown -R www-data. ./mikutap
 sudo systemctl restart nginx
