@@ -78,3 +78,12 @@ xxx.com {
     header_upstream -Origin
   }
 }
+
+
+
+
+forwardproxy {
+basicauth user password
+hide_ip
+hide_via
+}
