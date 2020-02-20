@@ -2,6 +2,7 @@ wget -c https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
 tar xf go1.13.8.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 sudo apt install binutils -y
 sudo apt install git -y
 git clone https://github.com/caddyserver/caddy.git
