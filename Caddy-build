@@ -87,3 +87,27 @@ basicauth user password
 hide_ip
 hide_via
 }
+
+
+#简化
+
+[Unit]
+Description=Caddy HTTP/2 web server
+Documentation=https://caddyserver.com/docs
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-abnormal
+User=www-data
+Group=www-data
+Environment=CADDYPATH=/etc/ssl/caddy
+EnvironmentFile=-/etc/caddy/envfile
+ExecStart=/usr/local/bin/caddy -log stdout -log-timestamps=false -agree=true -conf=/opt/caddy/Caddyfile -root=/var/tmp
+ExecReload=/bin/kill -USR1 $MAINPID
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=5s
+
+[Install]
+WantedBy=multi-user.target
