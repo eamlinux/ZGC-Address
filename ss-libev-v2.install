@@ -1,0 +1,19 @@
+sudo apt -t buster-backports install shadowsocks-libev
+wget -c https://github.com/shadowsocks/v2ray-plugin/releases/download/v1.3.0/v2ray-plugin-linux-amd64-v1.3.0.tar.gz
+tar xf v2ray-plugin-linux-amd64-v1.3.0.tar.gz
+sudo mv v2ray-plugin-linux-amd64 /usr/local/bin/
+sudo chown root:root /usr/local/bin/v2ray-plugin-linux-amd64
+sudo chmod 0755 /usr/local/bin/v2ray-plugin-linux-amd64
+
+sudo nano /etc/shadowsocks-libev/config.json
+
+{
+    "server":"127.0.0.1",
+    "mode":"tcp_and_udp",
+    "server_port":8443,
+    "password":"Rocky5209",
+    "timeout":60,
+    "method":"xchacha20-ietf-poly1305",
+    "plugin":"/usr/local/bin/v2ray-plugin_linux_amd64",
+    "plugin_opts":"server;fast-open;path=/log;loglevel=none"
+}
