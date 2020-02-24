@@ -1,0 +1,57 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name xxx.com;
+    return 301 https://xxx.com$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name xxx.com;
+    root html;
+
+    # SSL
+    ssl_certificate         /home/acme/.acme.sh/xxx.com_ecc/xxx.com.cer;
+    ssl_certificate_key     /home/acme/.acme.sh/xxx.com_ecc/xxx.com.key;
+    ssl_trusted_certificate /home/acme/.acme.sh/xxx.com_ecc/fullchain.cer;
+
+    ssl_ecdh_curve X25519:P-256:P-384;
+    ssl_protocols TLSv1.3;
+    ssl_ciphers TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK;
+    ssl_prefer_server_ciphers on;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets on;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 8.8.8.8 valid=300s;
+    resolver_timeout 10s;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    location / {
+      root /var/www/html/mikutap;
+      index  index.html index.php;
+    }
+
+ location /xxx {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:10000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+   }
+}
