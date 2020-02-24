@@ -11,9 +11,9 @@ sudo nano /etc/shadowsocks-libev/config.json
     "server":"127.0.0.1",
     "mode":"tcp_and_udp",
     "server_port":8443,
-    "password":"Rocky5209",
+    "password":"password",
     "timeout":60,
-    "method":"xchacha20-ietf-poly1305",
+    "method":"aes-256-gcm",
     "plugin":"/usr/local/bin/v2ray-plugin_linux_amd64",
     "plugin_opts":"server;fast-open;path=/log;loglevel=none"
 }
