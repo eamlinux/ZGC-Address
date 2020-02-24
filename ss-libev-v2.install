@@ -17,3 +17,74 @@ sudo nano /etc/shadowsocks-libev/config.json
     "plugin":"/usr/local/bin/v2ray-plugin_linux_amd64",
     "plugin_opts":"server;fast-open;path=/log;loglevel=none"
 }
+
+
+#### SSM
+
+sudo nano /etc/systemd/system/ssm.service
+
+[Unit]
+Description=Shadowsocks-libev Default Server Service
+Documentation=man:shadowsocks-libev(8)
+After=network-online.target
+
+[Service]
+Type=simple
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+User=eamlinux
+LimitNOFILE=32768
+ExecStart=/usr/bin/ss-manager -c /etc/shadowsocks-libev/config.json
+
+[Install]
+WantedBy=multi-user.target
+
+
+{
+    "server":["::1", "127.0.0.1"],
+    "mode":"tcp_and_udp",
+    "local_port": 1080,
+    "port_password": {
+	"10000": "password",
+	"10010": "password",
+	"10020": "password",
+	"10030": "password",
+	"10040": "password",
+	"10050": "password",
+	"10060": "password",
+	"10070": "password",
+	"10086": "password"
+    },
+    "timeout": 60,
+    "method":"aes-256-gcm",
+    "plugin":"/usr/local/bin/v2ray-plugin_linux_amd64",
+    "plugin_opts":"server;fast-open;path=/mirrors;loglevel=none",
+    "reuse_port": true
+}
+
+sudo nano /opt/caddy/Caddyfile
+
+xxx.com {
+  gzip
+  root /var/www/html
+  tls {
+  protocols tls1.3
+  alpn h2
+  }
+  proxy /mirrors localhost:10000 localhost:10010 localhost:10020 localhost:10030 localhost:10040 localhost:10050 localhost:10060 localhost:10070 localhost:10080 {
+    policy random
+    transparent
+    websocket
+    header_upstream -Origin
+  }
+}
+
+
+
+
+所有http 请求跳转到一个域名
+
+redir 301 {
+  if {>X-Forwarded-Proto} is http
+  /  https://{host}{uri}
+}
