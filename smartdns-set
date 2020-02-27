@@ -1,0 +1,7 @@
+# -group us
+speed-check-mode none
+server-https https://cloudflare-dns.com/dns-query
+# server-https https://edns.233py.com/dns-query
+# server-https https://sdns.233py.com/dns-query
+server-https https://dns.google/dns-query
+server-https https://doh.opendns.com/dns-query
