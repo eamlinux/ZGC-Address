@@ -5,3 +5,6 @@ server-https https://cloudflare-dns.com/dns-query
 # server-https https://sdns.233py.com/dns-query
 server-https https://dns.google/dns-query
 server-https https://doh.opendns.com/dns-query
+
+LuCI 中定位至「网络」 - 「DHCP/DNS」在其「基本设置」-「DNS 转发」 处填写127.0.0.1#6053
+LuCI 中定位至「网络」 - 「DHCP/DNS」在其「HOSTS和解析文件」中勾选 「忽略解析文件」
