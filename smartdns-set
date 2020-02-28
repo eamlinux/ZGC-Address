@@ -8,3 +8,12 @@ server-https https://doh.opendns.com/dns-query
 
 LuCI 中定位至「网络」 - 「DHCP/DNS」在其「基本设置」-「DNS 转发」 处填写127.0.0.1#6053
 LuCI 中定位至「网络」 - 「DHCP/DNS」在其「HOSTS和解析文件」中勾选 「忽略解析文件」
+
+
+SmartDNS 本地端口6053 添加国内和国外DNS（tls） 把国外DNS分为一组 开启第二DNS服务器 端口设为5335 跳过cache 国内dns开启过滤黑名单IP
+chinadns-ng 本地端口5353 国内外dns分别指向smartdns的6053和5335
+SSR使用绕过大陆IP模式 用5335的DNS服务 强制wan ip走代理那里添加国外dns IP
+dnsmasq转发到chinadns-ng
+经测试 国内域名获取得IP都是延迟最低的
+国外域名无论是特殊的还是正常的 获得的IP对代理节点优化
+国外正常域名在国内有IP的 获取对应国内IP 如intel.com
