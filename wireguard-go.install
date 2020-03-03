@@ -1,10 +1,10 @@
 sudo apt install build-essential wget nano git binutils qrencode resolvconf
 
 git clone https://github.com/WireGuard/wireguard-tools.git
-wget -c https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
+wget -c https://dl.google.com/go/go1.14.linux-amd64.tar.gz
 git clone https://github.com/WireGuard/wireguard-go.git
 
-tar xf go1.13.8.linux-amd64.tar.gz
+tar xf go1.14.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 
