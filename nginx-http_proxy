@@ -2,9 +2,9 @@ sudo apt install build-essential libpcre3 libpcre3-dev zlib1g-dev libgd-dev libp
 
 libc6-dev需要添加sid源
 
-wget -c http://nginx.org/download/nginx-1.17.7.tar.gz
-tar xf nginx-1.17.7.tar.gz
-cd nginx-1.17.7
+wget -c http://nginx.org/download/nginx-1.17.9.tar.gz
+tar xf nginx-1.17.9.tar.gz
+cd nginx-1.17.9
 
 wget https://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz
 wget https://www.zlib.net/zlib-1.2.11.tar.gz
@@ -18,7 +18,7 @@ patch -p1 < /path/to/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1
             --sbin-path=/usr/local/bin/nginx \
             --modules-path=/etc/nginx/modules \
             --conf-path=/etc/nginx/nginx.conf \
-            --error-log-path=/var/log/nginx/error.log \
+            --error-log-path=/var/log/nginx_error.log \
             --pid-path=/var/run/nginx.pid \
             --lock-path=/var/run/nginx.lock \
             --user=www-data \
@@ -83,7 +83,7 @@ Wants=network-online.target
 
 [Service]
 Type=forking
-PIDFile=/var/run/nginx.pid
+# PIDFile=/var/run/nginx.pid
 ExecStartPre=/usr/local/bin/nginx -t -c /etc/nginx/nginx.conf
 ExecStart=/usr/local/bin/nginx -c /etc/nginx/nginx.conf
 ExecReload=/bin/kill -s HUP $MAINPID
