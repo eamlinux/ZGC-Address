@@ -1,4 +1,4 @@
-sudo apt-get install libmnl-dev libelf-dev linux-headers-$(uname -r) build-essential pkg-config dkms xz-utils gnutls-bin
+sudo apt-get install libmnl-dev libelf-dev linux-headers-$(uname -r) build-essential pkg-config dkms xz-utils gnutls-bin qrencode resolvconf
 git clone https://github.com/WireGuard/wireguard-linux-compat.git
 git clone https://github.com/WireGuard/wireguard-tools.git
 
@@ -122,3 +122,6 @@ WantedBy=multi-user.target
 $ sudo systemctl daemon-reload
 $ sudo systemctl start wg-quick@wg0
 $ sudo systemctl enable wg-quick@wg0
+
+
+cat client.conf | qrencode -o - -t UTF8
