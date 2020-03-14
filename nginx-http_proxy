@@ -80,7 +80,7 @@ patch -p1 < /path/to/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1
             --sbin-path=/usr/local/bin/nginx \
             --modules-path=/etc/nginx/modules \
             --conf-path=/etc/nginx/nginx.conf \
-            --error-log-path=/var/log/nginx_error.log \
+            --error-log-path=/var/log/nginx/error.log \
             --pid-path=/var/run/nginx.pid \
             --lock-path=/var/run/nginx.lock \
             --user=www-data \
