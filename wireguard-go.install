@@ -44,3 +44,6 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 sudo systemctl start wg-quick@wg0
 sudo systemctl enable wg-quick@wg0
+
+
+cat client.conf | qrencode -o - -t UTF8
