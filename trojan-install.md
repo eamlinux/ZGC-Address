@@ -60,7 +60,7 @@ exit
 sudo mkdir -p /opt/trojan
 sudo nano /opt/trojan/server.json
 ```
-#### 1.13版配置内容，根据你的实际情况更改
+#### 版配置内容，根据你的实际情况更改
 ```json
 {
     "run_type": "server",
@@ -69,67 +69,18 @@ sudo nano /opt/trojan/server.json
     "remote_addr": "127.0.0.1",
     "remote_port": 80,
     "password": [
-        "密码1",
-        "密码2"
+        "passwd1",
+        "passwd2"
     ],
     "log_level": 1,
     "ssl": {
-        "cert": "/home/acme/cert/certificate.crt",
-        "key": "/home/acme/cert/private.key",
+        "cert": "/etc/ssl/xxx.crt",
+        "key": "/etc/ssl/xxx.key",
         "key_password": "",
-        "cipher": "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256",
+        "cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
         "prefer_server_cipher": true,
         "alpn": [
-            "http/2",
-            "http/1.1"
-        ],
-        "reuse_session": true,
-        "session_ticket": false,
-        "session_timeout": 600,
-        "plain_http_response": "",
-        "curves": "",
-        "dhparam": ""
-    },
-    "tcp": {
-        "prefer_ipv4": false,
-        "no_delay": true,
-        "keep_alive": true,
-        "fast_open": false,
-        "fast_open_qlen": 20
-    },
-    "mysql": {
-        "enabled": false,
-        "server_addr": "127.0.0.1",
-        "server_port": 3306,
-        "database": "trojan",
-        "username": "trojan",
-        "password": ""
-    }
-}
-```
-## 1.14版版配置内容，windows客户端配置见最后。
-```json
-{
-    "run_type": "server",
-    "local_addr": "0.0.0.0",
-    "local_port": 443,
-    "remote_addr": "127.0.0.1",
-    "remote_port": 80,
-    "password": [
-        "密码1",
-        "密码2"
-    ],
-    "log_level": 1,
-    "ssl": {
-        "cert": "/home/acme/cert/certificate.crt",
-        "key": "/home/acme/cert/private.key",
-        "key_password": "",
-        "cipher": "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256",
-        "cipher_tls13":"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
-        "prefer_server_cipher": true,
-        "alpn": [
-            "http/2",
-            "http/1.1"
+            "h2"
         ],
         "reuse_session": true,
         "session_ticket": false,
@@ -168,7 +119,7 @@ sudo nano /etc/nginx/sites-available/xxx
 ///内容如下：
 
 server {
-    listen 127.0.0.1:80 default_server;
+    listen 127.0.0.1:80 default_server http2;
     server_name 你的域名;
     location / {
         proxy_pass https://www.ietf.org;
@@ -176,14 +127,14 @@ server {
 }
 
 server {
-    listen 127.0.0.1:80;
+    listen 127.0.0.1:80 http2;
     server_name 主机外网IP;
     return 301 https://你的域名$request_uri;
 }
 
 server {
-    listen 0.0.0.0:80;
-    listen [::]:80;
+    listen 0.0.0.0:80 http2;
+    listen [::]:80 http2;
     server_name _;
     return 301 https://你的域名$request_uri;
 }
@@ -211,12 +162,10 @@ sudo systemctl start trojan
         "verify": true,
         "verify_hostname": true,
         "cert": "",
-        "cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:RSA-AES128-GCM-SHA256:RSA-AES256-GCM-SHA384:RSA-AES128-SHA:RSA-AES256-SHA:RSA-3DES-EDE-SHA",
         "cipher_tls13":"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
         "sni": "",
         "alpn": [
-            "h2",
-            "http/1.1"
+            "h2"
         ],
         "reuse_session": true,
         "session_ticket": false,
