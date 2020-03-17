@@ -133,8 +133,8 @@ server {
 }
 
 server {
-    listen 0.0.0.0:80 http2;
-    listen [::]:80 http2;
+    listen 0.0.0.0:80;
+    listen [::]:80;
     server_name _;
     return 301 https://你的域名$request_uri;
 }
