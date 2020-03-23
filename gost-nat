@@ -88,3 +88,64 @@ TLS 加密隧道
     gost -L=mtls://:443/127.0.0.1:843
 
 落地节点的 SSR 进程监听 127.0.0.1:843，然后 gost 监听 443 端口转发到 SSR 上即可。
+
+中转机器
+
+    version: "3"
+
+    services:
+      tls:
+        image: ginuerzh/gost
+        restart: always
+        network_mode: "host"
+        command:
+          - "-L=tcp://:443"
+          - "-L=udp://:443"
+          - "-F=forward+mtls://1.2.3.4:443?mbind=true"
+        logging:
+          options:
+            max-size: "10m"
+            max-file: "3"
+
+落地节点
+
+    version: "3"
+
+    services:
+      ssr:
+        image: fanvinga/docker-ssrmu
+        restart: always
+        network_mode: "bridge"
+        environment:
+          API_INTERFACE: "modwebapi"
+          WEBAPI_URL: "****"
+          WEBAPI_TOKEN: "***"
+          MU_SUFFIX: "***"
+          FAST_OPEN: "true"
+          SPEEDTEST: 6
+          NODE_ID: 1
+          TZ: "Asia/Hong_Kong"
+        logging:
+          options:
+            max-size: "10m"
+            max-file: "3"
+
+      gost:
+        depends_on:
+          - ssr
+        image: ginuerzh/gost
+        restart: always
+        network_mode: "bridge"
+        links:
+          - ssr
+        ports:
+          - "443:443/tcp"
+          - "443:443/udp"
+        command:
+          - "-L=mtls://:443/ssr:443"
+        logging:
+          options:
+            max-size: "10m"
+            max-file: "3"
+
+这里利用 Docker 的桥接网络，没有将 SSR 进程的端口暴露给主机，而是利用桥接直接将流量转发到 SSR 的容器内。
