@@ -1,3 +1,6 @@
+wget -c https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
+tar xf go1.14.1.linux-amd64.tar.gz
+
 git clone https://github.com/v2ray/v2ray-core.git
 cd v2ray-core/main
 env CGO_ENABLED=0 go build -o $HOME/v2ray -ldflags "-s -w"
@@ -5,4 +8,4 @@ env CGO_ENABLED=0 go build -o $HOME/v2ray -ldflags "-s -w"
 cd v2ray-core/infra/control/main
 env CGO_ENABLED=0 go build -o $HOME/v2ctl -tags confonly -ldflags "-s -w"
 
-sudo mv ~/v2ray ~/v2ctl /usr/local/bin/
+sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
