@@ -9,7 +9,7 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/gost
 sudo nano /etc/systemd/system/gost.service
 -------------------------------------------------------------------------
 [Unit]
-Description=SSR Proxy
+Description=Gost Tunnel
 After=network-online.target
 
 [Service]
