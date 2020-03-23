@@ -1,0 +1,90 @@
+git clone https://github.com/ginuerzh/gost.git
+cd gost/cmd/gost
+env CGO_ENABLED=0 go build -o $HOME/gostd -ldflags "-s -w"
+sudo mv $HOME/gostd /usr/local/bin/gost
+sudo chown root:root /usr/local/bin/gost
+sudo chmod 0755 /usr/local/bin/gost
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/gost
+
+sudo nano /etc/systemd/system/gost.service
+-------------------------------------------------------------------------
+[Unit]
+Description=SSR Proxy
+After=network-online.target
+
+[Service]
+Type=simple
+User=nobody
+ExecStart=/usr/local/bin/gost -L relay+mtls://:12345/127.0.0.1:443
+## gost后面参数仅供参考
+
+[Install]
+WantedBy=multi-user.target
+---------------------------------------------------------------------------
+
+sudo systemctl daemon-reload
+sudo systemctl enable gost
+sudo ssytemctl start gost
+
+relay+mtls 似乎性能有点问题，速度上不去，可能多路复用有点 bug，建议直接用 relay+tls 或者用 relay+mwss。
+
+
+国内中转机器
+
+   gost -L udp://:1053 -L tcp://:1053 -F relay+mtls://1.2.3.4:12345
+
+监听本机 1053 端口的 TCP、UDP 连接，转发到落地机器的 12345 端口。
+
+落地机器
+
+   gost -L relay+mtls://:12345/127.0.0.1:443
+
+监听本机的 12345 端口，接收转发过来的连接，再转给本地的 443 端口。
+
+不加密直接转发
+
+有些节点已经换成了 V2Ray+WS+TLS 的方案，已经有了一层 TLS 加密，这时就不需要再在隧道上加一层来套娃了，徒增性能损耗，可以直接端口转发。GOST 也可以支持直接转发，这样就可以省去 iptables 或者 socat 的工作。
+
+    gost -L=tcp://:443/1.2.3.4:443 -L=udp://:443/1.2.3.4:443
+
+很简单，直接监听本机 443 端口，转发到落地节点 1.2.3.4 的 443 端口上。这种节点后端个人比较习惯生产环境都用 docker-compose 部署，便于更新和管理，可以这样写。
+
+    version: "3"
+
+    services:
+      redirect:
+        image: ginuerzh/gost
+        restart: always
+        network_mode: "host"
+        command:
+          - "-L=tcp://:443/1.2.3.4:443"
+          - "-L=udp://:443/1.2.3.4:443"
+        logging:
+          options:
+            max-size: "10m"
+            max-file: "3"
+
+然后 docker-compose up -d 即可启动。
+
+docker-compose 的安装在 Ubuntu、Debian 上可以这样操作。
+
+    apt update && apt upgrade
+    apt install python3-pip
+    pip3 install -U pip
+    pip3 install docker-compose
+
+TLS 加密隧道
+
+目前网上也有一些 GOST 加密隧道的教程，但大多都有问题，有些人直接使用 GOST 的代理链路功能来转发，这样会导致落地节点上也多开了一个 GOST 代理，而且没有任何验证，可以直接起一个 GOST 客户端连上去，有一定风险。其实 GOST 的文档里提到了加密隧道的搭建方法，即利用 forward 协议。
+
+国内机器
+
+    gost -L=tcp://:443 -L=udp://:443 -F=forward+mtls://1.2.3.4:443?mbind=true
+
+监听 443 端口并利用 mtls 传输到落地节点 1.2.3.4 的 443 端口，?mbind=true 启用多路复用，不写也没什么关系。
+
+落地节点
+
+    gost -L=mtls://:443/127.0.0.1:843
+
+落地节点的 SSR 进程监听 127.0.0.1:843，然后 gost 监听 443 端口转发到 SSR 上即可。
