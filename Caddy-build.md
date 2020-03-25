@@ -136,7 +136,7 @@ hide_via
 }
 ```
 
-###### Debian  V1版
+##### Debian  V1版
 ```
 [Unit]
 Description=Caddy HTTP/2 web server
@@ -218,4 +218,8 @@ header {
     # header_up Upgrade {http.request.header.Upgrade}
   }
 }
+```
+#### 创建用户caddy
+```
+sudo useradd -r -m -s /sbin/nologin caddy
 ```
