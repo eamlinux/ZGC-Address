@@ -1,12 +1,14 @@
+## Go环境
+```
 wget -c https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
 tar xf go1.14.1.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 sudo apt install binutils -y
 sudo apt install git -y
-
+```
 ### Caddy V1
-
+```
 git clone -b v1 https://github.com/caddyserver/caddy.git
 nano caddy/caddy/caddymain/run.go
 
@@ -21,9 +23,9 @@ sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 sudo nano /etc/systemd/system/caddy.service
-
-#### Archlinux
-
+```
+#### Archlinux V1
+```
 [Unit]
 Description=Caddy HTTP/2 web server
 Documentation=https://caddyserver.com/docs
@@ -64,11 +66,45 @@ LockPersonality=true
 
 [Install]
 WantedBy=multi-user.target
+```
+
+#### Archlinux V2
+```
+[Unit]
+Description=Caddy Web Server
+Documentation=https://caddyserver.com/docs/
+After=network.target
+
+[Service]
+User=http
+Group=http
+ExecStart=/usr/bin/caddy run --config /etc/caddy/Caddyfile --resume --environ
+ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+
+# Hardening options
+PrivateTmp=true
+ProtectSystem=strict
+PrivateDevices=true
+ProtectHome=true
+ReadWritePaths=/var/lib/caddy /var/log/caddy
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
 
 
+[Install]
+WantedBy=multi-user.target
+```
+```sudo nano /opt/caddy/Caddyfile```
 #### Caddy V1
-sudo nano /opt/caddy/Caddyfile
-
+```
 xxx.com {
   gzip
   root /var/www/html/xxx
@@ -89,18 +125,19 @@ xxx.com {
     header_upstream -Origin
   }
 }
-
+```
 
 #### 转发配置
+```
 forwardproxy {
 basicauth user password
 hide_ip
 hide_via
 }
-
+```
 
 ###### Debian  V1版
-
+```
 [Unit]
 Description=Caddy HTTP/2 web server
 Documentation=https://caddyserver.com/docs
@@ -123,11 +160,11 @@ LimitNPROC=512
 
 [Install]
 WantedBy=multi-user.target
-
+```
 
 
 ##### Debian V2.0版
-
+```
 [Unit]
 Description=Caddy Web Server
 Documentation=https://caddyserver.com/docs/
@@ -147,11 +184,11 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
-
+```
 
 
 #### Caddy V2.0 Caddyfile
-
+```
 xxx.com {
 encode zstd gzip
 root * /var/www/html
@@ -181,3 +218,4 @@ header {
     # header_up Upgrade {http.request.header.Upgrade}
   }
 }
+```
