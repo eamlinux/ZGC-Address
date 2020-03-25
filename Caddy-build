@@ -4,20 +4,25 @@ sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 sudo apt install binutils -y
 sudo apt install git -y
-git clone https://github.com/caddyserver/caddy.git
+
+### Caddy V1
+
+git clone -b v1 https://github.com/caddyserver/caddy.git
 nano caddy/caddy/caddymain/run.go
 
 _ "github.com/caddyserver/forwardproxy"
 
 cd caddy/caddy
 go build .
-##  env CGO_ENABLED=0 go build -o $HOME/caddy -ldflags "-s -w"
+##  env CGO_ENABLED=0 go build -o ./caddy -ldflags "-s -w"
 strip -s caddy
 sudo mv caddy /usr/local/bin/
 sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 sudo nano /etc/systemd/system/caddy.service
+
+#### Archlinux
 
 [Unit]
 Description=Caddy HTTP/2 web server
@@ -61,28 +66,32 @@ LockPersonality=true
 WantedBy=multi-user.target
 
 
+#### Caddy V1
 sudo nano /opt/caddy/Caddyfile
 
 xxx.com {
-  root /var/www/html/mikutap
+  gzip
+  root /var/www/html/xxx
   tls xxx@xxx.com {
   protocols tls1.3
+  curves x25519
   alpn h2
   }
-  proxy /off localhost:9443 {
-    #header_upstream Host {host}
-    #header_upstream X-Real-IP {remote}
-    #header_upstream X-Forwarded-For {remote}
-    #header_upstream X-Forwarded-Port {server_port}
-    #header_upstream X-Forwarded-Proto {scheme}
+  header / {
+    Strict-Transport-Security "max-age=31536000;"
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+  }
+  proxy /xxx localhost:10086 {
+    transparent
     websocket
     header_upstream -Origin
   }
 }
 
 
-
-
+#### 转发配置
 forwardproxy {
 basicauth user password
 hide_ip
@@ -90,7 +99,7 @@ hide_via
 }
 
 
-#简化
+###### Debian  V1版
 
 [Unit]
 Description=Caddy HTTP/2 web server
@@ -117,7 +126,7 @@ WantedBy=multi-user.target
 
 
 
-##### 2.0版
+##### Debian V2.0版
 
 [Unit]
 Description=Caddy Web Server
@@ -138,3 +147,37 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
+
+
+
+#### Caddy V2.0 Caddyfile
+
+xxx.com {
+encode zstd gzip
+root * /var/www/html
+file_server browse
+
+tls xxx@xxx.com {
+    protocols  tls1.3
+    curves x25519
+    alpn h2
+}
+
+header {
+        Strict-Transport-Security max-age=31536000;
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer-when-downgrade
+}
+
+ reverse_proxy /api localhost:10086 {
+    # header_up Host {http.request.host}
+     header_up Host {http.reverse_proxy.upstream.hostport}
+     header_up X-Real-IP {http.request.remote}
+     header_up X-Forwarded-For {http.request.remote}
+     header_up X-Forwarded-Port {http.request.port}
+     header_up X-Forwarded-Proto {http.request.scheme}
+    # header_up Connection {http.request.header.Connection}
+    # header_up Upgrade {http.request.header.Upgrade}
+  }
+}
