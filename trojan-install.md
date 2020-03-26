@@ -2,8 +2,8 @@
 
 ## 安装trojan
 ```
-wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.14.1/trojan-1.14.1-linux-amd64.tar.xz
-tar xf trojan-1.14.1-linux-amd64.tar.xz
+wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.15.1/trojan-1.15.1-linux-amd64.tar.xz
+tar xf trojan-1.15.1-linux-amd64.tar.xz
 cd trojan
 sudo mv trojan /usr/local/bin/
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
@@ -23,6 +23,8 @@ User=acme
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 ExecStart=/usr/local/bin/trojan /opt/trojan/server.json
 ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=1s
 
 [Install]
 WantedBy=multi-user.target
