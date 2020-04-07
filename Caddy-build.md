@@ -195,7 +195,7 @@ root * /var/www/html
 file_server browse
 
 tls xxx@xxx.com {
-    protocols  tls1.3
+    protocols tls1.3
     curves x25519
     alpn h2
 }
@@ -207,15 +207,15 @@ header {
         Referrer-Policy no-referrer-when-downgrade
 }
 
- reverse_proxy /api localhost:10086 {
+reverse_proxy /api localhost:10086 {
     # header_up Host {http.request.host}
      header_up Host {http.reverse_proxy.upstream.hostport}
      header_up X-Real-IP {http.request.remote}
      header_up X-Forwarded-For {http.request.remote}
      header_up X-Forwarded-Port {http.request.port}
      header_up X-Forwarded-Proto {http.request.scheme}
-    # header_up Connection {http.request.header.Connection}
-    # header_up Upgrade {http.request.header.Upgrade}
+     header_up Connection {http.request.header.Connection}
+     header_up Upgrade {http.request.header.Upgrade}
   }
 }
 ```
