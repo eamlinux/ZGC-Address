@@ -1,0 +1,5 @@
+## Upgrade the Kernel on CentOS 8
+
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+dnf install https://mirrors.ustc.edu.cn/elrepo/kernel/el8/x86_64/RPMS/elrepo-release-8.1-1.el8.elrepo.noarch.rpm
+dnf --enablerepo=elrepo-kernel install kernel-ml
