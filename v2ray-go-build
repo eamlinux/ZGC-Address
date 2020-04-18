@@ -1,4 +1,4 @@
-wget -c https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz
+wget -c https://dl.google.com/go/go1.14.2.linux-amd64.tar.gz
 tar xf go1.14.1.linux-amd64.tar.gz
 
 git clone https://github.com/v2ray/v2ray-core.git
