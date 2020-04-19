@@ -182,6 +182,8 @@ http {
         types_hash_max_size 2048;
         # server_tokens off;
 
+        access_log off;
+        error_log /dev/null;
         # server_names_hash_bucket_size 64;
         # server_name_in_redirect off;
 
