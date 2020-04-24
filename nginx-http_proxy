@@ -8,7 +8,7 @@ cd nginx-1.18.0
 
 wget https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz
 wget https://www.zlib.net/zlib-1.2.11.tar.gz
-wget https://www.openssl.org/source/openssl-1.1.1f.tar.gz
+wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz
 
 git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
 patch -p1 < /path/to/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_101504.patch
@@ -63,7 +63,7 @@ patch -p1 < /path/to/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1
             --with-pcre=./pcre-8.43 \
             --with-pcre-jit \
             --with-zlib=./zlib-1.2.11 \
-            --with-openssl=./openssl-1.1.1f \
+            --with-openssl=./openssl-1.1.1g \
             --with-openssl-opt='enable-tls1_3 enable-ec_nistp_64_gcc_128 enable-weak-ssl-ciphers' \
             --add-dynamic-module=./ngx_http_proxy_connect_module \
             --with-debug
@@ -125,7 +125,7 @@ patch -p1 < /path/to/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1
             --with-pcre=./pcre-8.44 \
             --with-pcre-jit \
             --with-zlib=./zlib-1.2.11 \
-            --with-openssl=./openssl-1.1.1f \
+            --with-openssl=./openssl-1.1.1g \
             --with-openssl-opt="enable-tls1_3 no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong" \
             --with-debug
 
