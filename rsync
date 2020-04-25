@@ -52,3 +52,22 @@ rsync -qaHAXS SOURCE_DIR DESTINATION_DIR
 diff -r SOURCE_DIR DESTINATION_DIR
 
 通过使用本文所述的rsync并按照将安装迁移到新硬件中所述的方法更新fstab和bootloader，可以成功完成文件系统迁移。这实质上提供了一种将任何根文件系统转换为另一个文件系统的方法。
+
+
+## rsync守护程序
+
+rsync可以作为守护程序在侦听端口873的服务器上运行。
+
+编辑模板/etc/rsyncd.conf，配置共享并启动rsyncd.service。
+注意：从rsync-3.1.2-5开始，软件包中包含的系统单元rsyncd.service在[服务]部分下添加了安全功能ProtectSystem=full（rsync-3.1.2-8中ProtectHome=on已撤消）。 这使得/boot/，/etc/和/usr/目录为只读。 如果需要rsyncd写入系统目录，则可以编辑单元并在覆盖片段的[Service]部分中设置ProtectSystem=off。
+
+来自客户端的使用情况，例如 列出服务器内容：
+
+$ rsync rsync://服务器/共享
+
+将文件从客户端传输到服务器：
+
+$ rsync 本地文件 rsync://server/share/
+
+考虑使用iptables打开端口873和用户身份验证。
+注意：包括用户身份验证在内的所有传输数据均未加密。
