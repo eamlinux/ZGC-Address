@@ -83,3 +83,38 @@
     ]
   }
 }
+
+
+
+
+//Caddyfile
+
+http://xxx.com{
+    redir https://xxx.com{uri}
+}
+
+https://xxx.com {
+  gzip
+  root /var/www/html
+  tls xxx@xxx.com {
+  protocols tls1.3
+  curves x25519
+  alpn h2
+  }
+
+  header / {
+    Strict-Transport-Security "max-age=31536000;"
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+  }
+
+  proxy /502 https://127.0.0.1:1234 {
+        insecure_skip_verify
+        header_upstream Host {host}
+        header_upstream X-Real-IP {remote}
+        header_upstream X-Forwarded-For {remote}
+        header_upstream X-Forwarded-Port {server_port}
+        header_upstream X-Forwarded-Proto "https"
+ }
+}
