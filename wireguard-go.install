@@ -9,8 +9,9 @@ sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 
 cd wireguard-go
-make
-strip -s wireguard-go
+## make
+## strip -s wireguard-go
+env CGO_ENABLED=0 GO111MODULE=on go build -o ./wireguard-go -ldflags "-s -w"
 sudo mv wireguard-go /usr/local/bin/
 
 cd wireguard-tools/src
