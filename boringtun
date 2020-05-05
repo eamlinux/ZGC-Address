@@ -8,10 +8,10 @@ sudo cp ./wg /usr/local/bin/
 sudo cp ./wg-quick/linux.bash /usr/local/bin/wg-quick
 sudo nano /usr/local/bin/wg-quick
 
-sudo apt -t sid install cargo
-或者
-curl https://sh.rustup.rs -sSf | sh
+## sudo apt -t sid install cargo
 
+curl https://sh.rustup.rs -sSf | sh
+source ~/.profile
 git clone https://github.com/cloudflare/boringtun.git
 
 cd boringtun
