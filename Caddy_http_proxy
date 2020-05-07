@@ -1,0 +1,14 @@
+git clone https://github.com/caddyserver/forwardproxy.git
+cd forwardproxy/cmd/caddy
+env CGO_ENABLED=0 GO111MODULE=on go build -o ./caddy -ldflags "-s -w"
+./caddy -plugins
+
+
+##
+forwardproxy {
+    basicauth user1 0NtCL2JPJBgPPMmlPcJ
+    basicauth user2 密码
+    ports     80 443
+    hide_ip
+    hide_via
+}
