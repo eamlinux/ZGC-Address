@@ -2,3 +2,9 @@ git clone https://github.com/txthinking/brook.git
 cd brook/cli/brook
 go get -d -v
 env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./brook -v -ldflags "-s -w"
+
+sudo mv brook /usr/local/bin/
+sudo chown root:root /usr/local/bin/brook
+sudo chmod 0755 /usr/local/bin/brook
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/brook
+sudo nano /etc/systemd/system/brook.service
