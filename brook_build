@@ -1,0 +1,4 @@
+git clone https://github.com/txthinking/brook.git
+cd brook/cli/brook
+go get -d -v
+env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./brook -v -ldflags "-s -w"
