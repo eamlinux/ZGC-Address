@@ -149,3 +149,10 @@ TLS 加密隧道
             max-file: "3"
 
 这里利用 Docker 的桥接网络，没有将 SSR 进程的端口暴露给主机，而是利用桥接直接将流量转发到 SSR 的容器内。
+
+
+落地鸡：
+/usr/local/bin/gost -D -L "ws://:65432?path=/ws&rbuf=4096&wbuf=4096&compression=false"
+
+中转鸡：
+/usr/local/bin/gost -L=:本地端口/落地鸡ip:ssr端口 -F=ws://落地鸡ip或域名:65432/ws
