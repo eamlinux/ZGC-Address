@@ -17,6 +17,7 @@ _ "github.com/caddyserver/forwardproxy"
 cd caddy/caddy
 go build .
 ##  env CGO_ENABLED=0 go build -o ./caddy -ldflags "-s -w"
+##  env CGO_ENABLED=0 GO111MODULE=on go build -o ./caddy -ldflags "-s -w"
 strip -s caddy
 sudo mv caddy /usr/local/bin/
 sudo chown root:root /usr/local/bin/caddy
