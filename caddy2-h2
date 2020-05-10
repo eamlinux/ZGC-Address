@@ -1,0 +1,9 @@
+transport https {
+	tls
+	tls_client_auth <cert_file> <key_file>
+	# tls_insecure_skip_verify
+	# tls_timeout <duration>
+	# tls_trusted_ca_certs <pem_files...>
+	# keepalive [off|<duration>]
+	# keepalive_idle_conns <max_count>
+}
