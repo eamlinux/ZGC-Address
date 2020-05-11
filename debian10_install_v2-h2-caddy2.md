@@ -5,6 +5,11 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt install binutils git curl ufw libsodium-dev -y
 ```
+#### 校准时间***中国时区***
+```
+sudo rm /etc/localtime
+sudo ln -snf /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
+```
 ##### 开启bbr
 ```
 sudo nano /etc/ufw/sysctl.conf
@@ -99,3 +104,126 @@ transport https {
   }
 }
 ```
+#### 安装v2ray
+```
+cd ~
+git clone https://github.com/v2ray/v2ray-core.git
+cd v2ray-core/main
+env CGO_ENABLED=0 go build -o $HOME/v2ray -ldflags "-s -w"
+cd ~
+cd v2ray-core/infra/control/main
+env CGO_ENABLED=0 go build -o $HOME/v2ctl -tags confonly -ldflags "-s -w"
+cd ~
+sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
+```
+##### 配置开机启动
+```
+sudo nano /etc/systemd/system/v2ray.service
+```
+###### 启动配置
+```
+[Unit]
+Description=V2Ray Service
+After=network.target
+Wants=network.target
+
+[Service]
+User=caddy
+Type=simple
+PIDFile=/opt/v2ray/v2ray.pid
+ExecStart=/usr/local/bin/v2ray -config /opt/v2ray/config.json
+Restart=on-failure
+RestartPreventExitStatus=23
+
+[Install]
+WantedBy=multi-user.target
+```
+###### 配置v2ray文件```/opt/v2ray/config.json```
+```json
+{
+  "inbounds": [
+    {
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "port": "<Port>", \\端口
+      "listen": "127.0.0.1",
+      "tag": "vmess-in",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "<UUID>", \\uuid
+            "alterId": 64
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "h2",
+        "security": "tls",
+        "httpSettings": {
+          "path": "<H2 Path>",
+          "host": [
+            "<Host>"
+          ]
+        },
+        "tlsSettings": {
+          "serverName": "<Host>",
+          "certificates": [
+            {
+              "certificateFile": "<Path to cert>",
+              "keyFile": "<Path to key>"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": { },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": { },
+      "tag": "blocked"
+    }
+  ],
+  "dns": {
+    "servers": [
+      "https://cloudflare-dns.com/dns-query",
+      "https://dns.google/dns-query",
+      "1.1.1.1",
+      "1.0.0.1",
+      "8.8.8.8",
+      "8.8.4.4"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "vmess-in"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "outboundTag": "block",
+        "protocol": [
+          "bittorrent"
+        ]
+      }
+    ]
+  }
+}
+```
+cat /proc/sys/kernel/random/uuid
