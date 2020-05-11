@@ -10,6 +10,22 @@ sudo apt install binutils git curl ufw libsodium-dev -y
 sudo rm /etc/localtime
 sudo ln -snf /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
 ```
+
+#### 更改系统最大文件数
+```
+sudo nano /etc/security/limits.conf
+
+加入：
+* soft nofile 51200
+* hard nofile 51200
+* soft nproc 51200
+* hard nproc 51200
+
+root soft nofile 51200
+root hard nofile 51200
+root soft nproc 51200
+root hard nproc 51200
+```
 ##### 开启bbr
 ```
 sudo nano /etc/ufw/sysctl.conf
@@ -40,9 +56,9 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 ##### 设置caddy2开机启动服务
 ```
 sudo nano /etc/systemd/system/caddy.service
-```
-###### caddy2 systemd
-```
+
+加入以下内容：
+
 [Unit]
 Description=Caddy
 Documentation=https://caddyserver.com/docs/
@@ -63,8 +79,13 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target
 ```
-###### 配置文件```/opt/caddy/Caddyfile```
+###### Caddy配置文件
 ```
+sudo mkdir /opt/caddy/
+sudo nano /opt/caddy/Caddyfile
+
+加入以下内容：
+
 xxx.com {
 encode zstd gzip
 root * /var/www/html
@@ -83,7 +104,7 @@ header {
         Referrer-Policy no-referrer-when-downgrade
 }
 
-reverse_proxy /xxx.html https://127.0.0.1:10086 {
+reverse_proxy /xxx.html https://127.0.0.1:8443 {
      header_up Host {http.request.host}
      header_up X-Real-IP {http.request.remote}
      header_up X-Forwarded-For {http.request.remote}
@@ -119,9 +140,10 @@ sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
 ##### 配置开机启动
 ```
 sudo nano /etc/systemd/system/v2ray.service
-```
-###### 启动配置
-```
+
+
+加入以下内容：
+
 [Unit]
 Description=V2Ray Service
 After=network.target
@@ -138,7 +160,17 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target
 ```
-###### 配置v2ray文件```/opt/v2ray/config.json```
+###### 生成UUID,记住它，下面要用
+```
+cat /proc/sys/kernel/random/uuid
+```
+###### V2ray配置文件
+```
+sudo mkdir /opt/v2ray
+sudo nano /opt/v2ray/config.json
+```
+###### 加入以下内容：
+
 ```json
 {
   "inbounds": [
@@ -150,14 +182,14 @@ WantedBy=multi-user.target
           "tls"
         ]
       },
-      "port": "<Port>", //端口
+      "port": "<Port>", //端口跟Caddy配置里的转发的相同，像上面的"8443"端口
       "listen": "127.0.0.1",
       "tag": "vmess-in",
       "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "<UUID>", //uuid
+            "id": "<UUID>", //填写上面生成的UUID
             "alterId": 64
           }
         ]
@@ -166,17 +198,17 @@ WantedBy=multi-user.target
         "network": "h2",
         "security": "tls",
         "httpSettings": {
-          "path": "<H2 Path>",
+          "path": "<H2 Path>", //文件路径，跟caddy配置里的相同
           "host": [
-            "<Host>"
+            "<Host>" //你的域名
           ]
         },
         "tlsSettings": {
-          "serverName": "<Host>",
+          "serverName": "<Host>", //你的域名
           "certificates": [
             {
-              "certificateFile": "<Path to cert>",
-              "keyFile": "<Path to key>"
+              "certificateFile": "<Path to cert>", //caddy生成的证书crt
+              "keyFile": "<Path to key>"  //caddy生成的证书key
             }
           ]
         }
@@ -226,4 +258,3 @@ WantedBy=multi-user.target
   }
 }
 ```
-cat /proc/sys/kernel/random/uuid
