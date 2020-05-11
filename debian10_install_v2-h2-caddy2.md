@@ -64,7 +64,7 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 WantedBy=multi-user.target
 ```
 ###### 配置文件```/opt/caddy/Caddyfile```
-```json
+```
 xxx.com {
 encode zstd gzip
 root * /var/www/html
@@ -150,14 +150,14 @@ WantedBy=multi-user.target
           "tls"
         ]
       },
-      "port": "<Port>", \\端口
+      "port": "<Port>", //端口
       "listen": "127.0.0.1",
       "tag": "vmess-in",
       "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "<UUID>", \\uuid
+            "id": "<UUID>", //uuid
             "alterId": 64
           }
         ]
