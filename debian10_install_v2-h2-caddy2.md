@@ -4,6 +4,12 @@
 sudo apt update
 sudo apt upgrade -y
 sudo apt install binutils git curl ufw libsodium-dev -y
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw default deny
+sudo ufw enable
+sudo ufw reload
 ```
 #### 校准时间***中国时区***
 ```
@@ -182,14 +188,14 @@ sudo nano /opt/v2ray/config.json
           "tls"
         ]
       },
-      "port": "<Port>", //端口跟Caddy配置里的转发的相同，像上面的"8443"端口
+      "port": "8443", //端口跟Caddy配置里的转发的相同，像上面的"8443"端口
       "listen": "127.0.0.1",
       "tag": "vmess-in",
       "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "<UUID>", //填写上面生成的UUID
+            "id": "xxx-xxxxx-xxxxx-xxxxx-xxxx", //填写上面生成的UUID
             "alterId": 64
           }
         ]
@@ -198,13 +204,13 @@ sudo nano /opt/v2ray/config.json
         "network": "h2",
         "security": "tls",
         "httpSettings": {
-          "path": "<H2 Path>", //文件路径，跟caddy配置里的相同
+          "path": "/xxx.html", //文件路径，跟caddy配置里的相同
           "host": [
-            "<Host>" //你的域名
+            "xxx.com" //你的域名
           ]
         },
         "tlsSettings": {
-          "serverName": "<Host>", //你的域名
+          "serverName": "xxx.com", //你的域名
           "certificates": [
             {
               "certificateFile": "<Path to cert>", //caddy生成的证书crt
