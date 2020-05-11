@@ -265,8 +265,10 @@ sudo nano /opt/v2ray/config.json
 }
 ```
 #### 启动系统
+```
 sudo systemctl daemon-reload
 sudo systemctl enable v2ray
 sudo systemctl enable caddy
 sudo systemctl status v2ray
 sudo systemctl status caddy
+```
