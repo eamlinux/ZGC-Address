@@ -88,3 +88,10 @@ redir 301 {
   if {>X-Forwarded-Proto} is http
   /  https://{host}{uri}
 }
+
+
+
+## build
+git clone https://github.com/shadowsocks/v2ray-plugin.git
+cd v2ray-plugin
+env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -ldflags "-X main.VERSION='$(git describe --tags)' -s -w" -gcflags -o ./v2ray-plugin
