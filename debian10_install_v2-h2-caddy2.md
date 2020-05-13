@@ -91,7 +91,38 @@ sudo mkdir /opt/caddy/
 sudo nano /opt/caddy/Caddyfile
 
 加入以下内容：
+## ws
+-------------------------------------
+xxx.com {
+encode zstd gzip
+root * /var/www/html
+file_server browse
 
+tls xxx@xxx.com {
+    protocols tls1.3
+    curves x25519
+    alpn h2
+}
+
+header {
+        Strict-Transport-Security max-age=31536000;
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer-when-downgrade
+}
+
+reverse_proxy /xxx.html localhost:8443 {
+     header_up Host {http.request.host}
+     header_up X-Real-IP {http.request.remote}
+     header_up X-Forwarded-For {http.request.remote}
+     header_up X-Forwarded-Port {http.request.port}
+     header_up X-Forwarded-Proto {http.request.scheme}
+     header_up Connection {http.request.header.Connection}
+     header_up Upgrade {http.request.header.Upgrade}
+  }
+}
+--------------------------------------------------------------
+## h2
 xxx.com {
 encode zstd gzip
 root * /var/www/html
@@ -176,7 +207,82 @@ sudo mkdir /opt/v2ray
 sudo nano /opt/v2ray/config.json
 ```
 ###### 加入以下内容：
-
+####### WS
+```json
+{
+  "inbounds": [
+    {
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "port": "8443",
+      "listen": "127.0.0.1",
+      "tag": "vmess-in",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx",
+            "alterId": 64
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/xxx.html"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": { },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": { },
+      "tag": "blocked"
+    }
+  ],
+  "dns": {
+    "servers": [
+      "https://cloudflare-dns.com/dns-query",
+      "https://dns.google/dns-query",
+      "1.1.1.1",
+      "1.0.0.1",
+      "8.8.8.8",
+      "8.8.4.4"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "vmess-in"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "outboundTag": "block",
+        "protocol": [
+          "bittorrent"
+        ]
+      }
+    ]
+  }
+}
+```
+####### h2
 ```json
 {
   "inbounds": [
