@@ -176,6 +176,8 @@ cd ~
 sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
 ```
 sudo mkdir -p /var/www/html
+sudo git clone https://github.com/HFIProgramming/mikutap.git html
+sudo chown -R caddy. ./html
 
 ##### 配置开机启动
 ```
