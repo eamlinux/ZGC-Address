@@ -10,6 +10,7 @@ sudo ufw allow https
 sudo ufw default deny
 sudo ufw enable
 sudo ufw reload
+sudo useradd -r -m -s /sbin/nologin caddy
 ```
 #### 校准时间***中国时区***
 ```
