@@ -175,6 +175,8 @@ env CGO_ENABLED=0 go build -o $HOME/v2ctl -tags confonly -ldflags "-s -w"
 cd ~
 sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
 ```
+sudo mkdir -p /var/www/html
+
 ##### 配置开机启动
 ```
 sudo nano /etc/systemd/system/v2ray.service
@@ -379,3 +381,4 @@ sudo systemctl enable caddy
 sudo systemctl status v2ray
 sudo systemctl status caddy
 ```
+
