@@ -94,6 +94,15 @@ redir 301 {
 ## build
 git clone https://github.com/shadowsocks/v2ray-plugin.git
 cd v2ray-plugin
+nano go.sum
+改：
+github.com/v2ray/v2ray-core v4.23.1+incompatible h1:kqV93r0dFBcYAJp/XAXfUqlhsyt/Hxy8bcs2t9LHlgg=
+github.com/v2ray/v2ray-core v4.23.1+incompatible/go.mod h1:LtoljHM69/Tx4Niy/2vqWP8R2HPqS64NiaJaGkktn+Q=
+nano go.mod
+改：
+replace v2ray.com/core => github.com/v2ray/v2ray-core v4.23.1+incompatible
+go 1.14
+
 env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -ldflags "-X main.VERSION='$(git describe --tags)' -s -w" -gcflags "" -o ./v2ray-plugin
 
 
