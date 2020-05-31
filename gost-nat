@@ -156,3 +156,14 @@ TLS 加密隧道
 
 中转鸡：
 /usr/local/bin/gost -L=:本地端口/落地鸡ip:ssr端口 -F=ws://落地鸡ip或域名:65432/ws
+
+
+本地鸡：
+gost -L=http://:7575 -F=http2://user123:passwd123@xxx.com:1485?probe_resist=code:404&knock=x.xxx.com
+
+主鸡：
+gost -L="http2://user123:passwd123@:1485?probe_resist=code:404&knock=x.xxx.com" > /dev/null 2>&1
+
+
+
+
