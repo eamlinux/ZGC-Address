@@ -22,11 +22,13 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=root
+User=caddy
 ExecStart=/usr/local/bin/trojan-go -config /opt/trojan-go/config.json
 Restart=on-failure
 RestartSec=10
 RestartPreventExitStatus=23
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
