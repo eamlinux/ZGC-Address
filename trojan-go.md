@@ -1,9 +1,12 @@
 ### 编译trojan-go
 ```
-git clone https://github.com/p4gefau1t/trojan-go.git
+git clone --depth=1 https://github.com/p4gefau1t/trojan-go.git
 cd trojan-go/
-env CGO_ENABLED=0 go build -o $HOME/trojan-go -ldflags "-s -w" -tags "router server auth_mysql auth_redis relay cert other"
-sudo mv $HOME/trojan-go /usr/local/bin/
+env CGO_ENABLED=0 go build -o $HOME/trojan-god -ldflags "-s -w" -tags "router server auth_mysql auth_redis relay cert other"
+sudo mv $HOME/trojan-god /usr/local/bin/trojan-go
+sudo chown root:root /usr/local/bin/trojan-go
+sudo chmod 0755 /usr/local/bin/trojan-go
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan-go
 ```
 ### 设置systemd
 ```
