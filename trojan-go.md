@@ -147,3 +147,12 @@ WantedBy=multi-user.target
   }
 }
 ```
+
+#### 配置证书
+```
+\\ 申请证书
+sudo ./trojan-go -autocert request
+
+\\重置证书
+sudo ./trojan-go -autocert renew
+```
