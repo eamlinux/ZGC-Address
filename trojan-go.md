@@ -66,6 +66,7 @@ WantedBy=multi-user.target
     "prefer_server_cipher": false,
     "sni": "xxxx.com",
     "alpn": [
+      "http/1.1",
       "h2"
     ],
     "session_ticket": true,
