@@ -8,6 +8,8 @@ sudo mv $HOME/trojan-god /opt/trojan-go/trojan-go
 sudo chown root:root /opt/trojan-go/trojan-go
 sudo chmod 0755 /opt/trojan-go/trojan-go
 sudo setcap CAP_NET_BIND_SERVICE=+eip /opt/trojan-go/trojan-go
+sudo wget -O /opt/trojan-go/geosite.dat https://github.com/v2ray/domain-list-community/releases/latest/download/dlc.dat
+sudo wget -O /opt/trojan-go/geoip.dat https://github.com/v2ray/geoip/releases/latest/download/geoip.dat
 ```
 ### 设置systemd
 ```
