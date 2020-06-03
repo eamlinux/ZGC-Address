@@ -147,6 +147,43 @@ xxx.com {
         header_upstream X-Forwarded-Proto "https"
   }
 }
+-----------------------------------------------------------
+### Caddy1 H2 WS
+
+http://xxx.com {
+    redir https://xxx.com{uri}
+}
+
+https://xxx.com {
+  gzip
+  root /var/www/html
+  tls xxx@xxx.com {
+  protocols tls1.3
+  curves x25519
+  alpn h2
+  }
+
+  header / {
+    Strict-Transport-Security "max-age=31536000;"
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+  }
+
+  proxy /xxx/xxx https://127.0.0.1:8443 {
+        insecure_skip_verify
+        header_upstream Host {host}
+        header_upstream X-Real-IP {remote}
+        header_upstream X-Forwarded-For {remote}
+        header_upstream X-Forwarded-Port {server_port}
+        header_upstream X-Forwarded-Proto "https"
+ }
+  proxy /ws localhost:65432 {
+    transparent
+    websocket
+    header_upstream -Origin
+  }
+}
 ```
 #### 安装v2ray
 ```
