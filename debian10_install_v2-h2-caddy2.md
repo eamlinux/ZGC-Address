@@ -123,43 +123,28 @@ reverse_proxy /xxx.html localhost:8443 {
   }
 }
 --------------------------------------------------------------
-## h2
+## Caddy v1--h2
 xxx.com {
-encode zstd gzip
-root * /var/www/html
-file_server browse
-
-tls xxx@xxx.com {
-    protocols tls1.3
-    curves x25519
-    alpn h2
-}
-
-header {
-        Strict-Transport-Security max-age=31536000;
-        X-Content-Type-Options nosniff
-        X-Frame-Options DENY
-        Referrer-Policy no-referrer-when-downgrade
-}
-
-reverse_proxy /xxx.html https://127.0.0.1:8443 {
-     header_up Host {http.request.host}
-     header_up X-Real-IP {http.request.remote}
-     header_up X-Forwarded-For {http.request.remote}
-     header_up X-Forwarded-Port {http.request.port}
-     header_up X-Forwarded-Proto {http.request.scheme}
-     # header_up X-Forwarded-Proto "https"
-     header_up Connection {http.request.header.Connection}
-     header_up Upgrade {http.request.header.Upgrade}
-transport https {
-	tls
-	tls_client_auth <cert_file> <key_file>
-	# tls_insecure_skip_verify
-	# tls_timeout <duration>
-	# tls_trusted_ca_certs <pem_files...>
-	# keepalive [off|<duration>]
-	# keepalive_idle_conns <max_count>
-    }
+  gzip
+  root /var/www/html
+  tls xxx@xxx.com {
+  protocols tls1.3
+  curves x25519
+  alpn h2
+  }
+  header / {
+    Strict-Transport-Security "max-age=31536000;"
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+  }
+  proxy /xxxx https://127.0.0.1:8443 {
+        insecure_skip_verify
+        header_upstream Host {host}
+        header_upstream X-Real-IP {remote}
+        header_upstream X-Forwarded-For {remote}
+        header_upstream X-Forwarded-Port {server_port}
+        header_upstream X-Forwarded-Proto "https"
   }
 }
 ```
