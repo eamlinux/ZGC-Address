@@ -64,6 +64,49 @@ sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 ```
+#### 设置Caddy1 Systemd启动
+```
+sudo nano /etc/systemd/system/caddy.service
+
+//加入以下内容：
+
+[Unit]
+Description=Caddy HTTP/2 web server
+Documentation=https://caddyserver.com/docs
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+StartLimitIntervalSec=14400
+StartLimitBurst=10
+
+[Service]
+Restart=on-abnormal
+User=caddy
+Group=caddy
+Environment=CADDYPATH=/etc/ssl/caddy
+ExecStart=/usr/local/bin/caddy -log stdout -log-timestamps=false -agree=true -conf=/opt/caddy/Caddyfile -root=/dev/null
+ExecReload=/bin/kill -USR1 $MAINPID
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+PrivateDevices=false
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/etc/ssl/caddy
+ReadWriteDirectories=/etc/ssl/caddy
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+
+------------------------------------------------
+sudo mkdir /etc/ssl/caddy
+sudo chown -R caddy. /etc/ssl/caddy
+```
 
 #### 编译安装Caddy2
 ```
