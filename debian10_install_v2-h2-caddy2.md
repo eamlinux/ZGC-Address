@@ -50,6 +50,21 @@ sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 go version
 ```
+#### 编译Caddy1
+```
+git clone -b v1 --depth=1 https://github.com/caddyserver/caddy.git
+nano caddy/caddy/caddymain/run.go
+
+_ "github.com/caddyserver/forwardproxy"
+
+cd caddy/caddy
+env CGO_ENABLED=0 go build -o ./caddy -ldflags "-s -w"
+sudo mv caddy /usr/local/bin/
+sudo chown root:root /usr/local/bin/caddy
+sudo chmod 0755 /usr/local/bin/caddy
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
+```
+
 #### 编译安装Caddy2
 ```
 git clone --depth=1 https://github.com/caddyserver/caddy.git
