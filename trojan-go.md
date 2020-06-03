@@ -37,7 +37,7 @@ RestartPreventExitStatus=23
 WantedBy=multi-user.target
 ```
 ### 配置文件```/opt/trojan-go/config.json```
-```
+```json
 {
   "run_type": "server",
   "local_addr": "0.0.0.0",
