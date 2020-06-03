@@ -30,8 +30,8 @@ ExecStart=/opt/trojan-go/trojan-go -config /opt/trojan-go/config.json
 Restart=on-failure
 RestartSec=10
 RestartPreventExitStatus=23
-AmbientCapabilities=CAP_NET_BIND_SERVICE
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+## AmbientCapabilities=CAP_NET_BIND_SERVICE
+## CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
