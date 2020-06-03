@@ -52,7 +52,7 @@ go version
 ```
 #### 编译安装Caddy2
 ```
-git clone https://github.com/caddyserver/caddy.git
+git clone --depth=1 https://github.com/caddyserver/caddy.git
 cd caddy/cmd/caddy/
 env CGO_ENABLED=0 go build -o ./caddy -ldflags "-s -w"
 sudo mv caddy /usr/local/bin/
@@ -166,7 +166,7 @@ transport https {
 #### 安装v2ray
 ```
 cd ~
-git clone https://github.com/v2ray/v2ray-core.git
+git clone --depth=1 https://github.com/v2ray/v2ray-core.git
 cd v2ray-core/main
 env CGO_ENABLED=0 go build -o $HOME/v2ray -ldflags "-s -w"
 cd ~
