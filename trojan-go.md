@@ -152,6 +152,7 @@ WantedBy=multi-user.target
 
 #### 配置证书
 ```
+cd /opt/trojan-go
 \\ 申请证书
 sudo ./trojan-go -autocert request
 
