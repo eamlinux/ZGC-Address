@@ -242,6 +242,36 @@ https://xxx.com {
     header_upstream -Origin
   }
 }
+
+#### 正向代理
+
+xxx.tk {
+  gzip
+  root /var/www/html
+  tls xxx@xxx.tk {
+  protocols tls1.3
+  curves x25519
+  alpn h2
+  }
+  header / {
+    Strict-Transport-Security "max-age=31536000;"
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+  }
+  proxy /xxx localhost:9443 {
+    transparent
+    websocket
+    header_upstream -Origin
+  }
+forwardproxy {
+    basicauth user passwd
+    probe_resistance xxxx.xxx
+    ports     80 443
+    hide_ip
+    hide_via
+ }
+}
 ```
 #### 安装v2ray
 ```
