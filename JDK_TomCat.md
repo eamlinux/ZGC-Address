@@ -36,5 +36,7 @@ Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.1+10, mixed mode)
 sudo /usr/local/tomcat/bin/startup.sh
 ```
 如果提示JAVA_HOME错误，在Tomcat的bin目录下的catalina.sh中添加
-```export JAVA_HOME=/usr/local/jdk```
+```
+export JAVA_HOME=/usr/local/jdk
+```
 再启动***startup.sh***，就可以打开***http://IP:8080***，看到Tomcat的主页。
