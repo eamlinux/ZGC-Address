@@ -1,8 +1,12 @@
-环境：Archlinux
+### 环境：Archlinux
+
 下载JDK，https://jdk.java.net/
+
 下载Tomcat ，https://tomcat.apache.org/
+
 解压JDK后mv到/usr/local/jdk，解压tomcat后mv到/usr/local/tomcat
-设置变量
+
+##### 设置变量
 ```
 sudo nano /etc/profile
 ```
