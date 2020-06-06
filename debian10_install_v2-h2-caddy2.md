@@ -7,7 +7,9 @@ sudo apt install binutils git curl ufw libsodium-dev -y
 sudo ufw allow ssh
 sudo ufw allow http
 sudo ufw allow https
-sudo ufw default deny
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+### sudo ufw default deny
 sudo ufw enable
 sudo ufw reload
 sudo useradd -r -m -s /sbin/nologin caddy
