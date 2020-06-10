@@ -187,7 +187,7 @@ http://xxx.xx:80 {
   tls xxx@xxx.xx {
   protocols tls1.3
   curves x25519
-  h2
+  alpn h2
  }
 
 header / {
