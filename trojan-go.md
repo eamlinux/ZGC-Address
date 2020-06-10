@@ -47,8 +47,9 @@ WantedBy=multi-user.target
   "log_level": 1,
   "log_file": "",
   "password": [
-       "password"
-  ],
+    "passwd1",
+    "passwd2"
+],
   "buffer_size": 32,
   "dns": [
     "1.0.0.1",
@@ -56,11 +57,12 @@ WantedBy=multi-user.target
     "tcp://1.1.1.1",
     "dot://1.1.1.1"
   ],
+  "disable_http_check": false,
   "ssl": {
     "verify": true,
     "verify_hostname": true,
-    "cert": "./server.crt",
-    "key": "./server.key",
+    "cert": "xxx.crt",
+    "key": "xxx.key",
     "key_password": "",
     "cipher": "",
     "cipher_tls13": "",
@@ -87,7 +89,7 @@ WantedBy=multi-user.target
     "fast_open_qlen": 20
   },
   "mux": {
-    "enabled": false,
+    "enabled": true,
     "concurrency": 8,
     "idle_timeout": 60
   },
@@ -98,27 +100,36 @@ WantedBy=multi-user.target
     "block": [],
     "default_policy": "proxy",
     "domain_strategy": "as_is",
-    "geoip": "./geoip.dat",
-    "geosite": "./geoip.dat"
+    "geoip": "/opt/trojan-go/geoip.dat",
+    "geosite": "/opt/trojan-go/geosite.dat"
   },
   "websocket": {
-    "enabled": false,
-    "path": "",
-    "hostname": "127.0.0.1",
-    "obfuscation_password": "",
-    "double_tls": false,
+    "enabled": true,
+    "path": "/xxxx.xx",
+    "hostname": "xxxx.com",
+    "obfuscation_password": "xx@xx.xx",
+    "double_tls": true,
     "ssl": {
       "verify": true,
       "verify_hostname": true,
-      "cert": "./server.crt",
-      "key": "./server.key",
+      "cert": "xxx.crt",
+      "key": "xxx.key",
       "key_password": "",
       "prefer_server_cipher": false,
-      "sni": "",
+      "sni": "lau.leam.ml",
       "session_ticket": true,
       "reuse_session": true,
-      "plain_http_response": ""
+      "plain_http_response": "",
+      "key_log": ""
     }
+  },
+  "transport_plugin": {
+    "enabled": false,
+    "type": "",
+    "command": "",
+    "plugin_option": "",
+    "arg": [],
+    "env": []
   },
   "forward_proxy": {
     "enabled": false,
@@ -145,7 +156,14 @@ WantedBy=multi-user.target
   "api": {
     "enabled": false,
     "api_addr": "",
-    "api_port": 0
+    "api_port": 0,
+    "api_tls": false,
+    "ssl": {
+      "cert": "",
+      "key": "",
+      "key_password": "",
+      "client_cert": []
+    }
   }
 }
 ```
@@ -158,4 +176,25 @@ sudo ./trojan-go -autocert request
 
 \\重置证书
 sudo ./trojan-go -autocert renew
+```
+
+### Caddy v1
+```
+http://xxx.xx:80 {
+  gzip
+  root /var/www/html
+  timeouts none
+  tls xxx@xxx.xx {
+  protocols tls1.3
+  curves x25519
+  h2
+ }
+
+header / {
+    Strict-Transport-Security "max-age=31536000;"
+    X-XSS-Protection "1; mode=block"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+ }
+}
 ```
