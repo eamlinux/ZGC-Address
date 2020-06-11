@@ -2,8 +2,8 @@
 
 ## 安装trojan
 ```
-wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.15.1/trojan-1.15.1-linux-amd64.tar.xz
-tar xf trojan-1.15.1-linux-amd64.tar.xz
+wget -c https://github.com/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+tar xf trojan-1.16.0-linux-amd64.tar.xz
 cd trojan
 sudo mv trojan /usr/local/bin/
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
@@ -144,7 +144,6 @@ server {
 ///内容分隔
 
 sudo ln -s /etc/nginx/sites-available/xxx /etc/nginx/sites-enabled/
-sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
 sudo systemctl restart nginx
 sudo systemctl start trojan
 ```
