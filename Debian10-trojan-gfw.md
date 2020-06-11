@@ -15,7 +15,7 @@ sudo chown root:root /usr/local/bin/trojan
 sudo chmod 0755 /usr/local/bin/trojan
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/trojan
 ```
-### systemd ```sudo nano /etc/systemd/system/trojan.service```
+### systemd ...sudo nano /etc/systemd/system/trojan.service...
 ```
 [Unit]
 Description=trojan
