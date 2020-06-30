@@ -110,8 +110,7 @@ tar xf cloudflared-stable-linux-amd64.tgz
 
 curl https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz | sudo tar xzC /usr/local/bin/
 ```
-sudo apt install ufw
-/etc/ufw/sysctl.conf
+sudo apt install ufw && /etc/ufw/sysctl.conf
 ```
 # Uncomment this to allow this host to route packets between interfaces
 net/ipv4/ip_forward=1
@@ -202,29 +201,29 @@ make_resolv_conf(){
 }
 ```
 sudo chmod +x /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
-
+ && 
 sudo nano /etc/resolv.conf
 ```
 nameserver 127.0.0.1
 ```
-#sudo systemctl enable cloudflared
+#sudo systemctl enable cloudflared && 
 sudo systemctl daemon-reload
-
+ && 
 sudo /usr/local/bin/vpnserver start
 # 用管理端登陸設置密碼，並添加一個soft網橋
 sudo /usr/local/bin/vpnserver stop
-
+ && 
 sudo tzselect
 #4
 #9
 #1
 
-sudo rm /etc/localtime
+sudo rm /etc/localtime && 
 sudo ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 sudo nano /etc/locale.gen
 #修改zh_CN系列，按地區設置 ，美國不用設置 
-sudo locale-gen
+sudo locale-gen && 
 sudo dpkg-reconfigure locales
 ##中国区
 sudo nano /etc/default/locale
