@@ -212,20 +212,30 @@ sudo systemctl daemon-reload
 sudo /usr/local/bin/vpnserver start
 # 用管理端登陸設置密碼，並添加一個soft網橋
 sudo /usr/local/bin/vpnserver stop
- && 
+
+
 sudo tzselect
+
 #4
+
 #9
+
 #1
 
-sudo rm /etc/localtime && 
+sudo rm /etc/localtime
+
 sudo ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 sudo nano /etc/locale.gen
+
 #修改zh_CN系列，按地區設置 ，美國不用設置 
-sudo locale-gen && 
+
+sudo locale-gen
+
 sudo dpkg-reconfigure locales
+
 ##中国区
+
 sudo nano /etc/default/locale
 ```
 LANG="zh_CN.UTF-8"
