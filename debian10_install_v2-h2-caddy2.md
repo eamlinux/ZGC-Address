@@ -290,8 +290,8 @@ sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
 #### 伪装
 ```
 sudo mkdir -p /var/www/html
-sudo git clone https://github.com/HFIProgramming/mikutap.git html
-sudo chown -R caddy. ./html
+sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
+sudo chown -R caddy. /var/www/html
 ```
 ##### 配置开机启动
 ```
