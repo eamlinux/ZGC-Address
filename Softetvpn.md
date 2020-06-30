@@ -1,13 +1,13 @@
-sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential
-
+```sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential```
+```
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
 cd SoftEtherVPN
 git submodule init && git submodule update
 ./configure --disable-documentation
 make -C tmp
 make -C tmp install
-
-/lib/systemd/system/softether-vpnserver.service
+```
+```/lib/systemd/system/softether-vpnserver.service```
 ```
 [Unit]
 Description=SoftEther VPN Server
@@ -43,7 +43,7 @@ WantedBy=multi-user.target
 ```
 
 sudo systemctl enable softether-vpnserver
-
+```
 sudo apt install dnsmasq
 sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf_bk
 sudo nano /etc/dnsmasq.conf
@@ -89,7 +89,7 @@ log-async=5
 #quiet-dhcp6
 #dhcp-option=3,192.168.30.1
 -------------------------------------------------------------------------------------
-
+```
 /usr/local/iptables.sh
 ```
 #!/bin/bash
@@ -104,12 +104,12 @@ iptables -A FORWARD -s 192.168.30.0/24 -m state --state NEW -j ACCEPT
 ```
 
 sudo systemctl disable dnsmasq
-
+```
 wget -c https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz
 tar xf cloudflared-stable-linux-amd64.tgz
 
 curl https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz | sudo tar xzC /usr/local/bin/
-
+```
 sudo apt install ufw
 /etc/ufw/sysctl.conf
 ```
@@ -128,11 +128,13 @@ net/ipv4/conf/default/proxy_arp=0
 net/ipv4/conf/all/accept_redirects=1
 ```
 etc/default/ufw
+```
 DEFAULT_FORWARD_POLICY="ACCEPT"
 sudo nano /etc/modules
 iptable_nat
 ip6table_nat
-
+```
+```
 #/etc/sysctl.conf
 #```
 #net.core.default_qdisc=fq
@@ -145,7 +147,7 @@ ip6table_nat
 #net.ipv4.conf.default.send_redirects = 1
 #net.ipv4.conf.default.proxy_arp = 0
 #```
-
+```
 
 /etc/systemd/system/cloudflared.service
 ```
@@ -174,14 +176,14 @@ proxy-dns-upstream:
  - https://1.1.1.1/dns-query
  - https://1.0.0.1/dns-query
  ```
- 
+ ```
  useradd -r -M -s /usr/sbin/nologin cloudflared
  mkdir -p /var/log/cloudflared
  sudo chown -R cloudflared:cloudflared /var/log/cloudflared
  sudo chown -R cloudflared:cloudflared /usr/local/etc/cloudflared
- 
+ ```
  ## for use vps os
- 
+```
 sudo systemctl stop unattended-upgrades
 sudo systemctl disable unattended-upgrades
 sudo systemctl stop rdnssd
@@ -190,7 +192,7 @@ sudo systemctl stop resolvconf
 sudo systemctl disable resolvconf
 sudo apt purge --auto-remove resolvconf rdnssd
 sudo rm -rf /lib/resolvconf
-
+```
 使用 DHCP 钩子
 sudo nano /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
 ```
