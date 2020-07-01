@@ -9,9 +9,9 @@ source ~/.profile
 ```
 ## 拉取quic path
 ```
-wget -c http://nginx.org/download/nginx-1.18.0.tar.gz
-tar xf nginx-1.18.0.tar.gz
-cd nginx-1.18.0
+wget -c http://nginx.org/download/nginx-1.19.0.tar.gz
+tar xf nginx-1.19.0.tar.gz
+cd nginx-1.19.0
 wget https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz
 wget https://www.zlib.net/zlib-1.2.11.tar.gz
 git clone --recursive https://github.com/cloudflare/quiche
