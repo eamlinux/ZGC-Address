@@ -46,8 +46,8 @@ net/ipv4/tcp_congestion_control=bbr
 ```
 #### 安装GO环境
 ```
-wget -c https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz
-tar xf go1.14.4.linux-amd64.tar.gz
+wget -c https://dl.google.com/go/go1.14.5.linux-amd64.tar.gz
+tar xf go1.14.5.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 go version
@@ -373,11 +373,7 @@ sudo nano /opt/v2ray/config.json
   "dns": {
     "servers": [
       "https://cloudflare-dns.com/dns-query",
-      "https://dns.google/dns-query",
-      "1.1.1.1",
-      "1.0.0.1",
-      "8.8.8.8",
-      "8.8.4.4"
+      "https://dns.google/dns-query"
     ]
   },
   "routing": {
