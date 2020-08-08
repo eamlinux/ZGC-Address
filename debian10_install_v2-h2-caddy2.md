@@ -493,4 +493,116 @@ sudo systemctl enable caddy
 sudo systemctl status v2ray
 sudo systemctl status caddy
 ```
+## H2C
+#### v2ray
+```
+{
+  "inbounds": [
+    {
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "port": "8443",
+      "listen": "127.0.0.1",
+      "tag": "vmess-in",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "xxx-xxxxx-xxxxx-xxxxx-xxxx",
+            "alterId": 32
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "h2c",
+        "security": "none",
+        "httpSettings": {
+          "path": "/xxx.html",
+          "host": [
+            "xxx.com"
+          ]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": { },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": { },
+      "tag": "blocked"
+    }
+  ],
+  "dns": {
+    "servers": [
+      "https://cloudflare-dns.com/dns-query",
+      "https://dns.google/dns-query",
+      "localhost"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "vmess-in"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "outboundTag": "block",
+        "protocol": [
+          "bittorrent"
+        ]
+      }
+    ]
+  }
+}
+```
+#### caddy2
+```
+xxxxx.com {
+encode zstd gzip
+root * /var/www/html
+file_server
+
+tls xxx@xxxxx.com {
+    protocols tls1.3
+    curves x25519
+    alpn h2
+}
+
+header {
+        Strict-Transport-Security max-age=31536000;
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer-when-downgrade
+}
+
+reverse_proxy /xxxxx {
+     to http://127.0.0.1:8443
+     header_up Host {http.request.host}
+     header_up X-Real-IP {http.request.remote}
+     header_up X-Forwarded-For {http.request.remote}
+     header_up X-Forwarded-Port {http.request.port}
+     header_up X-Forwarded-Proto {http.request.scheme}
+     header_up Connection {http.request.header.Connection}
+     header_up Upgrade {http.request.header.Upgrade}
+     transport http {
+         versions h2c 2
+    }
+  }
+}
+```
 
