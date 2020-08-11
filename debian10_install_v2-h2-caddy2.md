@@ -519,7 +519,7 @@ sudo systemctl status caddy
         ]
       },
       "streamSettings": {
-        "network": "h2c",
+        "network": "h2",
         "security": "none",
         "httpSettings": {
           "path": "/xxx.html",
