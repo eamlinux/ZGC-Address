@@ -46,8 +46,8 @@ net/ipv4/tcp_congestion_control=bbr
 ```
 #### 安装GO环境
 ```
-wget -c https://dl.google.com/go/go1.14.6.linux-amd64.tar.gz
-tar xf go1.14.6.linux-amd64.tar.gz
+wget -c https://golang.org/dl/go1.15.linux-amd64.tar.gz
+tar xf go1.15.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 go version
