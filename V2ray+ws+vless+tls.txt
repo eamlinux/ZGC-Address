@@ -14,9 +14,7 @@
       "settings": {
         "clients": [
           {
-            "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx",
-            "level": 0,
-            "email": "xxxxx@xxxxx.com"
+            "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx"
           }
         ],
         "decryption": "none"
