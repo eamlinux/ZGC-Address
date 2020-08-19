@@ -1,0 +1,40 @@
+#关闭TSO命令
+ethtool -K eth0 tso off
+
+#进入init.d目录
+cd /etc/init.d
+
+#创建/编辑tsooff脚本文件
+vi tsooff
+
+#进入修改模式
+i
+
+# 添加启动脚本
+--------------------------------------------------
+#!/bin/sh /etc/rc.common
+ 
+START=99
+STOP=15
+ 
+start() {        
+        echo start
+        ethtool -K eth0 tso off
+}                 
+ 
+stop() {          
+        echo stop
+}
+------------------------------------------------------------
+
+#退出修改模式
+按esc
+
+#保存退出
+输入wq后按回车
+
+#给tsooff执行权限
+chmod +x tsooff
+
+#将脚本加入自动执行
+/etc/init.d/tsooff enable
