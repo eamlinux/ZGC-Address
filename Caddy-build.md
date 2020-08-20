@@ -1,7 +1,7 @@
 ## Go环境
 ```
-wget -c https://dl.google.com/go/go1.14.3.linux-amd64.tar.gz
-tar xf go1.14.3.linux-amd64.tar.gz
+wget -c https://dl.google.com/go/go1.14.7.linux-amd64.tar.gz
+tar xf go1.14.7.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 sudo apt install binutils -y
