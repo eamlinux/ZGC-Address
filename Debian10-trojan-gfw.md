@@ -112,4 +112,36 @@ http://web.cc:80 {
   }
 }
 ```
+
+### NGINX
+```
+server {
+    listen 127.0.0.1:80 default_server http2;
+    server_name web.com;
+    location / {
+      root /var/www/html;
+      index index.html index.htm;
+    }
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    # add_header Strict-Transport-Security "max-age=63072000" always;
+}
+
+server {
+    listen 127.0.0.1:80 http2;
+    server_name $server ip;
+    return 301 https://web.com$request_uri;
+}
+
+server {
+    listen 0.0.0.0:80;
+    listen [::]:80;
+    server_name _;
+    return 301 https://web.com$request_uri;
+}
+```
 至此就可以使用了。
