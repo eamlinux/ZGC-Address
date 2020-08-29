@@ -277,8 +277,9 @@ forwardproxy {
 ```
 #### 安装v2ray
 ```
+\\ 旧版 ## git clone --depth=1 https://github.com/v2ray/v2ray-core.git
 cd ~
-git clone --depth=1 https://github.com/v2ray/v2ray-core.git
+git clone --depth=1 https://github.com/v2fly/v2ray-core.git
 cd v2ray-core/main
 env CGO_ENABLED=0 go build -o $HOME/v2ray -ldflags "-s -w"
 cd ~
