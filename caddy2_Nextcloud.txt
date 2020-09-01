@@ -1,0 +1,36 @@
+php_fastcgi unix//run/php/php7.3-fpm.sock
+
+header {
+	Strict-Transport-Security max-age=31536000;
+	X-Content-Type-Options nosniff
+	X-Frame-Options SAMEORIGIN
+	Referrer-Policy no-referrer-when-downgrade
+	X-Robots-Tag none
+	X-Download-Options noopen
+	X-Permitted-Cross-Domain-Policies none
+}
+header /core/fonts {
+  Cache-Control max-age=604800
+ }
+
+redir /.well-known/carddav /remote.php/dav 301
+redir /.well-known/caldav /remote.php/dav 301
+
+@forbidden {
+        path    /.htaccess
+        path    /data/*
+        path    /config/*
+        path    /db_structure
+        path    /.xml
+        path    /README
+        path    /3rdparty/*
+        path    /lib/*
+        path    /templates/*
+        path    /occ
+        path    /console.php
+}
+
+respond @forbidden 404
+
+
+apt-get install php7.3-fpm php7.3-cli php7.3-json php7.3-curl php7.3-imap php7.3-gd php7.3-mysql php7.3-xml php7.3-zip php7.3-intl php-imagick php7.3-mbstring php7.3-sqlite3 php7.3-bcmath php7.3-gmp
