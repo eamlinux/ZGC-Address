@@ -46,8 +46,8 @@ net/ipv4/tcp_congestion_control=bbr
 ```
 #### 安装GO环境
 ```
-wget -c https://golang.org/dl/go1.15.linux-amd64.tar.gz
-tar xf go1.15.linux-amd64.tar.gz
+wget -c https://golang.org/dl/go1.15.1.linux-amd64.tar.gz
+tar xf go1.15.1.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 go version
@@ -546,8 +546,7 @@ sudo systemctl status caddy
   "dns": {
     "servers": [
       "https://cloudflare-dns.com/dns-query",
-      "https://dns.google/dns-query",
-      "localhost"
+      "https://dns.google/dns-query"
     ]
   },
   "routing": {
@@ -591,8 +590,7 @@ header {
         Referrer-Policy no-referrer-when-downgrade
 }
 
-reverse_proxy /xxxxx {
-     to http://127.0.0.1:8443
+reverse_proxy /xxxxx 127.0.0.1:8443 {
      header_up Host {http.request.host}
      header_up X-Real-IP {http.request.remote}
      header_up X-Forwarded-For {http.request.remote}
@@ -601,7 +599,7 @@ reverse_proxy /xxxxx {
      header_up Connection {http.request.header.Connection}
      header_up Upgrade {http.request.header.Upgrade}
      transport http {
-         versions h2c 2
+         versions h2c
     }
   }
 }
