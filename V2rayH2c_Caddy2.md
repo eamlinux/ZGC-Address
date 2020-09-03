@@ -1,5 +1,5 @@
-## 系统要求：Debian10
-#### 更新系统，安装防火墙
+# 系统要求：Debian10
+## 更新系统，安装防火墙
 ```
 sudo apt update
 sudo apt upgrade -y
@@ -13,13 +13,13 @@ sudo ufw enable
 sudo ufw reload
 sudo useradd -r -m -s /sbin/nologin caddy
 ```
-#### 校准时间***中国时区***
+## 校准时间***中国时区***
 ```
 sudo rm /etc/localtime
 sudo ln -snf /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
 ```
 
-#### 更改系统最大文件数
+## 更改系统最大文件数
 ```
 sudo nano /etc/security/limits.conf
 
@@ -34,16 +34,16 @@ root hard nofile 51200
 root soft nproc 51200
 root hard nproc 51200
 ```
-##### 开启bbr
+## 开启bbr
 ```
 sudo nano /etc/ufw/sysctl.conf
 ```
-###### 添加内容
+#### 添加内容
 ```
 net/core/default_qdisc=fq
 net/ipv4/tcp_congestion_control=bbr
 ```
-#### 安装GO环境
+## 安装GO环境
 ```
 wget -c https://golang.org/dl/go1.15.1.linux-amd64.tar.gz
 tar xf go1.15.1.linux-amd64.tar.gz
@@ -51,7 +51,7 @@ sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 go version
 ```
-#### 编译安装Caddy2
+## 编译安装Caddy2
 ```
 git clone --depth=1 https://github.com/caddyserver/caddy.git
 cd caddy/cmd/caddy/
@@ -61,7 +61,7 @@ sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 ```
-##### 设置caddy2开机启动服务
+## 设置caddy2开机启动服务
 ```
 sudo nano /etc/systemd/system/caddy.service
 
@@ -87,12 +87,12 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target
 ```
-##### Caddy2 H2c配置文件
+### 创建Caddy2 H2c配置文件
 ```
 sudo mkdir /opt/caddy/
 sudo nano /opt/caddy/Caddyfile
 ```
-######## 加入以下内容：
+#### 加入以下内容：
 ```
 xxxxx.com {
 encode zstd gzip
@@ -126,7 +126,7 @@ reverse_proxy /xxxxx 127.0.0.1:8443 {
   }
 }
 ```
-#### 安装v2ray
+## 安装v2ray
 ```
 cd ~
 git clone --depth=1 https://github.com/v2fly/v2ray-core.git
@@ -138,17 +138,17 @@ env CGO_ENABLED=0 go build -o $HOME/v2ctl -tags confonly -ldflags "-s -w"
 cd ~
 sudo mv $HOME/v2ray $HOME/v2ctl /usr/local/bin/
 ```
-###### 伪装
+#### 伪装
 ```
 sudo mkdir -p /var/www/html
 sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
 sudo chown -R caddy. /var/www/html
 ```
-####### 配置开机启动
+#### 配置开机启动
 ```
 sudo nano /etc/systemd/system/v2ray.service
 ```
-######## 加入以下内容：
+#### 加入以下内容：
 ```
 [Unit]
 Description=V2Ray Service
@@ -166,16 +166,16 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target
 ```
-###### 生成UUID,记住它，下面要用
+#### 生成UUID,记住它，下面要用
 ```
 cat /proc/sys/kernel/random/uuid
 ```
-###### V2ray配置文件
+#### 创建V2ray配置文件
 ```
 sudo mkdir /opt/v2ray
 sudo nano /opt/v2ray/config.json
 ```
-######## 加入以下内容：
+###### 加入以下内容：
 ```
 {
   "inbounds": [
@@ -250,7 +250,7 @@ sudo nano /opt/v2ray/config.json
   }
 }
 ```
-#### 启动系统
+## 启动系统
 ```
 sudo systemctl daemon-reload
 sudo systemctl start v2ray
