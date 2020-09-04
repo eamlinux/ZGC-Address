@@ -10,6 +10,7 @@ sudo ufw allow https
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw enable
+sudo ufw logging off
 sudo ufw reload
 sudo useradd -r -m -s /sbin/nologin caddy
 ```
