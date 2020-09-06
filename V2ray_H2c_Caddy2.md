@@ -170,6 +170,8 @@ WantedBy=multi-user.target
 #### 生成UUID,记住它，下面要用
 ```
 cat /proc/sys/kernel/random/uuid
+\\ 或者
+v2ctl uuid
 ```
 #### 创建V2ray配置文件
 ```
