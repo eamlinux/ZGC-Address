@@ -223,7 +223,7 @@ sudo nano /opt/v2ray/config.json
     {
       "protocol": "blackhole",
       "settings": { },
-      "tag": "blocked"
+      "tag": "block"
     }
   ],
   "dns": {
