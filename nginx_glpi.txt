@@ -1,0 +1,90 @@
+sudo apt install mariadb-server php7.3 php7.3-curl php7.3-zip php7.3-gd php7.3-intl php-pear php-imagick php7.3-imap php-memcache php7.3-pspell php7.3-recode php7.3-tidy php7.3-xmlrpc php7.3-xsl php7.3-mbstring php-gettext php7.3-ldap php-cas php-apcu php7.3-mysql php7.3-fpm php7.3-bz2
+
+
+
+> CREATE DATABASE glpidb;
+> GRANT ALL PRIVILEGES ON glpidb.* TO 'glpiuser'@'localhost' IDENTIFIED BY 'password';
+> FLUSH PRIVILEGES;
+> exit;
+
+cd /tmp/
+wget -c https://github.com/glpi-project/glpi/releases/download/9.5.1/glpi-9.5.1.tgz
+tar -xf glpi-9.5.1.tgz
+sudo mv glpi /var/www/html/*
+sudo chmod 755 -R /var/www/html/*
+sudo chown $USER:$USER -R /var/www/html/*
+sudo nano /opt/nginx/conf.d/glpi.conf
+
+sudo mysql -u root -p
+> CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY 'glpiuserpassword';
+> create database glpidb DEFAULT CHARACTER SET utf8;
+> grant all privileges on glpidb.* to 'glpiuser'@'localhost' identified by 'glpiuserpassword';
+> flush privileges;
+> /q
+
+
+
+
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name xxx.tk;
+    return 301 https://xxx.tk$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name xxx.tk;
+    # root html;
+
+    # SSL
+    ssl_certificate         /path/xxx.crt;
+    ssl_certificate_key     /path/xxx.key;
+    ssl_trusted_certificate /path/xxx.crt;
+
+    ssl_ecdh_curve X25519:P-256:P-384;
+    ssl_protocols TLSv1.3;
+    ssl_ciphers TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK;
+    ssl_prefer_server_ciphers on;
+
+    # 开启 1.3 o-RTT
+    ssl_early_data on;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets on;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 1.1.1.1 8.8.8.8 valid=300s;
+    resolver_timeout 10s;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    add_header Strict-Transport-Security "max-age=63072000" always;
+
+    root /var/www/html/glpi;
+    index index.php;
+
+    location / {
+    try_files $uri $uri/ index.php;
+    }
+
+    location ~ \.php$ {
+      fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+      fastcgi_index index.php;
+      include fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include fastcgi_params;
+      fastcgi_param SERVER_NAME $host;
+    }
+    location ~ /files{
+      deny all;
+    }
+}
