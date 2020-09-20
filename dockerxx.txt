@@ -3,31 +3,32 @@ FROM alpine:latest
 RUN apk add --no-cache ca-certificates mailcap
 
 RUN set -eux; \
-	mkdir -p \
-		/config/caddy \
-		/data/caddy \
-		/etc/caddy \
-		/usr/share/caddy \
-	; \
-	wget -O /etc/caddy/Caddyfile "https://github.com/caddyserver/dist/raw/506330b23c5cce43a9352179e7977a684678fbaf/config/Caddyfile"; \
-	wget -O /usr/share/caddy/index.html "https://github.com/caddyserver/dist/raw/506330b23c5cce43a9352179e7977a684678fbaf/welcome/index.html"
+        mkdir -p \
+                /config/caddy \
+                /data/caddy \
+                /etc/caddy \
+                /var/www/html \
+                /usr/share/caddy \
+        ; \
+        wget -O /etc/caddy/Caddyfile "https://github.com/caddyserver/dist/raw/506330b23c5cce43a9352179e7977a684678fbaf/config/Caddyfile"; \
+        wget -O /usr/share/caddy/index.html "https://github.com/caddyserver/dist/raw/506330b23c5cce43a9352179e7977a684678fbaf/welcome/index.html"
 
 # https://github.com/caddyserver/caddy/releases
 ENV CADDY_VERSION v2.2.0-rc.3
 
 RUN set -eux; \
-	apkArch="$(apk --print-arch)"; \
-	case "$apkArch" in \
-		x86_64)  binArch='amd64'; checksum='05ca569f22d55e61b75f7813b9d9cf0b8a3d9d0308cd1cc7d89463b0e97f864bbbb00386103d88cea323099310a55f12407e7547b32631a0c41e850cc3188159' ;; \
-		aarch64) binArch='arm64'; checksum='717c289c53fcaa6ed33cea8975fc4350fa95e61e3c703a82771c9cc9b1951572c996c5823ea9cc6ad2e2cecb841bea6dc51a8fb0f95fbdef8dbb70620e6b39e4' ;; \
-		*) echo >&2 "error: unsupported architecture ($apkArch)"; exit 1 ;;\
-	esac; \
-	wget -O /tmp/caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/v2.2.0-rc.3/caddy_2.2.0-rc.3_linux_${binArch}.tar.gz"; \
-	echo "$checksum  /tmp/caddy.tar.gz" | sha512sum -c; \
-	tar x -z -f /tmp/caddy.tar.gz -C /usr/bin caddy; \
-	rm -f /tmp/caddy.tar.gz; \
-	chmod +x /usr/bin/caddy; \
-	caddy version
+        apkArch="$(apk --print-arch)"; \
+        case "$apkArch" in \
+                x86_64)  binArch='amd64'; checksum='05ca569f22d55e61b75f7813b9d9cf0b8a3d9d0308cd1cc7d89463b0e97f864bbbb00386103d88cea323099310a55f12407e7547b32631a0c41e850cc3188159' ;; \
+                aarch64) binArch='arm64'; checksum='717c289c53fcaa6ed33cea8975fc4350fa95e61e3c703a82771c9cc9b1951572c996c5823ea9cc6ad2e2cecb841bea6dc51a8fb0f95fbdef8dbb70620e6b39e4' ;; \
+                *) echo >&2 "error: unsupported architecture ($apkArch)"; exit 1 ;;\
+        esac; \
+        wget -O /tmp/caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/v2.2.0-rc.3/caddy_2.2.0-rc.3_linux_${binArch}.tar.gz"; \
+        echo "$checksum  /tmp/caddy.tar.gz" | sha512sum -c; \
+        tar x -z -f /tmp/caddy.tar.gz -C /usr/bin caddy; \
+        rm -f /tmp/caddy.tar.gz; \
+        chmod +x /usr/bin/caddy; \
+        caddy version
 
 # set up nsswitch.conf for Go's "netgo" implementation
 # - https://github.com/docker-library/golang/blob/1eb096131592bcbc90aa3b97471811c798a93573/1.14/alpine3.12/Dockerfile#L9
@@ -37,9 +38,10 @@ RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 ENV XDG_CONFIG_HOME /config
 ENV XDG_DATA_HOME /data
 
-VOLUME /etc/caddy
 VOLUME /config
 VOLUME /data
+VOLUME /etc/caddy
+VOLUME /var/www/html
 
 EXPOSE 80
 EXPOSE 443
@@ -47,9 +49,12 @@ EXPOSE 2019
 
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
 
+
 docker build -t caddy:v2 .
 
-docker run -d -p 80:80 -p 443:443 --name caddy --restart=always -v /opt/caddy/Caddyfile:/etc/caddy/Caddyfile caddy:v2
+
+docker run -d -p 80:80 -p 443:443 --name caddy --restart=always -v /opt/caddy:/etc/caddy -v /var/www/html:/var/www/html caddy:v2
+
 
 普通用户运行docker
 sudo usermod -a -G docker $user
