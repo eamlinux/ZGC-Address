@@ -37,14 +37,13 @@ RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
 ENV XDG_CONFIG_HOME /config
 ENV XDG_DATA_HOME /data
 
+VOLUME /etc/caddy
 VOLUME /config
 VOLUME /data
 
 EXPOSE 80
 EXPOSE 443
 EXPOSE 2019
-
-WORKDIR /srv
 
 CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
 
