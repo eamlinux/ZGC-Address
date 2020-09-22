@@ -1,0 +1,66 @@
+{
+    "log": {
+        "loglevel": "none"
+    },
+    "inbounds": [
+        {
+            "sniffing": {
+                "enabled": true,
+                "destOverride": ["http","tls"]
+            },
+            "protocol": "vless",
+            "listen": "0.0.0.0",
+            "port": "995", // 公网端口，建议大于1024
+            "tag": "vless-in",
+            "settings": {
+                "decryption":"none",
+                "clients": [
+                    {"id": ""} // v2ctl uuid生成id
+                ]
+            },
+            "streamSettings": {
+                "network": "kcp",
+                "kcpSettings": {
+                    "seed": ""  // v2ctl uuid生成一个seed密钥
+                }
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": { },
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "settings": { },
+            "tag": "block"
+        }
+    ],
+    "dns": {
+        "servers": [
+            "https://cloudflare-dns.com/dns-query",
+            "https://dns.google/dns-query"
+        ]
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "inboundTag": [
+                  "vless-in"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "outboundTag": "block",
+                "protocol": [
+                    "bittorrent"
+                ]
+            }
+        ]
+    }
+}
