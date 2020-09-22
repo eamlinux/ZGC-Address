@@ -15,13 +15,13 @@
             "settings": {
                 "decryption":"none",
                 "clients": [
-                    {"id": ""} // v2ctl uuid生成id
+                    {"id": ""} // $UUID
                 ]
             },
             "streamSettings": {
                 "network": "kcp",
                 "kcpSettings": {
-                    "seed": ""  // v2ctl uuid生成一个seed密钥
+                    "seed": ""  // 可用$UUID做密钥
                 }
             }
         }
