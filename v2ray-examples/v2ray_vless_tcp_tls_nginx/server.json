@@ -1,0 +1,82 @@
+{
+    "inbounds": [
+        {
+            "sniffing": {
+                "enabled": true,
+                "destOverride": ["http","tls"]
+            },
+            "listen": "0.0.0.0",
+            "port": 443,
+            "tag": "vless-in",
+            "protocol": "vless",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "$UUID",
+                        "level": 0
+                    }
+                ],
+                "decryption": "none",
+                "fallbacks": [
+                    {
+                        "alpn": "h2",
+                        "dest": 80
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "tls",
+                "tlsSettings": {
+                    "serverName": "daemon.com",
+                    "alpn": [
+                        "h2"
+                    ],
+                    "certificates": [
+                        {
+                            "certificateFile": "/path/your/daemon.com.crt",
+                            "keyFile": "/path/your/daemon.com.key"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": { },
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "settings": { },
+            "tag": "blocked"
+        }
+    ],
+    "dns": {
+        "servers": [
+            "https://cloudflare-dns.com/dns-query",
+            "https://dns.google/dns-query"
+        ]
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "inboundTag": [
+                  "vless-in"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "outboundTag": "blocked",
+                "protocol": [
+                    "bittorrent"
+                ]
+            }
+        ]
+    }
+}
