@@ -1,7 +1,5 @@
 {
-  "log": {
-    "loglevel": "none"
-  },
+  "log": {"loglevel": "none"},
   "inbounds": [{
     "sniffing": {
       "enabled": true,
@@ -40,17 +38,13 @@
     "rules":[
       {
         "type": "field",
-        "inboundTag": [
-          "vmess-in"
-        ],
+        "inboundTag": ["vmess-in"],
         "outboundTag": "direct"
       },
       {
         "type": "field",
         "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ]
+        "protocol": ["bittorrent"]
       }
     ]
   },
