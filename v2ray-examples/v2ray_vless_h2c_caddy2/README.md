@@ -1,6 +1,6 @@
 # 使用说明
 两个配置文中```daemon.com```改成你的域名  
-Caddy2的版本要求一定要2.2+，去<https://github.com/caddyserver/caddy/releases>下载.
+Caddy2的版本要求一定要2.2起，去<https://github.com/caddyserver/caddy/releases>下载最新版本.
 ## 客户端配置：
 
 | 功能栏  | 填写说明  |
