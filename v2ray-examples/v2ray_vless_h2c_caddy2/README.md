@@ -2,6 +2,10 @@
 两个配置文中```daemon.com```改成你的域名
 ## 客户端配置：
 
-| :----: | :----: | :----: |
-|地址：|“填写你的域名”| 对应Caddyfile域名  |
-|端口：| “https一般为443”  | 默认端口，除非你更改  |
+| ekt   | werq  | rewq | 22   |
+|-------|-------|------|------|
+| weqr  | weqr  | ew   | ewq  |
+| weqr  | ewqr  | e    | ewqr |
+| ewqr  | wqr   | weqr | weqr |
+| wer   | erq   | e    | wqr  |
+| weqr  | ewq   | e    | wqr  |
