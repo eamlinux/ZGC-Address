@@ -9,13 +9,13 @@
                 "destOverride": ["http","tls"]
             },
             "listen": "127.0.0.1",
-            "port": 10443,
+            "port": 10443, //连接的端口，可以更改，与Caddyfile反代的相同
             "tag": "vless-in",
             "protocol": "vless",
             "settings": {
                 "clients": [
                     {
-                        "id": "", // uuid
+                        "id": "", //填入你生成的uuid
                         "level": 0
                     }
                 ],
@@ -25,9 +25,9 @@
                 "network": "h2",
                 "security": "none",
                 "httpSettings": {
-                    "path": "v2ray?id=v2ray",
+                    "path": "/v2ray?id=v2ray", //path路径，自行更改，要与Caddyfile的路径相同
                     "host": [
-                        "daemon.com"
+                        "daemon.com" //更改为你的域名
                     ]
                 }
             }
