@@ -34,7 +34,7 @@
     "tag": "blocked"
   }],
   "routing": {
-    "domainStrategy": "AsIs",
+    "domainStrategy": "UseIP",
     "rules":[
       {
         "type": "field",
