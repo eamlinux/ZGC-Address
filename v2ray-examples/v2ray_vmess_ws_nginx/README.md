@@ -18,7 +18,7 @@ nginx可以使用acme生成的证书
 | 底层传输安全：  | tls   |
 | 跳过证书验证：  | false   |
 # 额外文件
-把下面两个文件与v2ray程度放在同一个文件夹，如```/etc/v2ary/```或者```/usr/local/bin/```，主要看你把v2ray程序文件放在哪
+把下面两个文件与v2ray程序放在同一个文件夹，如```/etc/v2ary/```或者```/usr/local/bin/```，主要看你把v2ray程序文件放在哪
 ```
 wget -O geosite.dat https://github.com/v2ray/domain-list-community/releases/latest/download/dlc.dat
 wget -O geoip.dat https://github.com/v2ray/geoip/releases/latest/download/geoip.dat
