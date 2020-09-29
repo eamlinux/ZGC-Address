@@ -26,9 +26,7 @@
   }],
   "outbounds": [{
     "protocol": "freedom",
-    "settings": {
-      "domainStrategy": "UseIP"
-    },
+    "settings": {},
     "tag": "direct"
   },{
     "protocol": "blackhole",
@@ -36,6 +34,7 @@
     "tag": "blocked"
   }],
   "routing": {
+    "domainStrategy": "AsIs",
     "rules":[
       {
         "type": "field",
