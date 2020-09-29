@@ -6,7 +6,7 @@ Wants=network-online.target
 
 [Service]
 Type=forking
-;注意这个用户跟你的证书权限一样，使用这个配置请删除这行注释
+;注意下面这个用户请用你申请证书的用户，使用这个配置请删除这行注释
 User=acme
 ExecStartPre=/usr/local/bin/nginx -t -c /opt/nginx/nginx.conf
 ExecStart=/usr/local/bin/nginx -c /opt/nginx/nginx.conf
