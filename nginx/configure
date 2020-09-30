@@ -48,7 +48,7 @@
             --with-pcre=./pcre-8.44 \
             --with-pcre-jit \
             --with-zlib=./zlib-1.2.11 \
-            --with-openssl=./openssl-1.1.1g \
+            --with-openssl=./openssl-1.1.1h \
             --with-openssl-opt="enable-tls1_3 no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong" \
             --with-debug
 
