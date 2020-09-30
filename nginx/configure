@@ -51,3 +51,8 @@
             --with-openssl=./openssl-1.1.1g \
             --with-openssl-opt="enable-tls1_3 no-weak-ssl-ciphers no-ssl3 no-shared enable-ec_nistp_64_gcc_128 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong" \
             --with-debug
+
+
+
+
+--with-openssl-opt="enable-ec_nistp_64_gcc_128 no-ssl2 no-ssl3 no-comp no-idea no-dtls no-dtls1 no-shared no-psk no-srp no-ec2m no-weak-ssl-ciphers enable-tls1_3 -DOPENSSL_NO_HEARTBEATS -fstack-protector-strong"
