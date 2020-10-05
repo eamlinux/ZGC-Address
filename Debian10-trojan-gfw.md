@@ -1,6 +1,6 @@
 ### 安装编译环境
 ```
-sudo apt -y install build-essential cmake libboost-system-dev libboost-program-options-dev libssl-dev default-libmysqlclient-dev
+sudo apt -y install build-essential cmake libboost-system-dev libboost-program-options-dev libssl-dev
 ```
 ### 拉取源码并编译
 ```
@@ -8,7 +8,7 @@ git clone --depth=1 https://github.com/trojan-gfw/trojan.git
 cd trojan/
 mkdir build
 cd build/
-cmake ..
+cmake .. -DENABLE_MYSQL=OFF -DENABLE_NAT=OFF -DENABLE_TLS13_CIPHERSUITES=ON
 make
 sudo mv trojan /usr/local/bin/
 sudo chown root:root /usr/local/bin/trojan
@@ -52,20 +52,15 @@ sudo nano /opt/trojan/config.json
         "password1",
         "password2"
     ],
-    "log_level": 1,
+    "log_level": 5,
     "ssl": {
         "cert": "/path/to/certificate.crt",
         "key": "/path/to/private.key",
         "key_password": "",
-        "cipher": "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384",
-        "cipher_tls13": "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
+        "cipher": false,
+        "cipher_tls13": "TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
         "prefer_server_cipher": true,
-        "alpn": [
-            "http/1.1"
-        ],
-        "alpn_port_override": {
-            "h2": 81
-        },
+        "alpn": ["h2"],
         "reuse_session": true,
         "session_ticket": false,
         "session_timeout": 600,
@@ -80,17 +75,6 @@ sudo nano /opt/trojan/config.json
         "reuse_port": false,
         "fast_open": false,
         "fast_open_qlen": 20
-    },
-    "mysql": {
-        "enabled": false,
-        "server_addr": "127.0.0.1",
-        "server_port": 3306,
-        "database": "trojan",
-        "username": "trojan",
-        "password": "",
-        "key": "",
-        "cert": "",
-        "ca": ""
     }
 }
 ```
@@ -127,8 +111,7 @@ server {
     add_header X-XSS-Protection "1; mode=block" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "no-referrer-when-downgrade" always;
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-    # add_header Strict-Transport-Security "max-age=63072000" always;
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
 }
 
 server {
@@ -138,7 +121,7 @@ server {
 }
 
 server {
-    listen 0.0.0.0:80;
+    listen 0.0.0.0:80 http2;
     listen [::]:80;
     server_name _;
     return 301 https://web.com$request_uri;
