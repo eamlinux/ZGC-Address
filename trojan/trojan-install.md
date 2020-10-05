@@ -51,7 +51,7 @@ sudo su -l acme
 curl  https://get.acme.sh | sh
 exit
 sudo su -l acme
-acme.sh --issue -d 你的域名 --keylength ec-256 --standalone
+acme.sh --issue -d 你的域名 --keylength ec-384 --standalone
 mkdir cert
 acme.sh --install-cert -d 你的域名 --key-file /home/acme/cert/private.key --fullchain-file /home/acme/cert/certificate.crt --ecc
 acme.sh --upgrade --auto-upgrade
