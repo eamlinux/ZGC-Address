@@ -213,17 +213,17 @@ sudo nano /opt/v2ray/config.json
       "protocol": "vmess",
       "settings": {
         "clients": [
-          {"id": "2a5c3011-9f7b-9107-fdeb-b8dc7c40b65a","alterId": 0},
-          {"id": "a1ffc37f-17db-afb5-c3b9-0970497b8997","alterId": 0},
-          {"id": "074f6818-e32d-5eed-2a85-0a45cd6df626","alterId": 0}
+          {"id": "$UUID","alterId": 0},
+          {"id": "$UUID","alterId": 0},
+          {"id": "$UUID","alterId": 0}
         ]
       },
       "streamSettings": {
         "network": "h2",
         "security": "none",
         "httpSettings": {
-          "path": "/login?&id=admin",
-          "host": ["vuf03.zhanguoce.tk"]
+          "path": "/xxx?xx=xxx",
+          "host": ["daemon.com"]
         }
       }
     }
