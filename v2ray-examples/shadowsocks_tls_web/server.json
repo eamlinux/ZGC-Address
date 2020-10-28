@@ -1,0 +1,78 @@
+{
+    "log": {
+        "loglevel": "none"
+    },
+    "inbounds": [
+        {
+            "port": 10443,
+            "listen": "127.0.0.1",
+            "protocol": "dokodemo-door",
+            "tag": "ws-shadowsocks",
+            "settings": {
+                "address": "v1.mux.cool",
+                "followRedirect": false,
+                "network": "tcp, udp"
+            },
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "wsSettings": {
+                    "path": "/path"
+                }
+            }
+        },
+        {
+            "port": 9101,
+            "listen": "127.0.0.1",
+            "protocol": "shadowsocks",
+            "settings": {
+                "method": "chacha20-ietf-poly1305",
+                "ota": false,
+                "password": "password",
+                "network": "tcp,udp"
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {},
+            "tag": "direct"
+        },
+        {
+            "protocol": "blackhole",
+            "settings": {},
+            "tag": "blocked"
+        },
+        {
+            "protocol": "freedom",
+            "tag": "ssredirect",
+            "settings": {
+                "redirect": "127.0.0.1:9101"
+            }
+        }
+    ],
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+            {
+                "type": "field",
+                "inboundTag": "ws-shadowsocks",
+                "outboundTag": "ssredirect"
+            },
+            {
+                "type": "field",
+                "protocol": [
+                    "bittorrent"
+                ],
+                "outboundTag": "blocked"
+            }
+        ]
+    }
+}
