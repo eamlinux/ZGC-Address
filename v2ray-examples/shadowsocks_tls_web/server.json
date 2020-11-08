@@ -4,14 +4,14 @@
     },
     "inbounds": [
         {
-            "port": 10443,
+            "port": 9443,
             "listen": "127.0.0.1",
             "protocol": "dokodemo-door",
             "tag": "ws-shadowsocks",
             "settings": {
                 "address": "v1.mux.cool",
                 "followRedirect": false,
-                "network": "tcp, udp"
+                "network": "tcp"
             },
             "sniffing": {
                 "enabled": true,
@@ -35,7 +35,7 @@
                 "method": "chacha20-ietf-poly1305",
                 "ota": false,
                 "password": "password",
-                "network": "tcp,udp"
+                "network": "tcp"
             }
         }
     ],
