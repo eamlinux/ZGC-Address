@@ -11,16 +11,16 @@
     "protocol": "vmess",
     "settings": {
       "clients": [
-        {"id": "$uuid","alterId": 0}, // $uuid自己替换
-        {"id": "$uuid","alterId": 0}  // $uuid自己替换
+        {"id": "$uuid","alterId": 0}, //$uuid自己替换
+        {"id": "$uuid","alterId": 0}  //$uuid自己替换
       ]
     },
     "streamSettings": {
       "network": "h2",
       "security": "none",
       "httpSettings": {
-        "path": "/v2ray?id=v2ray", // path路径
-        "host": ["daemon.com"] // 你的域名
+        "path": "/v2ray?id=v2ray", //path路径
+        "host": ["daemon.com"] //你的域名
       }
     }
   }],
@@ -49,17 +49,9 @@
     ]
   },
   "dns": {
-    "hosts": {
-      "domain:v2ray.com": "www.vicemc.net",
-      "domain:github.io": "pages.github.com",
-      "domain:wikipedia.org": "www.wikimedia.org",
-      "domain:shadowsocks.org": "electronicsrealm.com"
-    },
     "servers": [
       "https://cloudflare-dns.com/dns-query",
-      "https://dns.google/dns-query",
-      "1.0.0.1",
-      "8.8.4.4"
+      "https://dns.google/dns-query"
     ]
   }
 }
