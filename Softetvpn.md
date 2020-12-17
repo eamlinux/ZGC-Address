@@ -4,7 +4,7 @@
 ```
 sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential
 ```
-### 拉取Softether源码编译
+### 拉取Softether源码
 ```
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
 cd SoftEtherVPN
@@ -154,12 +154,14 @@ iptables -A FORWARD -s 192.168.30.0/24 -m state --state NEW -j ACCEPT
 ```
 sudo systemctl disable dnsmasq
 ```
+### 添加DOH
 ```
 wget -c https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz
 tar xf cloudflared-stable-linux-amd64.tgz
 
 curl https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz | sudo tar xzC /usr/local/bin/
 ```
+### 添加防火墙转发
 sudo apt install ufw && /etc/ufw/sysctl.conf
 ```
 # Uncomment this to allow this host to route packets between interfaces
@@ -183,21 +185,6 @@ sudo nano /etc/modules
 iptable_nat
 ip6table_nat
 ```
-```
-#/etc/sysctl.conf
-#```
-#net.core.default_qdisc=fq
-#net.ipv4.tcp_congestion_control=bbr
-
-#net.core.somaxconn=4096
-#net.ipv4.conf.all.send_redirects = 0
-#net.ipv4.conf.all.accept_redirects = 1
-#net.ipv4.conf.all.rp_filter = 1
-#net.ipv4.conf.default.send_redirects = 1
-#net.ipv4.conf.default.proxy_arp = 0
-#```
-```
-
 /etc/systemd/system/cloudflared.service
 ```
 [Unit]
@@ -208,7 +195,7 @@ Wants=nss-lookup.target
 
 [Service]
 User=cloudflared
-ExecStart=/usr/local/bin/cloudflared --no-autoupdate --logfile /var/log/cloudflared/cloudflared.log --config /usr/local/etc/cloudflared/config.yml
+ExecStart=/usr/local/bin/cloudflared --no-autoupdate --logfile /opt/cloudflared/cloudflared.log --config /opt/cloudflared/config.yml
 Restart=on-failure
 
 [Install]
