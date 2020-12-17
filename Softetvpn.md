@@ -1,17 +1,51 @@
 ## Debian10系统下安装部署
 
-### 安装编辑环境
+### 安装编译环境
 ```
 sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential
 ```
-### 拉取Softether源码编辑
+### 拉取Softether源码编译
 ```
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
 cd SoftEtherVPN
 git submodule init && git submodule update
+```
+#### 修改Cmakelist解决```libraries: libcedar.so: cannot open shared object file: No such file or directory```错误
+```
+vi CMakeLists.txt
+```
+-------------------------------------------------修改部分----------------------------------------------------------------
+#### 把内容
+```
+if(UNIX)
+  include(GNUInstallDirs)
+ 
+  include(CheckIncludeFile)
+  Check_Include_File(sys/auxv.h HAVE_SYS_AUXV)
+  if(EXISTS "/lib/systemd/system")
+    set(CMAKE_INSTALL_SYSTEMD_UNITDIR "/lib/systemd/system" CACHE STRING "Where to install systemd unit files")
+  endif()
+endif()
+```
+#### 变成
+```
+if(UNIX)
+  include(GNUInstallDirs)
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ 
+  include(CheckIncludeFile)
+  Check_Include_File(sys/auxv.h HAVE_SYS_AUXV)
+  if(EXISTS "/lib/systemd/system")
+    set(CMAKE_INSTALL_SYSTEMD_UNITDIR "/lib/systemd/system" CACHE STRING "Where to install systemd unit files")
+  endif()
+endif()
+```
+-----------------------------------------------------END----------------------------------------------------------------
+### 进行编译
+```
 ./configure --disable-documentation
-make -C tmp
-make -C tmp install
+make -C build
+sudo make -C build install
 ```
 ### 编辑Softether启动文件
 ```
