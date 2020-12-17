@@ -1,4 +1,10 @@
-```sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential```
+## Debian10系统下安装部署
+
+### 安装编辑环境
+```
+sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential
+```
+### 拉取Softether源码编辑
 ```
 git clone https://github.com/SoftEtherVPN/SoftEtherVPN.git
 cd SoftEtherVPN
@@ -7,7 +13,11 @@ git submodule init && git submodule update
 make -C tmp
 make -C tmp install
 ```
-```/lib/systemd/system/softether-vpnserver.service```
+### 编辑Softether启动文件
+```
+/lib/systemd/system/softether-vpnserver.service
+```
+#### 添加部分内容
 ```
 [Unit]
 Description=SoftEther VPN Server
@@ -41,13 +51,17 @@ CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_BROADCAST CAP_N
 WantedBy=multi-user.target
 
 ```
-
+#### 激活启动项
+```
 sudo systemctl enable softether-vpnserver
+```
+### 安装dnsmasq作为dhcp分配
 ```
 sudo apt install dnsmasq
 sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf_bk
 sudo nano /etc/dnsmasq.conf
---------------------------------------------------------------------------
+
+-----------------------添加内容-----------------------------
 interface=tap_soft
 except-interface=ens3
 #port=0
@@ -88,9 +102,9 @@ log-async=5
 #log-dhcp
 #quiet-dhcp6
 #dhcp-option=3,192.168.30.1
--------------------------------------------------------------------------------------
+-------------------------END---------------------------
 ```
-/usr/local/iptables.sh
+### 编辑防火墙转发脚本```/usr/local/iptables.sh```
 ```
 #!/bin/bash
 /sbin/ifconfig tap_soft 192.168.30.1
@@ -102,8 +116,10 @@ iptables -A INPUT -s 192.168.30.0/24 -m state --state NEW -j ACCEPT
 iptables -A OUTPUT -s 192.168.30.0/24 -m state --state NEW -j ACCEPT
 iptables -A FORWARD -s 192.168.30.0/24 -m state --state NEW -j ACCEPT
 ```
-
+### 禁止dnsmasq开机启动，由softether控制
+```
 sudo systemctl disable dnsmasq
+```
 ```
 wget -c https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz
 tar xf cloudflared-stable-linux-amd64.tgz
