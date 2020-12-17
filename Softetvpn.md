@@ -280,6 +280,7 @@ LANGUAGE="zh_CN:zh"
 ```
 
 sudo reboot
+sudo ufw allow 67/udp
 
 
 
