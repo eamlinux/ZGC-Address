@@ -1,0 +1,34 @@
+web.me {
+    encode zstd gzip
+    root * /var/www/html
+    file_server
+    log {
+        output discard
+    }
+    tls {
+        protocols tls1.3
+        curves x25519
+        alpn h2
+    }
+    header {
+        Strict-Transport-Security max-age=31536000;
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer-when-downgrade
+    }
+    handle_errors {
+        respond "404 Not Found"
+    }
+    @websocket1 {
+        path /path1
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    @websocket2 {
+        path /path2
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    reverse_proxy @websocket1 localhost:10086
+    reverse_proxy @websocket2 localhost:10000
+}
