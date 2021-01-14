@@ -4,3 +4,26 @@ sudo mv caddy /usr/local/bin/
 sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
+
+sudo nano /etc/systemd/system/caddy.service
+###########################################
+[Unit]
+Description=Caddy
+Documentation=https://caddyserver.com/docs/
+After=network.target
+
+[Service]
+User=caddy
+Group=caddy
+ExecStart=/usr/local/bin/caddy run --environ --config /opt/caddy/Caddyfile
+ExecReload=/usr/local/bin/caddy reload --config /opt/caddy/Caddyfile
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+############################################
