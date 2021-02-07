@@ -116,3 +116,13 @@ DBHost=localhost
 DBUser=zabbixuser
 DBPassword=password
 ```
+#### font
+scp windows font ```simkai.ttf``` to linux /home/user
+```
+sudo mv simkai.ttf /usr/share/zabbix/fonts/
+sudo chown -R root:root /usr/share/zabbix/fonts/
+sudo chmod 0755 /usr/share/zabbix/fonts/simkai.ttf
+ls -l /usr/share/zabbix/fonts/
+sudo rm -f /etc/alternatives/zabbix-frontend-font
+sudo ln -s /usr/share/zabbix/fonts/simkai.ttf /etc/alternatives/zabbix-frontend-font
+```
