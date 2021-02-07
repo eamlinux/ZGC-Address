@@ -126,3 +126,7 @@ ls -l /usr/share/zabbix/fonts/
 sudo rm -f /etc/alternatives/zabbix-frontend-font
 sudo ln -s /usr/share/zabbix/fonts/simkai.ttf /etc/alternatives/zabbix-frontend-font
 ```
+### restart
+```
+sudo systemctl restart zabbix-server zabbix-agent2 nginx php7.3-fpm
+```
