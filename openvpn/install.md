@@ -1,0 +1,140 @@
+wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.0.8.tgz
+
+tar -xvzf EasyRSA-3.0.8.tgz
+
+cp -r EasyRSA-3.0.8/ /etc/openvpn/easy-rsa
+cd /etc/openvpn/easy-rsa
+cp vars.example vars
+nano vars
+```
+set_var EASYRSA                 "$PWD"
+set_var EASYRSA_PKI             "$EASYRSA/pki"
+set_var EASYRSA_DN              "cn_only"
+set_var EASYRSA_REQ_COUNTRY     "CN"
+set_var EASYRSA_REQ_PROVINCE    "GuangDong"
+set_var EASYRSA_REQ_CITY        "DongGuan"
+set_var EASYRSA_REQ_ORG         "ROSE CERTIFICATE AUTHORITY"
+set_var EASYRSA_REQ_EMAIL    "admin@example.com"
+set_var EASYRSA_REQ_OU          "ROSE EASY CA"
+set_var EASYRSA_KEY_SIZE        2048
+set_var EASYRSA_ALGO            rsa
+set_var EASYRSA_CA_EXPIRE    7500
+set_var EASYRSA_CERT_EXPIRE     365
+set_var EASYRSA_NS_SUPPORT    "no"
+set_var EASYRSA_NS_COMMENT    "ROSE CERTIFICATE AUTHORITY"
+set_var EASYRSA_EXT_DIR         "$EASYRSA/x509-types"
+set_var EASYRSA_SSL_CONF        "$EASYRSA/openssl-easyrsa.cnf"
+set_var EASYRSA_DIGEST          "sha256"
+```
+./easyrsa clean-all
+./easyrsa init-pki
+./easyrsa build-ca nopass
+./easyrsa gen-req server1 nopass
+./easyrsa sign-req server server1
+./easyrsa gen-dh
+
+openvpn --genkey --secret ta.key
+openvpn --genkey tls-auth ta.key
+
+cp ta.key /etc/openvpn/
+cp pki/ca.crt /etc/openvpn/server/
+cp pki/dh.pem /etc/openvpn/server/
+cp pki/private/server1.key /etc/openvpn/server/
+cp pki/issued/server1.crt /etc/openvpn/server/
+
+./easyrsa gen-req vpnclient nopass
+./easyrsa sign-req client vpnclient
+cp pki/ca.crt /etc/openvpn/client/
+cp pki/issued/vpnclient.crt /etc/openvpn/client/
+cp pki/private/vpnclient.key /etc/openvpn/client/
+
+nano /etc/openvpn/server.conf
+```
+port 1194
+proto udp
+dev tun
+ca /etc/openvpn/server/ca.crt
+cert /etc/openvpn/server/server1.crt
+key /etc/openvpn/server/server1.key
+dh /etc/openvpn/server/dh.pem
+server 10.8.0.0 255.255.255.0
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 1.0.0.1"
+push "dhcp-option DNS 8.8.4.4"
+ifconfig-pool-persist ipp.txt
+# push "route 192.168.0.0 255.255.255.0"
+keepalive 10 120
+comp-lzo
+# compress lz4
+# duplicate-cn
+tls-auth ta.key 0
+cipher AES-256-CBC
+user nobody
+group nogroup
+persist-key
+persist-tun
+status /var/log/openvpn/openvpn-status.log
+log         /var/log/openvpn/openvpn.log
+log-append  /var/log/openvpn/openvpn.log
+verb 3
+explicit-exit-notify 1
+script-security 2
+auth-user-pass-verify /etc/openvpn/checkpwd.sh via-file
+username-as-common-name
+verify-client-cert none
+client-to-client
+```
+touch /etc/openvpn/checkpwd.sh
+nano /etc/openvpn/checkpwd.sh
+```
+#!/bin/bash
+
+PASSFILE="/etc/openvpn/pwd-file"
+LOG_FILE="/etc/openvpn/logs/openvpn-password.log"
+TIME_STAMP=`date "+%Y-%m-%d %T"`
+
+readarray -t lines < $1
+username=${lines[0]}
+password=${lines[1]}
+
+if [ ! -r "${PASSFILE}" ]; then
+  echo "${TIME_STAMP}: Could not open password file \"${PASSFILE}\" for reading." >> ${LOG_FILE}
+  exit 1
+fi
+
+CORRECT_PASSWORD=`awk '!/^;/&&!/^#/&&$1=="'${username}'"{print $2;exit}' ${PASSFILE}`
+
+if [ "${CORRECT_PASSWORD}" = "" ]; then
+  echo "${TIME_STAMP}: User does not exist: username=\"${username}\", password=\"${password}\"." >> ${LOG_FILE}
+  exit 1
+fi
+
+if [ "${password}" = "${CORRECT_PASSWORD}" ]; then
+  echo "${TIME_STAMP}: Successful authentication: username=\"${username}\"." >> ${LOG_FILE}
+  exit 0
+fi
+
+echo "${TIME_STAMP}: Incorrect password: username=\"${username}\", password=\"${password}\"." >> ${LOG_FILE}
+exit 1
+```
+chmod +x /etc/openvpn/checkpwd.sh
+touch /etc/openvpn/pwd-file
+nano /etc/openvpn/pwd-file
+```
+test testpasswd
+```
+systemctl start openvpn@server
+systemctl enable openvpn@server
+
+
+/etc/ufw/before.rules
+
+```
+*nat
+# :PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+-A POSTROUTING -s 10.8.0.0/24 -o ens3 -j MASQUERADE
+
+COMMIT
+```
