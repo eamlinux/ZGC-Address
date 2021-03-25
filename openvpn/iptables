@@ -1,0 +1,15 @@
+/etc/ufw/before.rules
+
+# nat table rules
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+# port forwarding
+-A PREROUTING -p tcp --dport 本机端口号 -j DNAT --to-destination 目标地址:目标端口号
+-A PREROUTING -p udp --dport 本机端口号 -j DNAT --to-destination 目标地址:目标端口号
+-A POSTROUTING -p tcp -d 目标地址 --dport 目标端口号 -j SNAT --to-source 本机内网地址
+-A POSTROUTING -p udp -d 目标地址 --dport 目标端口号 -j SNAT --to-source 本机内网地址
+
+# commit to apply changes
+COMMIT
