@@ -1,0 +1,123 @@
+port: 7890
+socks-port: 7891
+allow-lan: true
+bind-address: "*"
+ipv6: false
+mode: rule
+log-level: silent
+external-controller: 0.0.0.0:9090
+external-ui: "/usr/share/openclash/dashboard"
+interface-name: en0
+
+hosts:
+##Custom HOSTS##
+#  experimental hosts, support wildcard (e.g. *.clash.dev Even *.foo.*.example.com)
+#  static domain has a higher priority than wildcard domain (foo.example.com > *.example.com)
+#  NOTE: hosts don't work with `fake-ip`
+
+#  '*.clash.dev': 127.0.0.1
+#  'alpha.clash.dev': '::1'
+##Custom HOSTS END##
+# '*.clash.dev': 127.0.0.1
+# '.dev': 127.0.0.1
+# 'alpha.clash.dev': '::1'
+
+profile:
+# Store the `select` results in $HOME/.config/clash/.cache
+# set false If you don't want this behavior
+# when two different configurations have groups with the same name, the selected values are shared
+store-selected: false
+
+# DNS server settings
+# This section is optional. When not present, the DNS server will be disabled.
+redir-port: 7892
+secret: "123456"
+dns:
+  enable: true
+  ipv6: false
+  listen: 127.0.0.1:7874
+  # ipv6: false # when the false, response to AAAA questions will be empty
+
+  # These nameservers are used to resolve the DNS nameserver hostnames below.
+  # Specify IP addresses only
+  default-nameserver:
+  - 180.76.76.76
+  - 1.0.0.1
+  enhanced-mode: redir-host # or fake-ip
+  # use-hosts: true # lookup hosts and return IP record
+  
+  # Hostnames in this list will not be resolved with fake IPs
+  # i.e. questions to these domain names will always be answered with their
+  # real IP addresses
+  # fake-ip-filter:
+  #   - '*.lan'
+  #   - localhost.ptlogin2.qq.com
+  
+  # Supports UDP, TCP, DoT, DoH. You can specify the port to connect to.
+  # All DNS questions are sent directly to the nameserver, without proxies
+  # involved. Clash answers the DNS question with the first result gathered.
+##Custom DNS##
+  nameserver:
+  - 127.0.0.1:5333
+  - https://doh.rixcloud.dev/dns-query
+  fallback:
+  - https://cloudflare-dns.com/dns-query
+  - https://dns.google/dns-query
+  - tls://dns.google:853
+  - https://1.1.1.1/dns-query
+  - tls://1.1.1.1:853
+  - tls://8.8.8.8:853
+  fallback-filter:
+    geoip: true
+    ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.0.0.0/24
+      - 192.0.2.0/24
+      - 192.88.99.0/24
+      - 192.168.0.0/16
+      - 198.18.0.0/15
+      - 198.51.100.0/24
+      - 203.0.113.0/24
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+      - 255.255.255.255/32
+#===================== OpenClash-General-Settings =====================#
+proxies:
+- name: "ss.tk"
+  type: ss
+  server: ss.tk
+  port: 443
+  cipher: chacha20-ietf-poly1305
+  password: "ss.com"
+  udp: false
+  plugin: v2ray-plugin
+  plugin-opts:
+    mode: websocket
+    host: ss.tk
+    tls: true
+    skip-cert-verify: false
+    path: '/ss'
+    mux: true
+    headers:
+      custom: ss.tk
+proxy-groups:
+- name: Proxy
+  type: select
+  proxies:
+  - "ss.tk"
+rules:
+  - DOMAIN-SUFFIX,google.com,Proxy
+  - DOMAIN-KEYWORD,google,Proxy
+  - DOMAIN,google.com,Proxy
+  - DOMAIN-SUFFIX,ad.com,REJECT
+  - SRC-IP-CIDR,192.168.1.201/32,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - GEOIP,CN,DIRECT
+  - DST-PORT,80,DIRECT
+  - SRC-PORT,7777,DIRECT
+  - MATCH,Proxy
