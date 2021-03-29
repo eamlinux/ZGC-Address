@@ -1,0 +1,8 @@
+# 适用于fake-ip增强模式 配合其它dns 5333 端口
+
+iptables -t nat -I openclash -s 192.168.1.91/32 -j RETURN
+iptables -t nat -I PREROUTING -s 192.168.1.91/32 -p udp --dport 53 -j REDIRECT --to-ports 5333
+iptables -t nat -I PREROUTING -s 192.168.1.91/32 -p tcp --dport 53 -j REDIRECT --to-ports 5333
+
+# 如有选中udp流量转发 需要添加如下项 绕过udp
+iptables -t mangle -A openclash -s 192.168.1.91/32 -j RETURN
