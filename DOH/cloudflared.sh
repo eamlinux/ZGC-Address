@@ -29,3 +29,18 @@ proxy-dns-upstream:
  - https://cloudflare-dns.com/dns-query
  - https://dns.google/dns-query
  - https://doh.opendns.com/dns-query" | sudo tee /opt/cloudflared/config.yml
+
+
+## resolv.conf
+sudo nano /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
+
+#!/bin/sh
+make_resolv_conf(){
+    :
+}
+
+sudo chmod +x /etc/dhcp/dhclient-enter-hooks.d/nodnsupdate
+
+sudo nano /etc/resolv.conf
+
+nameserver 127.0.0.1
