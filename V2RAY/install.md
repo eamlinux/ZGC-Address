@@ -12,7 +12,7 @@ sudo ufw reload
 sudo useradd -r -m -s /sbin/nologin caddy
 sudo mkdir -p /opt/caddy /opt/v2ray
 ```
-```
+```shell
 echo '* soft nofile 51200
 * hard nofile 51200
 * soft nproc 51200
@@ -23,11 +23,11 @@ root hard nofile 51200
 root soft nproc 51200
 root hard nproc 51200' | sudo tee -a /etc/security/limits.conf
 ```
-```
+```shell
 echo 'net/core/default_qdisc=fq
 net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
 ```
-```
+```shell
 echo '[Unit]
 Description=Caddy
 Documentation=https://caddyserver.com/docs/
@@ -48,7 +48,7 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target' | sudo tee /etc/systemd/system/caddy.service
 ```
-```
+```shell
 echo 'web.me {
     encode zstd gzip
     root * /var/www/html
@@ -84,17 +84,17 @@ echo 'web.me {
     reverse_proxy @websocket2 localhost:10000
 }' | sudo tee /opt/caddy/Caddyfile
 ```
-```
+```bash
 sudo mkdir -p /var/www/html
 sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
 sudo chown -R caddy. /var/www/html
 ```
-```
+```bash
 wget https://github.com/v2fly/v2ray-core/releases/download/v4.37.3/v2ray-linux-64.zip
 unzip -d v2ray v2ray-linux-64.zip
 sudo mv v2ray/v2ctl v2ray/v2ray /usr/local/bin/
 ```
-```
+```shell
 echo '[Unit]
 Description=V2Ray Service
 Documentation=https://www.v2fly.org/
