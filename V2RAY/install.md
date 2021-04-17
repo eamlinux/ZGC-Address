@@ -111,7 +111,7 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target' | sudo tee /etc/systemd/system/v2ray@.service
 ```
-```
+```shell
 sudo tee /opt/v2ray/vless.json > /dev/null <<EOF
 {
   "log": {"loglevel": "none"},
