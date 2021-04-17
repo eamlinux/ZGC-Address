@@ -10,6 +10,7 @@ echo "y" | sudo ufw enable
 sudo ufw logging off
 sudo ufw reload
 sudo useradd -r -m -s /sbin/nologin caddy
+sudo mkdir -p /opt/caddy /opt/v2ray
 ```
 ```
 echo '* soft nofile 51200
