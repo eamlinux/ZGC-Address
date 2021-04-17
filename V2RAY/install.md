@@ -130,7 +130,7 @@ sudo tee /opt/v2ray/vless.json > /dev/null <<EOF
     "streamSettings": {
       "network": "ws",
       "wsSettings": {
-        "path": "/phpadmin"
+        "path": "/ws"
       }
     },
     "sniffing": {
