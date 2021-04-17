@@ -1,3 +1,5 @@
+## debian10下安装
+```bash
 sudo apt install binutils git curl ufw libsodium-dev unzip -y
 sudo ufw allow ssh
 sudo ufw allow http
@@ -8,7 +10,7 @@ echo "y" | sudo ufw enable
 sudo ufw logging off
 sudo ufw reload
 sudo useradd -r -m -s /sbin/nologin caddy
-
+```
 echo '* soft nofile 51200
 * hard nofile 51200
 * soft nproc 51200
