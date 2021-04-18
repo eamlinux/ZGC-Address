@@ -1,0 +1,7 @@
+    @grpc {
+        protocol grpc
+        path  /pathname/*
+    }
+    reverse_proxy @grpc h2c://127.0.0.1:10086 {
+        header_up X-Real-IP {remote_host}
+    }
