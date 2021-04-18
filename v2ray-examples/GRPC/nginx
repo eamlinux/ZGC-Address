@@ -1,0 +1,14 @@
+    location /pathname {
+        if ($request_method != "POST") {
+            return 403;
+        }
+        grpc_pass grpc://127.0.0.1:10086;
+        grpc_connect_timeout 60s;
+        grpc_read_timeout 86400s;
+        grpc_send_timeout 60s;
+        grpc_set_header Upgrade $http_upgrade;
+        grpc_set_header Connection "upgrade";
+        grpc_set_header Host $http_host;
+        grpc_set_header X-Real-IP $remote_addr;
+        grpc_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
