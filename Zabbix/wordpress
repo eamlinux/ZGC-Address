@@ -12,3 +12,32 @@ web.com {
 
     rewrite @disallowed '/index.php'
 }
+
+
+
+web.me {
+    encode zstd gzip
+    root * /var/www/wordpress
+    php_fastcgi unix//run/php/php7.4-fpm.sock
+    file_server
+    log {
+        output discard
+    }
+    tls {
+        protocols tls1.3
+        curves x25519
+        alpn h2
+    }
+    header {
+        Strict-Transport-Security max-age=31536000;
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy no-referrer-when-downgrade
+    }
+    @disallowed {
+        path /xmlrpc.php
+        path *.sql
+        path /wp-content/uploads/*.php
+    }
+    rewrite @disallowed '/index.php'
+}
