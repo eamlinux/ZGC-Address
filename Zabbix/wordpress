@@ -1,0 +1,14 @@
+web.com {
+    root * /var/www/wordpress
+    php_fastcgi unix//run/php/php7.4-fpm.sock
+    file_server
+    encode gzip
+
+    @disallowed {
+        path /xmlrpc.php
+        path *.sql
+        path /wp-content/uploads/*.php
+    }
+
+    rewrite @disallowed '/index.php'
+}
