@@ -23,7 +23,7 @@ web.me {
     log {
         output discard
     }
-    tls {
+    tls admin@web.me {
         protocols tls1.3
         curves x25519
         alpn h2
