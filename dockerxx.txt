@@ -14,16 +14,16 @@ RUN set -eux; \
         wget -O /usr/share/caddy/index.html "https://github.com/caddyserver/dist/raw/506330b23c5cce43a9352179e7977a684678fbaf/welcome/index.html"
 
 # https://github.com/caddyserver/caddy/releases
-ENV CADDY_VERSION v2.2.0-rc.3
+ENV CADDY_VERSION v2.3.0
 
 RUN set -eux; \
         apkArch="$(apk --print-arch)"; \
         case "$apkArch" in \
-                x86_64)  binArch='amd64'; checksum='05ca569f22d55e61b75f7813b9d9cf0b8a3d9d0308cd1cc7d89463b0e97f864bbbb00386103d88cea323099310a55f12407e7547b32631a0c41e850cc3188159' ;; \
-                aarch64) binArch='arm64'; checksum='717c289c53fcaa6ed33cea8975fc4350fa95e61e3c703a82771c9cc9b1951572c996c5823ea9cc6ad2e2cecb841bea6dc51a8fb0f95fbdef8dbb70620e6b39e4' ;; \
+                x86_64)  binArch='amd64'; checksum='7112a03bf341a4ccc5332b5ea715de9a68316d2aa2f468bdc263b192448ce412e002acfda68bd0606088b35c5de1f2e93f2aa64ccc065a039f87ee34e0b85b98' ;; \
+                aarch64) binArch='arm64'; checksum='ef1e44293a935b05602524dbab96b51c862864b8a36c7de48b3329dab9b8a4b7d1930460868fded3afb3a74bdfb5a1c1c0ba46f1401edf648a370c0f7be8a05b' ;; \
                 *) echo >&2 "error: unsupported architecture ($apkArch)"; exit 1 ;;\
         esac; \
-        wget -O /tmp/caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/v2.2.0-rc.3/caddy_2.2.0-rc.3_linux_${binArch}.tar.gz"; \
+        wget -O /tmp/caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/v2.3.0/caddy_2.3.0_linux_${binArch}.tar.gz"; \
         echo "$checksum  /tmp/caddy.tar.gz" | sha512sum -c; \
         tar x -z -f /tmp/caddy.tar.gz -C /usr/bin caddy; \
         rm -f /tmp/caddy.tar.gz; \
