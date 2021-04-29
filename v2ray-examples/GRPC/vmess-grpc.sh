@@ -8,7 +8,7 @@ sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
     },
     "port": "10086",
     "listen": "127.0.0.1",
-    "tag": "vmess-in",
+    "tag": "vmess-grpc",
     "protocol": "vmess",
     "settings": {
       "clients": [
@@ -36,7 +36,7 @@ sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
     "domainStrategy": "AsIs",
     "rules": [{
       "type": "field",
-      "inboundTag": ["vless-in"],
+      "inboundTag": ["vmess-grpc"],
       "outboundTag": "direct"
     },{
       "type": "field",
