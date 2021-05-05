@@ -37,11 +37,7 @@ upstream = [
     "udp:1.0.0.1:53",
     "udp:8.8.8.8:53",
     "udp:8.8.4.4:53",
-    "tcp-tls:1.1.1.1:853",
-    "tcp-tls:1.0.0.1:853",
-    "tcp-tls:8.8.8.8:853",
-    "tcp-tls:8.8.4.4:853",
-    "tcp-tls:9.9.9.9:853",
+    "tcp-tls:dns.google:853",
 ]
 
 # Upstream timeout
