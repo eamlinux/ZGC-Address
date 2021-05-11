@@ -1,4 +1,4 @@
-sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
+sudo tee /opt/v2ray/vmh2c.json > /dev/null <<EOF
 {
   "log": {"loglevel": "none"},
   "inbounds": [{
