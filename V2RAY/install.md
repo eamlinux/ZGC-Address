@@ -27,6 +27,14 @@ root hard nproc 51200' | sudo tee -a /etc/security/limits.conf
 echo 'net/core/default_qdisc=fq
 net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
 ```
+```bash
+wget https://github.com/caddyserver/caddy/releases/download/v2.4.0/caddy_2.4.0_linux_amd64.tar.gz
+tar xf caddy_2.4.0_linux_amd64.tar.gz
+sudo mv caddy /usr/local/bin/
+sudo chown root:root /usr/local/bin/caddy
+sudo chmod 0755 /usr/local/bin/caddy
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
+```
 ```shell
 echo '[Unit]
 Description=Caddy
