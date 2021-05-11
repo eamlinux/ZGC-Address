@@ -1,0 +1,13 @@
+    reverse_proxy /dns-query 127.0.0.1:10086 {
+        header_up X-Real-IP {http.request.remote.host}
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
+    reverse_proxy /p?id=1024 localhost:10000 {
+        header_up X-Real-IP {remote_host}
+        transport http {
+            versions h2c
+        }
+    }
