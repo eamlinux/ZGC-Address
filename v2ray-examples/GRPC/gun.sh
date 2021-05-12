@@ -44,6 +44,12 @@ sudo tee /opt/v2ray/gun.json > /dev/null <<EOF
       "outboundTag": "block",
       "protocol": ["bittorrent"]
     }]
+  },
+  "dns": {
+    "servers": [
+      "https://cloudflare-dns.com/dns-query",
+      "https://dns.google/dns-query"
+    ]
   }
 }
 EOF
