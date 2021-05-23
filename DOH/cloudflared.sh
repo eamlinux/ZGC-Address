@@ -3,6 +3,9 @@ wget https://github.com/cloudflare/cloudflared/releases/download/2021.3.6/cloudf
 chmod +x cloudflared-linux-amd64
 mv cloudflared-linux-amd64 cloudflared
 sudo mv cloudflared /usr/local/bin/
+sudo chown cloudflared:cloudflared /usr/local/bin/cloudflared
+sudo chmod 0755 /usr/local/bin/cloudflared
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/cloudflared
 
 echo "[Unit]
 Description=Cloudflare DNS over HTTPS proxy
