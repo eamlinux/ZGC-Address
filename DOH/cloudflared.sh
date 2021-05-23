@@ -1,5 +1,5 @@
 ## cloudflared
-wget https://github.com/cloudflare/cloudflared/releases/download/2021.3.6/cloudflared-linux-amd64
+wget https://github.com/cloudflare/cloudflared/releases/download/2021.5.9/cloudflared-linux-amd64
 chmod +x cloudflared-linux-amd64
 mv cloudflared-linux-amd64 cloudflared
 sudo mv cloudflared /usr/local/bin/
