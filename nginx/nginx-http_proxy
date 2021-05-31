@@ -2,9 +2,9 @@ sudo apt install build-essential libpcre3 libpcre3-dev zlib1g-dev libgd-dev libp
 
 libc6-dev需要添加sid源
 
-wget -c http://nginx.org/download/nginx-1.19.9.tar.gz
-tar xf nginx-1.19.9.tar.gz
-cd nginx-1.19.9
+wget -c http://nginx.org/download/nginx-1.21.0.tar.gz
+tar xf nginx-1.21.0.tar.gz
+cd nginx-1.21.0
 
 wget https://ftp.pcre.org/pub/pcre/pcre-8.44.tar.gz
 wget https://www.zlib.net/zlib-1.2.11.tar.gz
