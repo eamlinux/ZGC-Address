@@ -98,7 +98,7 @@ sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
 sudo chown -R caddy. /var/www/html
 ```
 ```bash
-wget https://github.com/v2fly/v2ray-core/releases/download/v4.38.3/v2ray-linux-64.zip
+wget https://github.com/v2fly/v2ray-core/releases/download/v4.40.1/v2ray-linux-64.zip
 unzip -d v2ray v2ray-linux-64.zip
 sudo mv v2ray/v2ctl v2ray/v2ray /usr/local/bin/
 ```
