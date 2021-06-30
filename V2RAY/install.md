@@ -28,8 +28,8 @@ echo 'net/core/default_qdisc=fq
 net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
 ```
 ```bash
-wget https://github.com/caddyserver/caddy/releases/download/v2.4.1/caddy_2.4.1_linux_amd64.tar.gz
-tar xf caddy_2.4.1_linux_amd64.tar.gz
+wget https://github.com/caddyserver/caddy/releases/download/v2.4.3/caddy_2.4.3_linux_amd64.tar.gz
+tar xf caddy_2.4.3_linux_amd64.tar.gz
 sudo mv caddy /usr/local/bin/
 sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
