@@ -17,9 +17,10 @@ sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
       ]
     },
     "streamSettings": {
-      "network": "grpc",
+      "network": "gun",
+      "security": "none",
       "grpcSettings": {
-        "serviceName": "pathname"
+        "serviceName": "GunService"
       }
     }
   }],
