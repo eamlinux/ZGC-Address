@@ -1,0 +1,60 @@
+web.tk {
+    encode zstd gzip
+    root * /var/www/html
+    file_server
+
+    log {
+        output discard
+    }
+
+    tls {
+        protocols tls1.3
+        curves x25519
+        alpn h2
+    }
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy no-referrer-when-downgrade
+    }
+
+    handle_errors {
+        respond "404 Not Found"
+    }
+
+    @grpc1 {
+        protocol grpc
+        path  /path1/*
+    }
+    reverse_proxy @grpc1 h2c://127.0.0.1:10086 {
+        header_up X-Real-IP {remote_host}
+    }
+
+    @grpc2 {
+        protocol grpc
+        path  /path2/*
+    }
+    reverse_proxy @grpc2 h2c://127.0.0.1:10010 {
+        header_up X-Real-IP {remote_host}
+    }
+
+    @vmessws {
+        path /vmwspath
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    reverse_proxy @vmessws localhost:10000 {
+        header_up X-Real-IP {remote_host}
+    }
+
+    @SSws {
+        path /sswspath
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    reverse_proxy @SSws localhost:10050 {
+        header_up X-Real-IP {remote_host}
+    }
+}
