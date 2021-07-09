@@ -34,3 +34,42 @@ daemon.com {
 
     rewrite @disallowed '/index.php'
 }
+
+-------------------------------------------------------------------------------------------------------------------------
+
+daemon.com {
+    encode zstd gzip
+    root * /var/www/wordpress
+    php_fastcgi unix//run/php/php8.2-fpm.sock
+    file_server
+
+    log {
+        output discard
+    }
+
+    tls {
+        protocols tls1.3
+        curves x25519
+        alpn h2
+    }
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options nosniff
+        X-Frame-Options SAMEORIGIN
+        Referrer-Policy no-referrer-when-downgrade
+    }
+
+    handle_errors {
+        respond "404 Not Found"
+    }
+
+    @disallowed {
+        path /xmlrpc.php/*
+        path /*.sql/*
+        path /*.db/*
+        path /wp-content/uploads/*.php/*
+    }
+
+    rewrite @disallowed /index.php
+}
