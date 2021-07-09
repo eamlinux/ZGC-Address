@@ -71,10 +71,10 @@ daemon.com {
     }
 
     @disallowed {
-        path /xmlrpc.php/*
-        path /*.sql/*
-        path /*.db/*
-        path /wp-content/uploads/*.php/*
+        path /xmlrpc.php
+        path *.sql
+        path *.db
+        path /wp-content/uploads/*.php
     }
 
     rewrite @disallowed /index.php
