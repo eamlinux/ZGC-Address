@@ -51,9 +51,10 @@ sudo su -l acme
 curl  https://get.acme.sh | sh
 exit
 sudo su -l acme
+acme.sh --set-default-ca  --server  letsencrypt
 acme.sh --issue -d 你的域名 --keylength ec-384 --standalone
-# acme.sh --issue -d domain.com -w /var/www/html
-# acme.sh --issue -d domain.com -d www.domain.com -d dev.domain.com -w /var/www/html
+# acme.sh --issue -d domain.com -w /var/www/html --keylength ec-384 --server letsencrypt
+# acme.sh --issue -d domain.com -d www.domain.com -d dev.domain.com -w /var/www/html --keylength ec-384 --server letsencrypt
 mkdir cert
 acme.sh --install-cert -d 你的域名 --key-file /home/acme/cert/private.key --fullchain-file /home/acme/cert/certificate.crt --ecc
 acme.sh --upgrade --auto-upgrade
