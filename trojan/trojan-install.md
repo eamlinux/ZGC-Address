@@ -60,6 +60,19 @@ acme.sh --install-cert -d 你的域名 --key-file /home/acme/cert/private.key --
 acme.sh --upgrade --auto-upgrade
 exit
 ```
+## 使用nginx申请证书的配置
+```
+server {
+      listen 80;
+      server_name example.com;
+
+      root /var/www/html/;
+
+      location ~ /.well-known/acme-challenge {
+         allow all;
+      }
+}
+```
 ## 建立trojan配置
 ```
 sudo mkdir -p /opt/trojan
@@ -186,17 +199,3 @@ sudo systemctl start trojan
 ```
 
 ##### 其中有什么坑我也不知道，肯定是小坑，自己填一下，不难。
-
-## 使用nginx申请证书的配置
-```
-server {
-      listen 80;
-      server_name example.com;
-
-      root /var/www/html/;
-
-      location ~ /.well-known/acme-challenge {
-         allow all;
-      }
-}
-```
