@@ -125,7 +125,7 @@ sudo tee /opt/v2ray/vless.json > /dev/null <<EOF
 {
   "log": {"loglevel": "none"},
   "inbounds": [{
-    "port": 8443,
+    "port": 10086,
     "listen": "127.0.0.1",
     "tag": "vless-in",
     "protocol": "vless",
