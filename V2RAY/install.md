@@ -42,6 +42,7 @@ Documentation=https://caddyserver.com/docs/
 After=network.target
 
 [Service]
+Type=notify
 User=caddy
 Group=caddy
 ExecStart=/usr/local/bin/caddy run --environ --config /opt/caddy/Caddyfile
