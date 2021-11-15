@@ -36,7 +36,7 @@ sudo su -l acme
 curl  https://get.acme.sh | sh
 exit
 sudo su -l acme
-acme.sh --issue -d msk.sengoce.tk --keylength ec-384 --standalone --server letsencrypt
+acme.sh --issue -d web.tk --keylength ec-384 --standalone --server letsencrypt
 ```
 nano /etc/nginx/conf.d/fallback.conf  
 ```
