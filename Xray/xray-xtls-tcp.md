@@ -1,8 +1,8 @@
-apt -y update
-apt -y install curl git nginx-full libnginx-mod-stream wget
-rm -rf /usr/bin/v2ray /var/log/v2ray /etc/v2ray /etc/systemd/system/v2ray.service
-systemctl daemon-reload
-nano /etc/nginx/nginx.conf
+apt -y update  
+apt -y install curl git nginx-full libnginx-mod-stream wget  
+rm -rf /usr/bin/v2ray /var/log/v2ray /etc/v2ray /etc/systemd/system/v2ray.service  
+systemctl daemon-reload  
+nano /etc/nginx/nginx.conf  
 ```
 stream {
         map $ssl_preread_server_name $user_xray {
@@ -20,10 +20,10 @@ stream {
 }
 ```
 
-cd /var/www/html
-git clone https://github.com/tusenpo/FlappyFrog.git flappyfrog
-acme.sh --issue -d msk.sengoce.tk --keylength ec-384 --standalone --server letsencrypt
-nano /etc/nginx/conf.d/fallback.conf
+cd /var/www/html  
+git clone https://github.com/tusenpo/FlappyFrog.git flappyfrog  
+acme.sh --issue -d msk.sengoce.tk --keylength ec-384 --standalone --server letsencrypt  
+nano /etc/nginx/conf.d/fallback.conf  
 ```
 server {
         listen 80;
