@@ -22,7 +22,22 @@ stream {
 
 cd /var/www/html  
 git clone https://github.com/tusenpo/FlappyFrog.git flappyfrog  
-acme.sh --issue -d msk.sengoce.tk --keylength ec-384 --standalone --server letsencrypt  
+```
+sudo apt install socat ufw
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/socat
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+sudo ufw default deny
+sudo ufw reload
+sudo useradd -r -m -s /bin/bash acme
+sudo su -l acme
+curl  https://get.acme.sh | sh
+exit
+sudo su -l acme
+acme.sh --issue -d msk.sengoce.tk --keylength ec-384 --standalone --server letsencrypt
+```
 nano /etc/nginx/conf.d/fallback.conf  
 ```
 server {
