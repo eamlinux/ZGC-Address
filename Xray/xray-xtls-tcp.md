@@ -56,9 +56,9 @@ server {
         root /var/www/html/flappyfrog;
 }
 ```
-wget https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip 
-unzip -d xray Xray-linux-64.zip 
-sudo mv xray/xray /usr/local/bin/ 
+wget https://github.com/XTLS/Xray-core/releases/download/v1.4.5/Xray-linux-64.zip  
+unzip -d xray Xray-linux-64.zip  
+sudo mv xray/xray /usr/local/bin/  
 ```
 cat > /etc/systemd/system/xray@.service <<EOF
 [Unit]
