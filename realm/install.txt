@@ -7,7 +7,7 @@ sudo mv filebrowser /usr/local/bin/
 sudo chown root:root /usr/local/bin/filebrowser
 sudo chmod 0755 /usr/local/bin/filebrowser
 sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/filebrowser
-sudo useradd -r -m -s /sbin/nologin caddy -g root
+sudo useradd -r -M -s /sbin/nologin caddy -g root
 echo 'net/core/default_qdisc=fq
 net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
 sudo mkdir -p /opt/fileserver/userdir
