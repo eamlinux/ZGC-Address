@@ -1,0 +1,83 @@
+apt install wget sudo nano curl sqlite3
+
+wget -c -t5 https://github.com/filebrowser/filebrowser/releases/download/v2.19.0/linux-amd64-filebrowser.tar.gz
+tar zxf linux-amd64-filebrowser.tar.gz
+chmod +x filebrowser
+sudo mv filebrowser /usr/local/bin/
+sudo chown root:root /usr/local/bin/filebrowser
+sudo chmod 0755 /usr/local/bin/filebrowser
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/filebrowser
+sudo useradd -r -m -s /sbin/nologin caddy -g root
+echo 'net/core/default_qdisc=fq
+net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
+sudo mkdir -p /opt/fileserver/userdir
+
+sudo tee /opt/fileserver/config.json > /dev/null <<EOF
+{
+    "address":"0.0.0.0",
+    "database":"/opt/fileserver/server.db",
+    "log":"/opt/fileserver/log/filebrowser.log",
+    "port":80,
+    "root":"/opt/fileserver/userdir",
+    "username":"admin"
+}
+EOF
+
+sudo tee /etc/systemd/system/filebrowser.service > /dev/null <<EOF
+[Unit]
+Description=Filebrowser Client Service
+After=network.target
+
+[Service]
+User=caddy
+Group=caddy
+ExecStart=/usr/local/bin/filebrowser --config /opt/fileserver/config.json
+ExecReload=/usr/local/bin/filebrowser reload --config /opt/fileserver/config.json
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+LimitNPROC=512
+PrivateTmp=true
+ProtectSystem=full
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+EOF
+wget -c -t5 https://github.com/zhboner/realm/releases/download/v1.4/realm
+chmod +x realm
+sudo mv realm /usr/local/bin/
+sudo chown root:root /usr/local/bin/realm
+sudo chmod 0755 /usr/local/bin/realm
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/realm
+
+sudo tee /etc/systemd/system/realm.service > /dev/null <<EOF
+[Unit]
+Description=realm
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Type=simple
+User=caddy
+Group=caddy
+Restart=on-failure
+RestartSec=5s
+DynamicUser=true
+ExecStart=/usr/local/bin/realm --config /opt/fileserver/userdir/config.json
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /opt/fileserver/userdir/config.json > /dev/null <<EOF
+{
+    "listening_addresses": ["0.0.0.0"],
+    "listening_ports": ["80", "8080", "443"],
+    "remote_addresses": ["xxx.xxx.xxx.xxx"],
+    "remote_ports": ["80", "8080", "443"]
+}
+EOF
+chown -R caddy. /opt/fileserver
+systemctl daemon-reload
+systemctl enable --now fileserver
+systemctl enable --now realm
