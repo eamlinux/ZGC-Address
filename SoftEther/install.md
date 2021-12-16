@@ -72,10 +72,8 @@ ip addr del 192.168.30.1/24 dev ${VPNIF}
 iptables -D FORWARD -i ${VPNIF} -j ACCEPT
 iptables -t nat -D POSTROUTING -o ${IF} -j MASQUERADE
 ```
-## dnsmasq
-```
 ## /etc/dnsmasq.conf
-
+```
 interface=tap_soft
 bind-interfaces
 port=0
@@ -105,4 +103,28 @@ ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
+```
+## 优化
+```
+sudo apt install curl ufw -y
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+echo "y" | sudo ufw enable
+sudo ufw logging off
+sudo ufw reload
+```
+## limits
+```
+echo '* soft nofile 51200
+* hard nofile 51200
+* soft nproc 51200
+* hard nproc 51200
+
+root soft nofile 51200
+root hard nofile 51200
+root soft nproc 51200
+root hard nproc 51200' | sudo tee -a /etc/security/limits.conf
 ```
