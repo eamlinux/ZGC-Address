@@ -2,7 +2,7 @@
 
 ### 安装编译环境
 ```
-sudo apt -y install cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential
+sudo apt -y install pkg-config cmake gcc g++ libncurses5-dev libreadline-dev libssl-dev make zlib1g-dev curl git net-tools lsof htop libsodium-dev build-essential
 ```
 ### 拉取Softether源码
 ```
@@ -43,7 +43,7 @@ endif()
 -----------------------------------------------------END----------------------------------------------------------------
 ### 进行编译
 ```
-./configure --disable-documentation
+./configure
 make -C build
 sudo make -C build install
 ```
@@ -119,7 +119,6 @@ server=127.0.0.1#53453
 proxy-dnssec
 no-resolv
 dhcp-option=option:dns-server,192.168.30.1
-#dhcp-option=option6:dns-server,[2a00:5a60::ad2:0ff],[2a00:5a60::ad1:0ff]
 cache-size=10000
 neg-ttl=80000
 local-ttl=3600
@@ -154,12 +153,31 @@ iptables -A FORWARD -s 192.168.30.0/24 -m state --state NEW -j ACCEPT
 ```
 sudo systemctl disable dnsmasq
 ```
-### 添加DOH
+### 添加DOH见DOH文件夹
 ```
-wget -c https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz
-tar xf cloudflared-stable-linux-amd64.tgz
+#!/bin/bash
+IF=ens5
+VPNIF=tap_soft
 
-curl https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz | sudo tar xzC /usr/local/bin/
+ip addr add 192.168.30.1/24 dev ${VPNIF}
+iptables -A FORWARD -i ${VPNIF} -j ACCEPT
+iptables -t nat -A POSTROUTING -o ${IF} -j MASQUERADE
+
+################################################################
+
+#!/bin/bash
+IF=ens5
+VPNIF=tap_soft
+
+ip addr del 192.168.30.1/24 dev ${VPNIF}
+iptables -D FORWARD -i ${VPNIF} -j ACCEPT
+iptables -t nat -D POSTROUTING -o ${IF} -j MASQUERADE
+
+#################################################################
+
+ExecStartPost=/bin/sleep 05
+ExecStartPost=/opt/vpnserver/add-bridge.sh
+ExecStopPost=/opt/vpnserver/remove-bridge.sh
 ```
 ### 添加防火墙转发
 sudo apt install ufw && /etc/ufw/sysctl.conf
