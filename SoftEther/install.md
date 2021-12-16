@@ -128,3 +128,18 @@ root hard nofile 51200
 root soft nproc 51200
 root hard nproc 51200' | sudo tee -a /etc/security/limits.conf
 ```
+## Uncomment this to allow this host to route packets between interfaces
+```
+net/ipv4/ip_forward=1
+net/ipv6/conf/default/forwarding=1
+net/ipv6/conf/all/forwarding=1
+
+net/core/default_qdisc=fq
+net/ipv4/tcp_congestion_control=bbr
+net/core/somaxconn=4096
+net/ipv4/conf/all/send_redirects=0
+net/ipv4/conf/all/rp_filter=1
+net/ipv4/conf/default/send_redirects=1
+net/ipv4/conf/default/proxy_arp=0
+net/ipv4/conf/all/accept_redirects=1
+```
