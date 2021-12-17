@@ -3,7 +3,7 @@
 #!/bin/bash
 sleep 5
 /opt/vpnclient/vpncmd /client localhost /cmd AccountConnect vpn20
-sleep 1
+sleep 3
 dhclient vpn_vpn
 ```
 
