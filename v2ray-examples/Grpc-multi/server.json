@@ -1,0 +1,57 @@
+sudo tee /opt/v2ray/multi.json > /dev/null <<EOF
+{
+  "log": {"loglevel": "none"},
+  "inbounds": [{
+    "sniffing": {
+      "enabled": true,
+      "destOverride": ["http","tls"]
+    },
+    "protocol": "vless",
+    "listen": "127.0.0.1",
+    "port": "10050",
+    "tag": "Grpc-multi",
+    "settings": {
+      "decryption":"none",
+      "clients": [
+        {"id": "$(v2ctl uuid)"},
+        {"id": "$(v2ctl uuid)"}
+      ]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "pathname",
+        "multiMode": true
+      }
+    }
+  }],
+  "outbounds": [{
+    "protocol": "freedom",
+    "settings": {},
+    "tag": "direct"
+  },{
+    "protocol": "blackhole",
+    "settings": {},
+    "tag": "block"
+  }],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [{
+      "type": "field",
+      "inboundTag": ["Grpc-multi"],
+      "outboundTag": "direct"
+    },{
+      "type": "field",
+      "outboundTag": "block",
+      "protocol": ["bittorrent"]
+    }]
+  },
+  "dns": {
+    "servers": [
+      "https://cloudflare-dns.com/dns-query",
+      "https://dns.google/dns-query"
+    ]
+  }
+}
+EOF
