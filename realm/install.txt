@@ -58,12 +58,13 @@ Wants=network-online.target systemd-networkd-wait-online.service
 
 [Service]
 Type=simple
-User=caddy
-Group=caddy
+# User=caddy
+# Group=caddy
 Restart=on-failure
 RestartSec=5s
 DynamicUser=true
 ExecStart=/usr/local/bin/realm --config /opt/fileserver/userdir/config.json
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
