@@ -204,9 +204,9 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 ```
-> 开机启动
-> ```sudo systemctl daemon-reload```
-> ```sudo systemctl enable --now openvpn@server```
+> 开机启动  
+> ```sudo systemctl daemon-reload```  
+> ```sudo systemctl enable --now openvpn@server```  
 
 ## 客户端配置
 ```sh
