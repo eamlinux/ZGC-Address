@@ -227,8 +227,8 @@ data-ciphers AES-256-GCM
 tls-client
 tls-version-min 1.3
 tls-ciphersuites TLS_AES_256_GCM_SHA384
-;ignore-unknown-option block-outside-dns
-;setenv opt block-outside-dns
+ignore-unknown-option block-outside-dns
+setenv opt block-outside-dns
 verb 3
 <ca>
 # /opt/openvpn/ca.crt
