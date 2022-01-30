@@ -143,3 +143,34 @@ net/ipv4/conf/default/send_redirects=1
 net/ipv4/conf/default/proxy_arp=0
 net/ipv4/conf/all/accept_redirects=1
 ```
+## 防火墙另一种配置
+```
+sudo nano /opt/vpnserver/add-bridge.sh
+```
+> 内容
+```
+#!/bin/sh
+IF=eth0
+TunIF=tun0
+
+iptables -t nat -I POSTROUTING 1 -s 192.168.30.0/24 -o ${IF} -j MASQUERADE
+iptables -I INPUT 1 -i ${TunIF} -j ACCEPT
+iptables -I FORWARD 1 -i ${IF} -o ${TunIF} -j ACCEPT
+iptables -I FORWARD 1 -i ${TunIF} -o ${IF} -j ACCEPT
+# iptables -I INPUT 1 -i ${IF} -p udp --dport 23456 -j ACCEPT
+```
+```
+sudo nano /opt/vpnserver/remove-bridge.sh
+```
+> 内容
+```
+#!/bin/sh
+IF=eth0
+TunIF=tun0
+
+iptables -t nat -D POSTROUTING -s 192.168.30.0/24 -o ${IF} -j MASQUERADE
+iptables -D INPUT -i ${TunIF} -j ACCEPT
+iptables -D FORWARD -i ${IF} -o ${TunIF} -j ACCEPT
+iptables -D FORWARD -i ${TunIF} -o ${IF} -j ACCEPT
+# iptables -D INPUT -i ${IF} -p udp --dport 23456 -j ACCEPT
+```
