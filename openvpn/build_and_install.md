@@ -205,8 +205,10 @@ WantedBy=multi-user.target
 EOF
 ```
 > 开机启动  
-> ```sudo systemctl daemon-reload```  
-> ```sudo systemctl enable --now openvpn@server```  
+```
+sudo systemctl daemon-reload
+sudo systemctl enable --now openvpn@server
+```  
 
 ## 客户端配置
 ```sh
@@ -219,6 +221,8 @@ nobind
 persist-key
 persist-tun
 explicit-exit-notify
+sndbuf 0
+rcvbuf 0
 verify-x509-name server_001 name
 auth SHA384
 auth-nocache
