@@ -62,32 +62,36 @@ sudo systemctl enable --now filebrowser
 
 ### Caddy2 reverse_proxy
 ```
-echo 'web.tk {
-    encode gzip
-    reverse_proxy localhost:9000
-	
+echo '{
+    order reverse_proxy before map
+    admin off
     log {
         output discard
     }
+    default_sni xx.yy
+}
+
+xx.yy {
+    encode {
+      gzip 6
+    }
+    reverse_proxy localhost:9000
 
     tls {
         protocols tls1.3
         curves x25519
-        key_type p384
         alpn h2
     }
 
-    header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options nosniff
-        X-Frame-Options SAMEORIGIN
-        Referrer-Policy no-referrer-when-downgrade
+    route {
+        header {
+            Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+            X-Content-Type-Options nosniff
+            X-Frame-Options SAMEORIGIN
+            Referrer-Policy no-referrer-when-downgrade
+        }
     }
 
-    handle_errors {
-        respond "404 Not Found"
-    }
-	
     @grpc {
         protocol grpc
         path  /pathname/*
