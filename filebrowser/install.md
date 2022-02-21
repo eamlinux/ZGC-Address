@@ -4,7 +4,7 @@ sudo apt install wget sudo nano curl sqlite3 acl -y
 ```
 ### Install filebrowser
 ```
-wget -c -t5 https://github.com/filebrowser/filebrowser/releases/download/v2.19.0/linux-amd64-filebrowser.tar.gz
+wget -c -t5 https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz
 tar zxf linux-amd64-filebrowser.tar.gz
 chmod +x filebrowser
 sudo mv filebrowser /usr/local/bin/
