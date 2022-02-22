@@ -1,13 +1,13 @@
 
-wget -c https://golang.org/dl/go1.16.3.linux-amd64.tar.gz
-tar xf go1.16.3.linux-amd64.tar.gz
+wget -c https://go.dev/dl/go1.17.7.linux-amd64.tar.gz
+tar xf go1.17.7.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 sudo apt install binutils
-strip -s doh-client/doh-client
 
 git clone https://github.com/m13253/dns-over-https.git
 make
+strip -s doh-client/doh-client
 sudo cp doh-client/doh-client /usr/local/bin/
 
 ## /etc/systemd/system/doh-client.service
