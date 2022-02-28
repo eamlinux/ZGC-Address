@@ -175,6 +175,14 @@ iptables -D INPUT -i ${IF} -p udp --dport 23456 -j ACCEPT
 sudo chmod +x /opt/openvpn/{add-bridge.sh,remove-bridge.sh}
 sudo chmod 700 /opt/openvpn/{add-bridge.sh,remove-bridge.sh}
 ```
+### Set eth0
+```
+nano /etc/default/grub
+```
+> 修改内容
+```
+GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"
+```
 ## 开机启动脚本
 ```
 sudo tee /etc/systemd/system/openvpn@.service > /dev/null <<EOF
