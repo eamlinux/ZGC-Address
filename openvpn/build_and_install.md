@@ -182,6 +182,7 @@ nano /etc/default/grub
 > 修改内容
 ```
 GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"
+$ sudo update-grub
 ```
 ## 开机启动脚本
 ```
