@@ -46,7 +46,7 @@
   }
 
   @WS {
-    path /phpadmin.php
+    path /wspath
     header Connection *Upgrade*
     header Upgrade websocket
   }
