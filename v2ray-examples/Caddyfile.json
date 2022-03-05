@@ -1,0 +1,89 @@
+{
+  "admin": {
+    "disabled": true
+  },
+  "logging": {
+    "logs": {
+      "default": {
+        "writer": {
+          "output": "discard"
+        }
+      }
+    }
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "https": {
+          "listen": [":443"],
+          "routes": [{
+            "match": [{
+              "host": ["xx.yy"]
+            }],
+            "handle": [{
+              "handler": "headers",
+              "response": {
+                "set": {
+                  "Referrer-Policy": ["no-referrer-when-downgrade"],
+                  "X-Content-Type-Options": ["nosniff"],
+                  "X-Frame-Options": ["SAMEORIGIN"],
+                  "Strict-Transport-Security": ["max-age=31536000; includeSubDomains; preload"]
+                }
+              }
+            },
+            {
+              "handler": "reverse_proxy",
+              "upstreams": [{
+                "dial": "localhost:9900"
+              }]
+            },
+            {
+              "encodings": {
+                "gzip": {
+                  "level": 6
+                }
+              },
+              "handler": "encode",
+              "prefer": ["gzip"]
+            }]
+          },
+          {
+            "match": [{
+              "path": ["/ServerName/*"],
+              "protocol": "grpc"
+            }],
+            "handle": [{
+              "handler": "reverse_proxy",
+              "headers": {
+                "request": {
+                  "set": {
+                    "X-Real-Ip": ["{http.request.remote.host}"]
+                  }
+                }
+              },
+              "transport": {
+                "protocol": "http",
+                "versions": ["h2c"]
+              },
+              "upstreams": [{
+                "dial": "127.0.0.1:10000"
+              }]
+            }]
+          }],
+          "tls_connection_policies": [{
+            "protocol_min": "tls1.3",
+            "curves": ["x25519"],
+            "alpn": ["h2"]
+          }]
+        }
+      }
+    },
+    "tls": {
+      "automation": {
+        "policies": [{
+          "subjects": ["xx.yy"]
+        }]
+      }
+    }
+  }
+}
