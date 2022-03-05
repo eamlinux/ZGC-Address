@@ -39,7 +39,7 @@
 
   @GRPC {
     protocol grpc
-    path /bittorrent/*
+    path /ServerName/*
   }
   reverse_proxy @GRPC h2c://127.0.0.1:34567 {
     header_up X-Real-IP {remote_host}
