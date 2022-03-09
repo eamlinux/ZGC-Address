@@ -1,0 +1,39 @@
+sudo tee /opt/v2ray/grpc_ss.json > /dev/null <<EOF
+{
+  "log": {
+    "loglevel": "none"
+  },
+  "inbounds": [{
+    "listen": "127.0.0.1",
+    "port": 10000,
+    "protocol": "shadowsocks",
+    "settings": {
+      "method": "chacha20-ietf-poly1305",
+      "password": "{{ password }}"
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "pathname"
+      }
+    }
+  }],
+  "outbounds": [{
+    "protocol": "freedom",
+    "tag": "direct"
+  },
+  {
+    "protocol": "blackhole",
+    "tag": "block"
+  }],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [{
+      "type": "field",
+      "protocol": ["bittorrent"],
+      "outboundTag": "block"
+    }]
+  }
+}
+EOF
