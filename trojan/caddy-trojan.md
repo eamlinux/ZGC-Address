@@ -1,11 +1,17 @@
+## 安装golang  
+```
 wget -c https://go.dev/dl/go1.17.8.linux-amd64.tar.gz
 tar xf go1.17.8.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
-
+```
+## 下载xcaddy  
+```
 wget https://github.com/caddyserver/xcaddy/releases/download/v0.2.1/xcaddy_0.2.1_linux_amd64.tar.gz
 tar xf xcaddy_0.2.1_linux_amd64.tar.gz
-
+```
+## 编译 caddy-trojan  
+```
 xcaddy build v2.4.6 --with github.com/imgk/caddy-trojan
 
 strip -s caddy
@@ -16,7 +22,9 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 
 sudo useradd -r -m -s /sbin/nologin caddy
 sudo mkdir -p /opt/caddy
-
+```
+## 添加开机启动  
+```
 sudo tee /etc/systemd/system/caddy.service > /dev/null <<EOF
 [Unit]
 Description=Caddy
@@ -40,7 +48,9 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target
 EOF
-
+```
+## 添加配置  
+```
 sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
 {
   order trojan before map
@@ -93,7 +103,15 @@ sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
   }
 }
 EOF
-
+```
+## 添加网站  
+```
 sudo mkdir -p /var/www/html
 sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
 sudo chown -R caddy. /var/www/html
+```
+## 添加开机服务
+```
+sudo systemctl daemon-reload
+sudo systemctl enable --now caddy
+```
