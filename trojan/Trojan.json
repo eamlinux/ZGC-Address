@@ -1,3 +1,4 @@
+sudo tee /opt/caddy/Caddyfile.json > /dev/null <<EOF
 {
   "admin": {
     "disabled": true
@@ -82,3 +83,4 @@
     }
   }
 }
+EOF
