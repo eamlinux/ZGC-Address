@@ -1,0 +1,51 @@
+{
+  order trojan before map
+  admin off
+  log {
+    output discard
+  }
+  default_sni xx.yy
+  servers :443 {
+    listener_wrappers {
+      trojan
+    }
+    protocol {
+      allow_h2c
+      experimental_http3
+    }
+  }
+}
+
+:443, xx.yy {
+  encode {
+    gzip 6
+  }
+
+  tls {
+    protocols tls1.3
+    curves x25519
+    alpn h2 http/1.1
+  }
+
+  trojan {
+    user password1 password2
+    connect_method
+    websocket
+  }
+
+  @host {
+    host xx.yy
+  }
+
+  route @host {
+    header {
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      X-Content-Type-Options nosniff
+      X-Frame-Options SAMEORIGIN
+      Referrer-Policy no-referrer-when-downgrade
+    }
+    file_server {
+      root /var/www/html
+    }
+  }
+}
