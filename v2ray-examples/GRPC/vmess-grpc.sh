@@ -1,6 +1,8 @@
 sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
 {
-  "log": {"loglevel": "none"},
+  "log": {
+    "loglevel": "none"
+  },
   "inbounds": [{
     "sniffing": {
       "enabled": true,
