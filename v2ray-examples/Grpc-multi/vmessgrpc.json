@@ -1,0 +1,57 @@
+sudo tee /opt/v2ray/multi.json > /dev/null <<EOF
+{
+  "log": {
+    "loglevel": "none"
+  },
+  "inbounds": [{
+    "sniffing": {
+      "enabled": true,
+      "destOverride": ["http", "tls"]
+    },
+    "listen": "127.0.0.1",
+    "port": 10086,
+    "protocol": "vmess",
+    "settings": {
+      "clients": [{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      },{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "pathname",
+        "multiMode": true
+      }
+    }
+  }],
+  "outbounds": [{
+    "protocol": "freedom",
+    "settings": {}
+  },{
+    "protocol": "blackhole",
+    "settings": {},
+    "tag": "blocked"
+  }],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [{
+      "type": "field",
+      "outboundTag": "blocked",
+      "protocol": ["bittorrent"]
+    }]
+  },
+  "dns": {
+    "servers": [
+      "https://dns.google/dns-query",
+      "1.1.1.1",
+      "8.8.8.8",
+      "localhost"
+    ]
+  }
+}
+EOF
