@@ -4,17 +4,20 @@ sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
   "inbounds": [{
     "sniffing": {
       "enabled": true,
-      "destOverride": ["http","tls"]
+      "destOverride": ["http", "tls"]
     },
     "port": "10086",
     "listen": "127.0.0.1",
     "tag": "vmess-grpc",
     "protocol": "vmess",
     "settings": {
-      "clients": [
-        {"id": "$(v2ctl uuid)","alterId": 0},
-        {"id": "$(v2ctl uuid)","alterId": 0}
-      ]
+      "clients": [{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      },{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      }]
     },
     "streamSettings": {
       "network": "gun",
@@ -47,8 +50,10 @@ sudo tee /opt/v2ray/vmgrpc.json > /dev/null <<EOF
   },
   "dns": {
     "servers": [
-      "https://cloudflare-dns.com/dns-query",
-      "https://dns.google/dns-query"
+      "https://dns.google/dns-query",
+      "1.1.1.1",
+      "8.8.8.8",
+      "localhost"
     ]
   }
 }
