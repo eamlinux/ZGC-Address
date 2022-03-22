@@ -26,7 +26,7 @@ sudo tee /opt/v2ray/h2c.json > /dev/null <<EOF
       "security": "none",
       "httpSettings": {
         "path": "/p?id=2048",
-        "host": ["eam168.tk"]
+        "host": ["xx.yy"]
       }
     }
   }],
