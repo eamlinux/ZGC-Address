@@ -1,13 +1,13 @@
 ## 编译环境
 ```
 sudo apt install binutils iptables build-essential automake autoconf libtool m4 liblz4-tool liblz4-dev liblzo2-dev libssl-dev libpam0g-dev libcmocka-dev pkg-config libpkcs11-helper1-dev libsystemd-dev -y
-wget https://swupdate.openvpn.org/community/releases/openvpn-2.5.5.tar.gz
+wget https://swupdate.openvpn.org/community/releases/openvpn-2.5.6.tar.gz
 wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.0.8.tgz
 ```
 ## 编译openvpn
 ```
-tar xf openvpn-2.5.5.tar.gz
-cd openvpn-2.5.5/
+tar xf openvpn-2.5.6.tar.gz
+cd openvpn-2.5.6/
 nano cf.sh
 chmod +x cf.sh
 ./cf.sh
