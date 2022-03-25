@@ -138,3 +138,26 @@ systemctl enable openvpn@server
 
 COMMIT
 ```
+```
+client
+dev tun
+proto udp
+remote 8.8.8.8 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+# cert vpnclient.crt
+# key vpnclient.key
+ca ca.crt
+remote-cert-tls server
+tls-auth ta.key 1
+cipher AES-256-GCM
+# comp-lzo
+verb 3
+auth-user-pass
+dhcp-option DNS 1.0.0.1
+dhcp-option DNS 8.8.4.4
+mssfix 1431
+auth-nocache
+```
