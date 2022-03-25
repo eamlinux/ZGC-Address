@@ -16,7 +16,7 @@ make test
 make install
 ldconfig
 ```
-> 或者  
+> 或者
 ```
 cd ~
 git clone git://git.openssl.org/openssl.git
@@ -28,7 +28,22 @@ make install
 ldconfig
 openssl version -a
 ```
-## Configuer配置  
+## 编译Openvpn  
+```
+wget https://swupdate.openvpn.org/community/releases/openvpn-2.5.6.tar.gz
+tar xf openvpn-2.5.6.tar.gz
+cd openvpn-2.5.6
+nano cf.sh
+chmod +x cf.sh
+./conf.sh
+make
+strip -s src/openvpn/openvpn
+sudo mv src/openvpn/openvpn /usr/sbin/openvpn
+sudo chown root:root /usr/sbin/openvpn
+sudo chmod 0755 /usr/sbin/openvpn
+sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/openvpn
+```
+> CF.sh配置  
 ```
 #!/bin/sh
 ./configure enable_async_push=yes \
