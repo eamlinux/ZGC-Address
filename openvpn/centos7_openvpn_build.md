@@ -1,9 +1,8 @@
 ## 准备编译环境  
 ```bash
-yum install -y epel-release sudo nano wget curl unzip
-yum install -y pkcs11-helper lzo-devel pam-devel.x86_64 gcc gcc-c++ lz4-devel
-yum install -y make gcc perl-core pcre-devel wget zlib-devel
 yum autoremove -y openssl openssl-devel
+yum install -y epel-release
+yum install -y pkcs11-helper lzo-devel pam-devel.x86_64 gcc gcc-c++ lz4-devel make perl-core pcre-devel wget zlib-devel systemd-devel nano sudo wget curl unzip
 ldconfig
 ```
 ## 更新OpenSSL
