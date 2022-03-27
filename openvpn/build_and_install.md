@@ -98,7 +98,7 @@ set_var EASYRSA_CURVE          secp384r1
 set_var EASYRSA_CA_EXPIRE      3650
 set_var EASYRSA_CERT_EXPIRE    3650
 set_var EASYRSA_DIGEST         "sha384"
-set_var EASYRSA_REQ_CN         "server_001"
+set_var EASYRSA_REQ_CN         "server"
 set_var EASYRSA_CRL_DAYS       3650
 ```
 > ```Server.conf```内容
