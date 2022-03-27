@@ -138,6 +138,7 @@ duplicate-cn
 explicit-exit-notify 1
 sndbuf 0
 rcvbuf 0
+client-to-client
 ```
 ## 防火墙配置
 ```
