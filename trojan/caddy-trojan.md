@@ -12,7 +12,8 @@ tar xf xcaddy_0.2.1_linux_amd64.tar.gz
 ```
 ## 编译 caddy-trojan  
 ```
-xcaddy build v2.4.6 --with github.com/imgk/caddy-trojan
+## xcaddy build v2.4.6 --with github.com/imgk/caddy-trojan
+xcaddy build --with github.com/imgk/caddy-trojan
 
 strip -s caddy
 sudo mv caddy /usr/local/bin/
