@@ -81,8 +81,8 @@ sudo openvpn --genkey secret /opt/openvpn/tls-crypt.key
 sudo cp pki/ca.crt pki/private/ca.key pki/issued/server_001.crt pki/private/server_001.key pki/crl.pem /opt/openvpn
 sudo chmod 644 /opt/openvpn/crl.pem
 cd /opt/openvpn/
-sudo nano /opt/openvpn/server.conf
 sudo mkdir -p /opt/openvpn/ccd /opt/openvpn/log
+sudo nano /opt/openvpn/server.conf
 ```
 > ```VARS```内容
 ```
@@ -175,6 +175,26 @@ iptables -D INPUT -i ${IF} -p udp --dport 23456 -j ACCEPT
 ```
 sudo chmod +x /opt/openvpn/{add-bridge.sh,remove-bridge.sh}
 sudo chmod 700 /opt/openvpn/{add-bridge.sh,remove-bridge.sh}
+```
+> 防火墙的另一种配置
+```
+#!/bin/bash
+IF=enp1s0
+VPNIF=tun0
+
+# echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -A FORWARD -i ${VPNIF} -j ACCEPT
+iptables -t nat -A POSTROUTING -o ${IF} -j MASQUERADE
+
+-------------------------------------------------------
+
+#!/bin/bash
+IF=enp1s0
+VPNIF=tun0
+
+# echo 0 > /proc/sys/net/ipv4/ip_forward
+iptables -D FORWARD -i  ${VPNIF} -j ACCEPT
+iptables -t nat -D POSTROUTING -o ${IF} -j MASQUERADE
 ```
 ### Set eth0
 ```
