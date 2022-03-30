@@ -13,7 +13,8 @@ tar xf xcaddy_0.2.1_linux_amd64.tar.gz
 ## 编译 caddy-trojan  
 ```
 ## xcaddy build v2.4.6 --with github.com/imgk/caddy-trojan
-xcaddy build --with github.com/imgk/caddy-trojan
+## ./xcaddy build --with github.com/imgk/caddy-trojan
+./xcaddy build --with github.com/caddyserver/transform-encoder --with github.com/imgk/caddy-trojan
 
 strip -s caddy
 sudo mv caddy /usr/local/bin/
@@ -23,6 +24,12 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 
 sudo useradd -r -m -s /sbin/nologin caddy
 sudo mkdir -p /opt/caddy
+```
+> 或者
+```
+git clone https://github.com/imgk/caddy-trojan.git
+cd caddy-trojan/
+env CGO_ENABLED=0 go build -v -o ./caddy -ldflags="-w -s" -trimpath
 ```
 ## 添加开机启动  
 ```
