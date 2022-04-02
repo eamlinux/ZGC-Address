@@ -71,9 +71,9 @@ echo '{
     default_sni xx.yy
 }
 
-xx.yy {
+:443, xx.yy {
     encode {
-      gzip 6
+        gzip 6
     }
 
     tls {
@@ -90,22 +90,21 @@ xx.yy {
         header_up X-Real-IP {remote_host}
     }
 
-  @host {
-    host xx.yy
-  }
+    @host {
+        host xx.yy
+    }
 
-  route @host {
-    header {
-      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-      X-Content-Type-Options nosniff
-      X-Frame-Options SAMEORIGIN
-      Referrer-Policy no-referrer-when-downgrade
+    route @host {
+        header {
+            Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+            X-Content-Type-Options nosniff
+            X-Frame-Options SAMEORIGIN
+            Referrer-Policy no-referrer-when-downgrade
+        }
+        file_server {
+            root /var/www/html
+        }
+        reverse_proxy /webdev/* localhost:9000
     }
-    file_server {
-      root /var/www/html
-    }
-    reverse_proxy /webdev localhost:9000
-  }
-}
 }' | sudo tee /opt/caddy/Caddyfile
 ```
