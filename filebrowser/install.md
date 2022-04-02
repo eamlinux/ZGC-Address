@@ -75,21 +75,11 @@ xx.yy {
     encode {
       gzip 6
     }
-    reverse_proxy localhost:9000
 
     tls {
         protocols tls1.3
         curves x25519
         alpn h2
-    }
-
-    route {
-        header {
-            Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-            X-Content-Type-Options nosniff
-            X-Frame-Options SAMEORIGIN
-            Referrer-Policy no-referrer-when-downgrade
-        }
     }
 
     @grpc {
@@ -99,5 +89,23 @@ xx.yy {
     reverse_proxy @grpc h2c://127.0.0.1:10086 {
         header_up X-Real-IP {remote_host}
     }
+
+  @host {
+    host xx.yy
+  }
+
+  route @host {
+    header {
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      X-Content-Type-Options nosniff
+      X-Frame-Options SAMEORIGIN
+      Referrer-Policy no-referrer-when-downgrade
+    }
+    file_server {
+      root /var/www/html
+    }
+    reverse_proxy /webdev localhost:9000
+  }
+}
 }' | sudo tee /opt/caddy/Caddyfile
 ```
