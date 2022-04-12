@@ -1,1 +1,2 @@
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys
+sudo apt-key adv --keyserver www.gpg-keyserver.de --recv-keys
