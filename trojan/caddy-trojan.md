@@ -1,20 +1,19 @@
 ## 安装golang  
 ```
-wget -c https://go.dev/dl/go1.18.linux-amd64.tar.gz
-tar xf go1.18.linux-amd64.tar.gz
+wget -c https://go.dev/dl/go1.18.1.linux-amd64.tar.gz
+tar xf go1.18.1.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 ```
 ## 下载xcaddy  
 ```
-wget https://github.com/caddyserver/xcaddy/releases/download/v0.2.1/xcaddy_0.2.1_linux_amd64.tar.gz
-tar xf xcaddy_0.2.1_linux_amd64.tar.gz
+wget https://github.com/caddyserver/xcaddy/releases/download/v0.3.0/xcaddy_0.3.0_linux_amd64.tar.gz
+tar xf xcaddy_0.3.0_linux_amd64.tar.gz
 ```
 ## 编译 caddy-trojan  
 ```
-## xcaddy build v2.4.6 --with github.com/imgk/caddy-trojan
-## ./xcaddy build --with github.com/imgk/caddy-trojan
-./xcaddy build --with github.com/caddyserver/transform-encoder --with github.com/imgk/caddy-trojan
+./xcaddy build --with github.com/imgk/caddy-trojan
+## ./xcaddy build --with github.com/caddyserver/transform-encoder --with github.com/imgk/caddy-trojan
 
 strip -s caddy
 sudo mv caddy /usr/local/bin/
