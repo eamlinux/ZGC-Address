@@ -57,7 +57,6 @@ WantedBy=multi-user.target
 EOF
 ```
 ## ~~添加配置,请使用末尾的最新配置~~
-~~
 ```
 sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
 {
@@ -75,7 +74,7 @@ sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
       allow_h2c
     }
   }
-}~~
+}
 
 :443, xx.yy {
   encode {
@@ -112,7 +111,6 @@ sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
 }
 EOF
 ```
-~~
 ## 添加网站  
 ```
 sudo mkdir -p /var/www/html
