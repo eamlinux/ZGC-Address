@@ -56,7 +56,8 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 WantedBy=multi-user.target
 EOF
 ```
-## 添加配置  
+## ~~添加配置,请使用末尾的最新配置~~
+~~
 ```
 sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
 {
@@ -74,7 +75,7 @@ sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
       allow_h2c
     }
   }
-}
+}~~
 
 :443, xx.yy {
   encode {
@@ -111,6 +112,7 @@ sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
 }
 EOF
 ```
+~~
 ## 添加网站  
 ```
 sudo mkdir -p /var/www/html
@@ -121,4 +123,62 @@ sudo chown -R caddy. /var/www/html
 ```
 sudo systemctl daemon-reload
 sudo systemctl enable --now caddy
+```
+## 最新配置：
+```
+sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
+{
+  order trojan before map
+  admin off
+  log {
+    output discard
+  }
+  servers :443 {
+    listener_wrappers {
+      trojan
+    }
+    protocol {
+      allow_h2c
+      experimental_http3
+    }
+  }
+  trojan {
+    caddy
+    no_proxy
+    users password1 password2
+  }
+}
+
+:443, xx.yy {
+  encode {
+    gzip 6
+  }
+
+  tls {
+    protocols tls1.3
+    curves x25519
+    alpn h2
+  }
+
+  @host {
+    host xx.yy
+  }
+
+  route @host {
+    trojan {
+      connect_method
+      websocket
+    }
+    header {
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      X-Content-Type-Options nosniff
+      X-Frame-Options SAMEORIGIN
+      Referrer-Policy no-referrer-when-downgrade
+    }
+    file_server {
+      root /var/www/html
+    }
+  }
+}
+EOF
 ```
