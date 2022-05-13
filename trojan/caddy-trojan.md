@@ -1,7 +1,7 @@
 ## 安装golang  
 ```
-wget -c https://go.dev/dl/go1.18.1.linux-amd64.tar.gz
-tar xf go1.18.1.linux-amd64.tar.gz
+wget -c https://go.dev/dl/go1.18.2.linux-amd64.tar.gz
+tar xf go1.18.2.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
 ```
