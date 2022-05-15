@@ -30,7 +30,7 @@ net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
 ```bash
 wget https://github.com/caddyserver/caddy/releases/download/v2.5.1/caddy_2.5.1_linux_amd64.tar.gz
 ## wget https://github.com/caddyserver/caddy/releases/download/v2.4.6/caddy_2.4.6_linux_amd64.tar.gz
-tar xf caddy_2.4.6_linux_amd64.tar.gz
+tar xf caddy_2.5.1_linux_amd64.tar.gz
 sudo mv caddy /usr/local/bin/
 sudo chown root:root /usr/local/bin/caddy
 sudo chmod 0755 /usr/local/bin/caddy
