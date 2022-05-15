@@ -28,7 +28,8 @@ echo 'net/core/default_qdisc=fq
 net/ipv4/tcp_congestion_control=bbr' | sudo tee -a /etc/ufw/sysctl.conf
 ```
 ```bash
-wget https://github.com/caddyserver/caddy/releases/download/v2.4.6/caddy_2.4.6_linux_amd64.tar.gz
+wget https://github.com/caddyserver/caddy/releases/download/v2.5.1/caddy_2.5.1_linux_amd64.tar.gz
+## wget https://github.com/caddyserver/caddy/releases/download/v2.4.6/caddy_2.4.6_linux_amd64.tar.gz
 tar xf caddy_2.4.6_linux_amd64.tar.gz
 sudo mv caddy /usr/local/bin/
 sudo chown root:root /usr/local/bin/caddy
@@ -99,7 +100,7 @@ sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
 sudo chown -R caddy. /var/www/html
 ```
 ```bash
-wget https://github.com/v2fly/v2ray-core/releases/download/v4.44.0/v2ray-linux-64.zip
+wget https://github.com/v2fly/v2ray-core/releases/download/v4.45.0/v2ray-linux-64.zip
 unzip -d v2ray v2ray-linux-64.zip
 sudo mv v2ray/v2ctl v2ray/v2ray /usr/local/bin/
 ```
