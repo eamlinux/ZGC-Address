@@ -1,0 +1,2 @@
+sudo mkdir /usr/lib/openvpn/
+sudo mv openvpn-auth-ldap.so /usr/lib/openvpn/
