@@ -2,7 +2,7 @@
 ```
 sudo apt install binutils iptables build-essential automake autoconf libtool m4 liblz4-tool liblz4-dev liblzo2-dev libssl-dev libpam0g-dev libcmocka-dev pkg-config libpkcs11-helper1-dev libsystemd-dev -y
 wget https://swupdate.openvpn.org/community/releases/openvpn-2.5.6.tar.gz
-wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.1.0.tgz
+wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.1.0/EasyRSA-3.1.0.tgz
 ```
 ## 编译openvpn
 ```
