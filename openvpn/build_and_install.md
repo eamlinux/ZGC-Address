@@ -70,7 +70,7 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/openvpn
 ## 证书与Server配置
 ```
 sudo mkdir -p /opt/easy-rsa /opt/openvpn
-sudo tar zxf ./EasyRSA-3.0.8.tgz --strip-components=1 --directory /opt/easy-rsa
+sudo tar zxf ./EasyRSA-3.1.0.tgz --strip-components=1 --directory /opt/easy-rsa
 cd /opt/easy-rsa/
 sudo nano vars
 sudo ./easyrsa init-pki
