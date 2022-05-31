@@ -72,8 +72,8 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/openvpn
 sudo mkdir -p /opt/easy-rsa /opt/openvpn
 sudo tar zxf ./EasyRSA-3.1.0.tgz --strip-components=1 --directory /opt/easy-rsa
 cd /opt/easy-rsa/
-sudo nano vars
 sudo ./easyrsa init-pki
+sudo nano /opt/easy-rsa/pki/vars
 sudo ./easyrsa --batch build-ca nopass
 sudo ./easyrsa build-server-full server_001 nopass
 sudo ./easyrsa build-client-full client001 nopass
