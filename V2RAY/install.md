@@ -40,14 +40,15 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
 echo '[Unit]
 Description=Caddy
 Documentation=https://caddyserver.com/docs/
-After=network.target
+After=network.target network-online.target
+Requires=network-online.target
 
 [Service]
 Type=notify
 User=caddy
 Group=caddy
 ExecStart=/usr/local/bin/caddy run --environ --config /opt/caddy/Caddyfile
-ExecReload=/usr/local/bin/caddy reload --config /opt/caddy/Caddyfile
+ExecReload=/usr/local/bin/caddy reload --config /opt/caddy/Caddyfile --force
 TimeoutStopSec=5s
 LimitNOFILE=1048576
 LimitNPROC=512
