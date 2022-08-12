@@ -1,0 +1,9 @@
+/opt/openvpn/ccd/client
+push "route 10.0.0.0 255.0.0.0"
+# push "route 192.168.30.0 255.255.255.0"
+
+
+/opt/openvpn/ccd/node
+ifconfig-push 172.16.0.240 255.255.0.0
+iroute 10.0.0.0 255.0.0.0
+# iroute 192.168.30.0 255.255.255.0
