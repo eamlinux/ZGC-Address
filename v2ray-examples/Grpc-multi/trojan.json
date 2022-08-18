@@ -1,0 +1,67 @@
+sudo tee /opt/v2ray/trojan.json > /dev/null <<EOF
+{
+  "log": {
+    "loglevel": "none"
+  },
+  "inbounds": [{
+    "sniffing": {
+      "enabled": true,
+      "destOverride": ["http", "tls"]
+    },
+    "listen": "127.0.0.1",
+    "port": 10011,
+    "protocol": "trojan",
+    "tag": "trojan-grpc",
+    "settings": {
+      "clients": [{
+        "password": "password1",
+        "email": "test0@gmail.com"
+      },
+      {
+        "password": "password2",
+        "email": "test1@gmail.com"
+      
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "DFQERBdfa",
+        "multiMode": true
+      }
+    }
+  }],
+  "outbounds": [{
+    "protocol": "freedom",
+    "settings": {},
+    "tag": "direct"
+  },{
+    "protocol": "blackhole",
+    "settings": {},
+    "tag": "blocked"
+  }],
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [{
+      "type": "field",
+      "inboundTag": ["trojan-grpc"],
+      "outboundTag": "direct"
+    },{
+      "type": "field",
+      "outboundTag": "blocked",
+      "protocol": ["bittorrent"]
+    }]
+  },
+  "dns": {
+    "servers": [
+      "https://dns.google/dns-query",
+      "https://cloudflare-dns.com/dns-query",
+      "https://9.9.9.9/dns-query",
+      "https://doh.opendns.com/dns-query",
+      "1.1.1.1",
+      "8.8.8.8"
+    ]
+  }
+}
+EOF
