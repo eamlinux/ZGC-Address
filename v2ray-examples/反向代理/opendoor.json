@@ -1,0 +1,50 @@
+{
+  "log": {"loglevel": "none"},
+  "reverse": {
+    "portals": [{
+      "tag": "portal",
+      "domain": "daemon.tk"
+    }]
+  },
+  "inbounds": [{
+    "tag": "external",
+    "port": 80,
+    "protocol": "dokodemo-door",
+    "settings": {
+      "address": "127.0.0.1",
+      "port": 8080,
+      "network": "tcp"
+    }
+  },{
+    "tag": "tunnel",
+    "listen": "127.0.0.1",
+    "port": 10600,
+    "protocol": "vmess",
+    "settings": {
+      "clients": [{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "path1",
+        "multiMode": true
+      }
+    }
+  }],
+  "routing":{
+    "rules":[{
+      "type":"field",
+      "inboundTag":["external"],
+      "outboundTag":"portal"
+    },{
+      "type":"field",
+      "inboundTag":["tunnel"],
+      "domain":["full:daemon.tk"],
+      "outboundTag":"portal"
+    }]
+  }
+}
