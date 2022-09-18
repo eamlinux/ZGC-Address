@@ -8,7 +8,7 @@ sudo tee /opt/v2ray/resb.json > /dev/null <<EOF
     }]
   },
   "inbounds": [{
-    "tag": "tunnel",  //client
+    "tag": "interconn",  //client
     "listen": "127.0.0.1",
     "port": 10700,
     "protocol": "vmess",
@@ -27,7 +27,7 @@ sudo tee /opt/v2ray/resb.json > /dev/null <<EOF
       }
     }
   },{
-    "tag": "interconn",  //node
+    "tag": "tunnel",  //node
     "listen": "127.0.0.1",
     "port": 10600,
     "protocol": "vmess",
@@ -49,11 +49,11 @@ sudo tee /opt/v2ray/resb.json > /dev/null <<EOF
   "routing":{
     "rules":[{
       "type":"field",
-      "inboundTag":["tunnel"],
+      "inboundTag":["interconn"],
       "outboundTag":"portal"
     },{
       "type":"field",
-      "inboundTag":["interconn"],
+      "inboundTag":["tunnel"],
       "domain":["full:daemon.tk"],
       "outboundTag":"portal"
     }]
