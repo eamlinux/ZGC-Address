@@ -1,0 +1,62 @@
+sudo tee /opt/v2ray/resb.json > /dev/null <<EOF
+{
+  "log": {"loglevel": "none"},
+  "reverse": {
+    "portals": [{
+      "tag": "portal",
+      "domain": "daemon.tk"
+    }]
+  },
+  "inbounds": [{
+    "tag": "tunnel",  //client
+    "listen": "127.0.0.1",
+    "port": 10700,
+    "protocol": "vmess",
+    "settings": {
+      "clients": [{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "path0",
+        "multiMode": true
+      }
+    }
+  },{
+    "tag": "interconn",  //node
+    "listen": "127.0.0.1",
+    "port": 10600,
+    "protocol": "vmess",
+    "settings": {
+      "clients": [{
+        "id": "$(cat /proc/sys/kernel/random/uuid)",
+        "alterId": 0
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "path1",
+        "multiMode": true
+      }
+    }
+  }],
+  "routing":{
+    "rules":[{
+      "type":"field",
+      "inboundTag":["tunnel"],
+      "outboundTag":"portal"
+    },{
+      "type":"field",
+      "inboundTag":["interconn"],
+      "domain":["full:daemon.tk"],
+      "outboundTag":"portal"
+    }]
+  }
+}
+EOF
