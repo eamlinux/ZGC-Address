@@ -1,0 +1,53 @@
+{
+  "log": {"loglevel": "none"},
+  "reverse": {
+    "bridges": [{
+      "tag": "bridge",
+      "domain": "daemon.tk"
+    }]
+  },
+  "outbounds": [{
+    "tag": "interconn",
+    "protocol": "vmess",
+    "settings": {
+      "vnext": [{
+        "address": "xxxx.xyz",  //你的域名
+        "port": 443,
+        "users": [{
+          "id": "$(cat /proc/sys/kernel/random/uuid)",
+          "alterId": 0,
+          "security": "auto"
+        }]
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "tls",
+      "tlsSettings": {
+        "allowInsecure": false,
+        "serverName": "xxxx.xyz",
+        "alpn": ["h2"]
+      },
+      "grpcSettings": {
+        "serviceName": "path1",
+        "multiMode": true
+      }
+    }
+  },{
+    "protocol": "freedom",
+    "settings": {},
+    "tag": "out"
+  }],
+  "routing": {
+    "rules": [{
+      "type": "field",
+      "inboundTag": ["bridge"],
+      "domain": ["full:daemon.tk"],
+      "outboundTag": "interconn"
+    },{
+      "type": "field",
+      "inboundTag": ["bridge"],
+      "outboundTag": "out"
+    }]
+  }
+}
