@@ -7,7 +7,7 @@
     }]
   },
   "outbounds": [{
-    "tag": "interconn",
+    "tag": "tunnel",
     "protocol": "vmess",
     "settings": {
       "vnext": [{
@@ -43,7 +43,7 @@
       "type": "field",
       "inboundTag": ["bridge"],
       "domain": ["full:daemon.tk"],
-      "outboundTag": "interconn"
+      "outboundTag": "tunnel"
     },{
       "type": "field",
       "inboundTag": ["bridge"],
