@@ -27,9 +27,9 @@ sudo tee /opt/fileserver/config.json > /dev/null <<EOF
 }
 EOF
 ```
-#### filebrowser.service
+#### fileserver.service
 ```
-sudo tee /etc/systemd/system/filebrowser.service > /dev/null <<EOF
+sudo tee /etc/systemd/system/fileserver.service > /dev/null <<EOF
 [Unit]
 Description=Filebrowser Client Service
 After=network.target
@@ -37,14 +37,14 @@ After=network.target
 [Service]
 User=nobody
 Group=nogroup
+NoNewPrivileges=true
 ExecStart=/usr/local/bin/filebrowser --config /opt/fileserver/config.json
-ExecReload=/usr/local/bin/filebrowser reload --config /opt/fileserver/config.json
-TimeoutStopSec=5s
 LimitNOFILE=1048576
 LimitNPROC=512
 PrivateTmp=true
-ProtectSystem=full
-AmbientCapabilities=CAP_NET_BIND_SERVICE
+# ProtectSystem=full
+Restart=on-failure
+RestartPreventExitStatus=23
 
 [Install]
 WantedBy=multi-user.target
