@@ -57,7 +57,7 @@ sudo setfacl -R -m u:nobody:rwx /opt/fileserver
 ### Systemctl Start
 ```
 sudo systemctl daemon-reload
-sudo systemctl enable --now filebrowser
+sudo systemctl enable --now fileserver
 ```
 
 ### Caddy2 reverse_proxy
