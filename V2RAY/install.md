@@ -186,6 +186,7 @@ EOF
 CaddyFile
 ```shell
 {
+  order reverse_proxy before map
   admin off
   log {
     output discard
@@ -196,10 +197,6 @@ CaddyFile
   default_sni xx.yy
 }
 
-:80 {
-  redir https://{host}{uri} permanent
-}
-
 :443, xx.yy {
   encode {
     gzip 6
@@ -208,6 +205,18 @@ CaddyFile
     protocols tls1.3
     curves x25519
     alpn h2
+  }
+
+  @GRPC {
+    protocol grpc
+    path /pathname/*
+  }
+  reverse_proxy @GRPC 127.0.0.1:10000 {
+    flush_interval -1
+    header_up X-Real-IP {remote_host}
+    transport http {
+      versions h2c
+    }
   }
 
   @xxyy {
