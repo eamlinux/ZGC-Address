@@ -123,6 +123,72 @@ RestartPreventExitStatus=23
 [Install]
 WantedBy=multi-user.target' | sudo tee /etc/systemd/system/v2ray@.service
 ```
+```bash
+sudo tee /opt/v2ray/trojan.json > /dev/null <<EOF
+{
+  "log": {
+    "loglevel": "none"
+  },
+  "inbounds": [{
+    "sniffing": {
+      "enabled": true,
+      "destOverride": ["http", "tls"]
+    },
+    "listen": "127.0.0.1",
+    "port": 10000,
+    "protocol": "trojan",
+    "tag": "tro",
+    "settings": {
+      "clients": [{
+        "password": "passone",
+        "email": "abcdef@gmail.com"
+      },
+      {
+        "password": "passtow",
+        "email": "zxcvbn@gmail.com"
+      }]
+    },
+    "streamSettings": {
+      "network": "grpc",
+      "security": "none",
+      "grpcSettings": {
+        "serviceName": "pathname",
+        "multiMode": true
+      }
+    }
+  }],
+  "outbounds": [{
+    "protocol": "freedom",
+    "settings": {},
+    "tag": "direct"
+  },{
+    "protocol": "blackhole",
+    "settings": {},
+    "tag": "blocked"
+  }],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [{
+      "type": "field",
+      "inboundTag": ["tro"],
+      "outboundTag": "direct"
+    },{
+      "type": "field",
+      "outboundTag": "blocked",
+      "protocol": ["bittorrent"]
+    }]
+  },
+  "dns": {
+    "servers": [
+      "https://dns.google/dns-query",
+      "https://cloudflare-dns.com/dns-query",
+      "1.1.1.1",
+      "8.8.8.8"
+    ]
+  }
+}
+EOF
+```
 ```shell
 sudo tee /opt/v2ray/vless.json > /dev/null <<EOF
 {
