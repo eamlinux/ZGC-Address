@@ -190,11 +190,8 @@ CaddyFile
   log {
     output discard
   }
-  cert_issuer zerossl
-  key_type ed25519
-  ocsp_stapling on
   servers :443 {
-    protocols h3
+    protocols h1 h2 h3
   }
   default_sni xx.yy
 }
