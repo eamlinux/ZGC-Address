@@ -185,64 +185,50 @@ EOF
 ```
 CaddyFile
 ```shell
-web.tk {
-    encode zstd gzip
-    root * /var/www/html
-    file_server
+{
+  admin off
+  log {
+    output discard
+  }
+  cert_issuer zerossl
+  key_type ed25519
+  ocsp_stapling on
+  servers :443 {
+    protocols h3
+  }
+  default_sni xx.yy
+}
 
-    log {
-        output discard
-    }
+:80 {
+  redir https://{host}{uri} permanent
+}
 
-    tls {
-        protocols tls1.3
-        curves x25519
-        alpn h2
-    }
+:443, xx.yy {
+  encode {
+    gzip 6
+  }
+  tls {
+    protocols tls1.3
+    curves x25519
+    alpn h2
+  }
 
+  @xxyy {
+    host xx.yy
+  }
+  route @xxyy {
     header {
-        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options nosniff
-        X-Frame-Options SAMEORIGIN
-        Referrer-Policy no-referrer-when-downgrade
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      X-Content-Type-Options nosniff
+      X-Frame-Options SAMEORIGIN
+      Referrer-Policy no-referrer-when-downgrade
     }
-
-    handle_errors {
-        respond "404 Not Found"
+    reverse_proxy localhost:9000 {
+      header_up X-Real-IP {remote_host}
     }
-
-    @grpc1 {
-        protocol grpc
-        path  /path1/*
+    file_server {
+      root /var/www/html
     }
-    reverse_proxy @grpc1 h2c://127.0.0.1:10086 {
-        header_up X-Real-IP {remote_host}
-    }
-
-    @grpc2 {
-        protocol grpc
-        path  /path2/*
-    }
-    reverse_proxy @grpc2 h2c://127.0.0.1:10010 {
-        header_up X-Real-IP {remote_host}
-    }
-
-    @vmessws {
-        path /vmwspath
-        header Connection *Upgrade*
-        header Upgrade websocket
-    }
-    reverse_proxy @vmessws localhost:10000 {
-        header_up X-Real-IP {remote_host}
-    }
-
-    @SSws {
-        path /sswspath
-        header Connection *Upgrade*
-        header Upgrade websocket
-    }
-    reverse_proxy @SSws localhost:10050 {
-        header_up X-Real-IP {remote_host}
-    }
+  }
 }
 ```
