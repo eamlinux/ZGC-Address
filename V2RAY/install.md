@@ -103,7 +103,7 @@ sudo chown -R caddy. /var/www/html
 ```bash
 wget https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip
 unzip -d v2ray v2ray-linux-64.zip
-sudo mv v2ray/v2ctl v2ray/v2ray /usr/local/bin/
+sudo mv v2ray/v2ray /usr/local/bin/
 ```
 ```shell
 echo '[Unit]
@@ -116,7 +116,7 @@ User=nobody
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/usr/local/bin/v2ray -config /opt/v2ray/%i.json
+ExecStart=/usr/local/bin/v2ray run -config /opt/v2ray/%i.json
 Restart=on-failure
 RestartPreventExitStatus=23
 
