@@ -59,42 +59,6 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target' | sudo tee /etc/systemd/system/caddy.service
 ```
-```shell
-echo 'web.me {
-    encode zstd gzip
-    root * /var/www/html
-    file_server
-    log {
-        output discard
-    }
-    tls {
-        protocols tls1.3
-        curves x25519
-        alpn h2
-    }
-    header {
-        Strict-Transport-Security max-age=31536000;
-        X-Content-Type-Options nosniff
-        X-Frame-Options DENY
-        Referrer-Policy no-referrer-when-downgrade
-    }
-    handle_errors {
-        respond "404 Not Found"
-    }
-    @websocket1 {
-        path /path1
-        header Connection *Upgrade*
-        header Upgrade websocket
-    }
-    @websocket2 {
-        path /path2
-        header Connection *Upgrade*
-        header Upgrade websocket
-    }
-    reverse_proxy @websocket1 localhost:10086
-    reverse_proxy @websocket2 localhost:10000
-}' | sudo tee /opt/caddy/Caddyfile
-```
 ```bash
 sudo mkdir -p /var/www/html
 sudo git clone https://github.com/HFIProgramming/mikutap.git /var/www/html
@@ -251,6 +215,7 @@ EOF
 ```
 CaddyFile
 ```shell
+sudo tee /opt/caddy/Caddyfile > /dev/null <<EOF
 {
   order reverse_proxy before map
   admin off
@@ -303,4 +268,5 @@ CaddyFile
     }
   }
 }
+EOF
 ```
