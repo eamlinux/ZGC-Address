@@ -1,9 +1,9 @@
 
-wget -c https://go.dev/dl/go1.17.8.linux-amd64.tar.gz
-tar xf go1.17.8.linux-amd64.tar.gz
+wget -c https://go.dev/dl/go1.19.2.linux-amd64.tar.gz
+tar xf go1.19.2.linux-amd64.tar.gz
 sudo mv go /usr/local/
 sudo ln -snf /usr/local/go/bin/* /usr/local/bin/
-sudo apt install binutils
+sudo apt install binutils -y
 
 git clone https://github.com/m13253/dns-over-https.git
 make
