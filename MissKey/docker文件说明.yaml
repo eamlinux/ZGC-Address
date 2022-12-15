@@ -41,3 +41,14 @@ networks:
   internal_network: # 内部网络
     internal: true
   external_network: # 外部网络
+
+
+redis官方推荐版本：
+
+  redis:
+    restart: always
+    image: redis:4.0-alpine
+    networks:
+      - internal_network
+    volumes:
+      - ./redis:/data
