@@ -52,3 +52,49 @@ redis官方推荐版本：
       - internal_network
     volumes:
       - ./redis:/data
+
+
+
+version: "3"
+
+services:
+  web:
+    restart: always # 自动重启，请注意如果您对您的配置没有信心，请不要开启这个选项(把这一行注释即可)，以避免进程崩溃反复重启耗费大量资源！
+    image: misskey/misskey:latest # 我们使用misskey提供的官方镜像
+    container_name: misskey_web # 容器名，就是个名字，方便辨认
+    links:
+      - db
+      - redis
+    ports:
+      - "127.0.0.1:3000:3000"  #默认映射到3000端口上
+    networks:
+      - internal_network
+      - external_network
+    volumes:
+      - ./config:/misskey/.config:ro # 用于映射配置文件，请根据您的实际配置来决定文件夹名称，设定为只读即可
+      - ./files:/misskey/files # 用户上传到本地的文件，如果您一开始就接入外部存储（如wasabi或是AWS S3）您可以忽略这块配置
+
+  redis:
+    restart: always
+    image: redis:latest
+    container_name: misskey_redis
+    networks:
+      - internal_network
+    volumes:
+      - ./redis:/data # redis数据库的数据文件夹映射，创建后默认在 ./redis 文件夹中
+
+  db:
+    restart: always
+    image: postgres:12.2-alpine
+    container_name: misskey_db
+    networks:
+      - internal_network
+    env_file:
+      - ./config/docker.env # 需要使用配置文件中设置的 Docker 环境变量
+    volumes:
+      - ./db:/var/lib/postgresql/data # 主数据库的数据文件夹映射，创建后默认在 ./db 文件夹中
+
+networks:
+  internal_network: # 内部网络
+    internal: true
+  external_network: # 外部网络
