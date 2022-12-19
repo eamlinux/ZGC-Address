@@ -429,17 +429,17 @@ sudo -u caddy ./bin/create-account -config ./dendrite.yaml -username leamnet -ad
 
 ### 旧机：
 ```
-sudo systemctl disable --now dendrite
+sudo systemctl disable --now matrix
 sudo su
-pg_dump -U postgres -F c dendrite > db1.tar
+pg_dump -U postgres -F c matrix > db1.tar
 ```
 ### 新机：
 ```
-sudo systemctl stop dendrite
+sudo systemctl stop matrix
 sudo su
 su postgres
-dropdb dendrite
-pg_restore -U postgres -d dendrite -1  db1.tar
+dropdb matrix
+pg_restore -U postgres -d matrix -1 db1.tar
 ````
 ### 媒体文件：
 ```
