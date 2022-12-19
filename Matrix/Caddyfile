@@ -4,7 +4,7 @@
   log {
     output discard
   }
-  # default_sni matrix.io
+  default_sni matrix.io
   servers :443 {
     protocols h1 h2
   }
