@@ -1,0 +1,50 @@
+# Configuration file for Synapse.
+server_name: "xxyy.top"
+pid_file: /data/homeserver.pid
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+#database:
+#  name: sqlite3
+#  args:
+#    database: /data/homeserver.db
+
+database:
+  name: psycopg2
+  txn_limit: 10000
+  args:
+    user: dbuser
+    password: db_password
+    database: matrixdb
+    host: postgres
+    port: 5432
+    cp_min: 5
+    cp_max: 10
+
+log_config: "/data/xxyy.top.log.config"
+media_store_path: /data/media_store
+registration_shared_secret: "????????????????????????"
+report_stats: false
+macaroon_secret_key: "????????????????????????????????????"
+form_secret: "??????????????????????????????????????????????"
+signing_key_path: "/data/xxyy.top.signing.key"
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+enable_registration: true
+enable_registration_without_verification: true
+public_baseurl: "https://matrix.xxyy.top"
+serve_server_wellknown: true
+block_non_admin_invites: false
+allow_guest_access: false
+# vim:ft=yaml
+
+turn_uris: [ "turn:turn.xxyy.top?transport=udp", "turn:turn.xxyy.top?transport=tcp" ]
+turn_shared_secret: "?????????????????????????"
+turn_user_lifetime: 86400000
+turn_allow_guests: True
