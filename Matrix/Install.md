@@ -10,6 +10,35 @@ sudo apt update
 sudo apt -y install podman uidmap dbus-user-session dbus-x11 slirp4netns libpam-systemd podman-aardvark-dns podman-netavark podman-docker
 sudo reboot
 ```
+## 配置podman用户环境
+- 添加一个普通用户作为无根用户【如：podman】，并将其加入subuid和subgid中
+```
+sudo useradd -r -m -s /bin/bash podman
+echo "podman:100000:65536" | sudo tee -a /etc/subuid
+echo "podman:100000:65536" | sudo tee -a /etc/subgid
+```
+- 设定无根用户podman无需登陆也能开机启动无根容器
+```
+sudo loginctl enable-linger podman
+```
+- 切换到无根用户podman并解决运行容器里命令出现"Failed to connect to bus: 找不到介质"的问题
+```
+sudo su -l podman
+nano .bashrc
+```
+- 在当前用户目录下编辑.bashrc，在最后面添加如下内容：
+```
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+```
+- 刷新环境
+```
+source .bashrc
+```
+- 重置podman，使用能正常使用aardvark-dns
+```
+podman system reset --force
+```
 ## 安装Postgresql
 ```
 podman network create --subnet 192.168.188.0/24 network01
