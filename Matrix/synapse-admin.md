@@ -16,7 +16,7 @@ sudo chown -R caddy:caddy /opt/synapse-admin
   }
   default_sni xxyy.top
   servers :443 {
-    protocols h1 h2
+    protocols h1 h2 h3
   }
 }
 
@@ -25,7 +25,7 @@ xxyy.top {
     gzip 6
   }
   tls {
-    protocols tls1.2
+    protocols tls1.3
     curves x25519
     alpn h2
   }
@@ -59,7 +59,7 @@ matrix.xxyy.top {
     gzip 6
   }
   tls {
-    protocols tls1.2
+    protocols tls1.3
     curves x25519
     alpn h2
   }
