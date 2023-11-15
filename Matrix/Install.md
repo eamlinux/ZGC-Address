@@ -1,4 +1,4 @@
-# 安装podman
+## 安装podman
 ```
 source /etc/os-release
 wget http://downloadcontent.opensuse.org/repositories/home:/alvistack/Debian_$VERSION_ID/Release.key -O alvistack_key
@@ -10,6 +10,38 @@ sudo apt update
 sudo apt -y install podman uidmap dbus-user-session dbus-x11 slirp4netns libpam-systemd podman-aardvark-dns podman-netavark podman-docker
 sudo reboot
 ```
+## 安装Postgresql
+```
+podman network create --subnet 192.168.188.0/24 network01
+
+podman run \
+--name postgres \
+--network network01 \
+--log-driver json-file \
+--log-opt max-size=1m \
+--log-opt max-file=1 \
+-p 5432:5432 \
+-v /home/podman/pgdata:/var/lib/postgresql/data \
+-e POSTGRES_PASSWORD=my_password \
+-e LANG=C.UTF-8 \
+-d postgres:alpine
+```
+## 建立数据库
+```
+podman exec -it postgres psql -U postgres
+## 建立用户
+CREATE USER dbuser WITH password 'dbuser_password';
+## 有些特殊要求的数据库，如指定语言'C'
+CREATE DATABASE matrixdb
+ENCODING 'UTF8'
+LC_COLLATE='C'
+LC_CTYPE='C'
+template=template0
+OWNER dbuser;
+
+## 正常数据库
+CREATE DATABASE userdb ENCODING 'UTF8' OWNER dbuser;
+```
 ## 生成 Synapse 配置文件
 ```
 podman run -it --rm \
@@ -19,7 +51,7 @@ podman run -it --rm \
 matrixdotorg/synapse:latest \
 generate
 ```
-## 安装运行
+## 安装运行matrix
 ```
 podman run \
 --name synapse \
@@ -32,6 +64,20 @@ podman run \
 -p 8009:8009 \
 -p 8448:8448 \
 -d matrixdotorg/synapse:latest
+```
+## 配置数据库连接
+```
+database:
+  name: psycopg2
+  txn_limit: 10000
+  args:
+    user: dbuser
+    password: db_password
+    database: matrixdb
+    host: postgres
+    port: 5432
+    cp_min: 5
+    cp_max: 10
 ```
 ## 生成开机启动
 ```
