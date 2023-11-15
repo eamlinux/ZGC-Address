@@ -25,7 +25,7 @@ xxyy.top {
     gzip 6
   }
   tls {
-    protocols tls1.3
+    protocols tls1.2
     curves x25519
     alpn h2
   }
@@ -59,7 +59,7 @@ matrix.xxyy.top {
     gzip 6
   }
   tls {
-    protocols tls1.3
+    protocols tls1.2
     curves x25519
     alpn h2
   }
