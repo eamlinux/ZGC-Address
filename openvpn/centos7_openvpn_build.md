@@ -87,7 +87,8 @@ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/sbin/openvpn
             with_crypto_library=openssl \
             with_gnu_ld=yes \
             with_mem_check=no \
-            with_sysroot=no
+            with_sysroot=no \
+            --disable-dco
 ```
 ## 创建证书  
 ```
