@@ -67,4 +67,4 @@ podman exec -it dendrite \
 -config /etc/dendrite/dendrite.yaml \
 -username my_username -admin  # 加admin为管理员，不加为普通用户
 ```
-> dendrite.yaml文件与Caddy反代见其它两个文件
+***dendrite.yaml文件与Caddy反代见其它两个文件***
