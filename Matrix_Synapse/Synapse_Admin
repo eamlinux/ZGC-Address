@@ -1,0 +1,5 @@
+wget https://github.com/Awesome-Technologies/synapse-admin/releases/download/0.8.7/synapse-admin-0.8.7-dirty.tar.gz
+tar xf synapse-admin-0.8.7-dirty.tar.gz
+mv synapse-admin-0.8.7-dirty synapse-admin
+sudo mv synapse-admin /opt/
+sudo chown -R caddy:caddy /opt/synapse-admin
