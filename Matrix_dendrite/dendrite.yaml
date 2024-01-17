@@ -1,0 +1,157 @@
+version: 2
+
+global:
+  server_name: domain.org
+  private_key: matrix_key.pem
+  old_private_keys: []
+  key_validity_period: 168h0m0s
+
+  database:
+    connection_string: postgres://dendrite_user:DBuser_password@postgres/dendrite_DB?sslmode=disable
+    max_open_conns: 90
+    max_idle_conns: 5
+    conn_max_lifetime: -1
+
+  cache:
+    max_size_estimated: 1gb
+    max_age: 1h
+
+  well_known_server_name: "domain.org:443"
+  well_known_client_name: "https://domain.org"
+  well_known_sliding_sync_proxy: ""
+
+  trusted_third_party_id_servers:
+    - matrix.org
+    - vector.im
+  disable_federation: false
+
+  presence:
+    enable_inbound: false
+    enable_outbound: false
+
+  report_stats:
+    enabled: false
+    endpoint: https://panopticon.matrix.org/push
+
+  server_notices:
+    enabled: false
+    local_part: "_server"
+    display_name: "Server Alerts"
+    avatar_url: ""
+    room_name: "Server Alerts"
+
+  jetstream:
+    addresses: []
+    disable_tls_validation: false
+    storage_path: ./
+    topic_prefix: Dendrite
+
+  metrics:
+    enabled: false
+    basic_auth:
+      username: metrics
+      password: metrics
+
+  dns_cache:
+    enabled: false
+    cache_size: 256
+
+app_service_api:
+  disable_tls_validation: false
+  config_files: []
+
+client_api:
+  registration_disabled: false
+  guests_disabled: true
+  registration_shared_secret: ""
+  enable_registration_captcha: true
+  recaptcha_public_key: "6Le...................................."
+  recaptcha_private_key: "6Le....................................."
+  recaptcha_bypass_secret: ""
+  recaptcha_siteverify_api: "https://www.google.com/recaptcha/api/siteverify"
+
+  turn:
+    turn_user_lifetime: "5m"
+    turn_uris: []
+    turn_shared_secret: ""
+    turn_username: ""
+    turn_password: ""
+
+  rate_limiting:
+    enabled: true
+    threshold: 20
+    cooloff_ms: 500
+    exempt_user_ids: []
+
+federation_api:
+  send_max_retries: 16
+  p2p_retries_until_assumed_offline: 1
+  disable_tls_validation: false
+  disable_http_keepalives: false
+
+  key_perspectives:
+    - server_name: matrix.org
+      keys:
+        - key_id: ed25519:auto
+          public_key: Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw
+        - key_id: ed25519:a_RXGa
+          public_key: l8Hft5qXKn1vfHrg3p4+W8gELQVo8N13JkluMfmn2sQ
+  prefer_direct_fetch: false
+
+media_api:
+  base_path: ./media_store
+  max_file_size_bytes: 20971520
+  dynamic_thumbnails: false
+  max_thumbnail_generators: 10
+  thumbnail_sizes:
+    - width: 32
+      height: 32
+      method: crop
+    - width: 96
+      height: 96
+      method: crop
+    - width: 640
+      height: 480
+      method: scale
+
+room_server:
+  default_room_version: "10"
+
+mscs:
+  mscs: []
+
+sync_api:
+  search:
+    enabled: false
+    index_path: "./searchindex"
+    in_memory: false
+    language: "en"
+
+user_api:
+  bcrypt_cost: 10
+  openid_token_lifetime_ms: 3600000
+  push_gateway_disable_tls_validation: false
+  auto_join_rooms: []
+  worker_count: 8
+
+tracing:
+  enabled: false
+  jaeger:
+    serviceName: ""
+    disabled: false
+    rpc_metrics: false
+    traceid_128bit: false
+    tags: []
+    sampler: null
+    reporter: null
+    headers: null
+    baggage_restrictions: null
+    throttler: null
+
+logging:
+  - type: std
+    level: error
+  - type: file
+    level: error
+    params:
+      path: ./logs
