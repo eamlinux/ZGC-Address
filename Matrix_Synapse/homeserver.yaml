@@ -1,0 +1,66 @@
+# Configuration file for Synapse.
+# https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+server_name: "domail.org"
+pid_file: /data/homeserver.pid
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    resources:
+      - names: [client, federation]
+        compress: false
+# database:
+#   name: sqlite3
+#   args:
+#     database: /data/homeserver.db
+database:
+  name: psycopg2
+  args:
+    user: synapse_user
+    password: synapse_passowrd
+    database: synapse_db
+    host: localhost
+    port: 5432
+    cp_min: 5
+    cp_max: 10
+
+log_config: "/data/domail.org.log.config"
+media_store_path: /data/media_store
+registration_shared_secret: "4lWA3XRoxZ................."
+report_stats: false
+macaroon_secret_key: "Dvs-j9Gj...................................."
+form_secret: "KOw56r......................................"
+signing_key_path: "/data/domail.org.signing.key"
+suppress_key_server_warning: true
+trusted_key_servers:
+  - server_name: "matrix.org"
+    verify_keys:
+      "ed25519:auto": "Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw"
+      "ed25519:a_RXGa": "l8Hft5qXKn1vfHrg3p4+W8gELQVo8N13JkluMfmn2sQ"
+
+max_upload_size: 20M
+enable_registration: true
+enable_registration_without_verification: true
+public_baseurl: "https://domail.org"
+serve_server_wellknown: true
+block_non_admin_invites: false
+allow_guest_access: false
+
+email:
+  smtp_host: smtp.mail.com
+  smtp_port: 587
+  smtp_user: "uname@outlook.com"
+  smtp_pass: "mail_password"
+  force_tls: false
+  require_transport_security: true
+  enable_tls: true
+  notif_from: "Your Friendly homeserver"
+  enable_notifs: true
+  notif_for_new_users: false
+
+turn_uris: [ "turn:turn.domail.org?transport=udp", "turn:turn.domail.org?transport=tcp" ]
+turn_shared_secret: "yBczSZviPGkraGrMEKzcHoeuycP0G4xZORhQib63XcLWTD0RbXFKvSQ6frMgpcyC"
+turn_user_lifetime: 86400000
+turn_allow_guests: false
+# vim:ft=yaml
