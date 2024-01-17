@@ -1,0 +1,64 @@
+domain.org {
+  encode {
+    gzip 6
+  }
+  tls {
+    protocols tls1.2
+    curves x25519
+    alpn h2
+  }
+
+  @host {
+    host domain.org
+  }
+  route @host {
+    header /.well-known/matrix/* Content-Type application/json
+    header /.well-known/matrix/* Access-Control-Allow-Origin *
+    respond /.well-known/matrix/server `{"m.server": "matrix.domain.org:443"}`
+    respond /.well-known/matrix/client `{"m.homeserver": {"base_url": "https://matrix.domain.org"}}`
+    header {
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      X-Content-Type-Options nosniff
+      X-Frame-Options SAMEORIGIN
+      Referrer-Policy no-referrer-when-downgrade
+    }
+    file_server {
+      root /opt/synapse-admin
+    }
+  }
+}
+
+matrix.domain.org {
+  encode {
+    gzip 6
+  }
+  tls {
+    protocols tls1.2
+    curves x25519
+    alpn h2
+  }
+
+  @matrix {
+    host matrix.domain.org
+  }
+  route @matrix {
+    header {
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+      X-Content-Type-Options nosniff
+      X-Frame-Options SAMEORIGIN
+      Referrer-Policy no-referrer-when-downgrade
+    }
+    reverse_proxy /_matrix/* localhost:8008 {
+      header_up Host {host}
+      header_up X-Real-IP {remote}
+    }
+    reverse_proxy /_synapse/client/* localhost:8008 {
+      header_up Host {host}
+      header_up X-Real-IP {remote}
+    }
+    reverse_proxy /_synapse/admin/* localhost:8008 {
+      header_up Host {host}
+      header_up X-Real-IP {remote}
+    }
+  }
+}
